@@ -197,3 +197,254 @@ button:hover {
     background-size: cover;
     background-position: center;
 }
+
+/* === AddTask (isoliert) ================================================ */
+.at-assign-field {
+    position: relative
+}
+
+.at-assign-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    outline: none;
+    background: #fff
+}
+
+.at-assign-input:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, .15)
+}
+
+.at-assign-dd {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 6px);
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    max-height: 280px;
+    overflow: auto;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
+    z-index: 30;
+    display: none
+}
+
+.at-assign-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    margin: 6px;
+    border-radius: 10px;
+    cursor: pointer;
+    background: #fff;
+    color: #111827;
+    transition: background .15s, color .15s
+}
+
+.at-assign-item:hover {
+    background: #f3f4f6
+}
+
+.at-assign-item.at-is-selected {
+    background: #111827;
+    color: #fff
+}
+
+.at-assign-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #fff;
+    font-size: 12px;
+    flex: 0 0 28px
+}
+
+/* Avatarfarben */
+.at-av-c1 {
+    background: #F59E0B
+}
+
+.at-av-c2 {
+    background: #0EA5A4
+}
+
+.at-av-c3 {
+    background: #4CAF50
+}
+
+.at-av-c4 {
+    background: #6366F1
+}
+
+.at-av-c5 {
+    background: #EF4444
+}
+
+.at-av-c6 {
+    background: #8B5CF6
+}
+
+.at-av-c7 {
+    background: #EC4899
+}
+
+.at-assign-name {
+    flex: 1;
+    font-size: 14px
+}
+
+.at-assign-check {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #9ca3af;
+    border-radius: 4px;
+    display: inline-block;
+    position: relative;
+    flex: 0 0 18px;
+    background: #fff
+}
+
+.at-assign-item.at-is-selected .at-assign-check {
+    background: #111827;
+    border-color: #e5e7eb
+}
+
+.at-assign-check.at-checked::after {
+    content: '✓';
+    position: absolute;
+    left: 2px;
+    top: -2px;
+    font-size: 20px;
+    line-height: 1;
+    color: #fff;
+}
+
+/* Preview unter dem Eingabefeld */
+#at-assigned-preview {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px
+}
+
+.at-assign-strip {
+    display: flex;
+    align-items: center;
+    gap: 8px
+}
+
+.at-assign-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 12px;
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 0 0 2px #fff
+}
+
+/* Badgefarben passend zu Avataren */
+.at-badge-c1 {
+    background: #F59E0B
+}
+
+.at-badge-c2 {
+    background: #0EA5A4
+}
+
+.at-badge-c3 {
+    background: #4CAF50
+}
+
+.at-badge-c4 {
+    background: #6366F1
+}
+
+.at-badge-c5 {
+    background: #EF4444
+}
+
+.at-badge-c6 {
+    background: #8B5CF6
+}
+
+.at-badge-c7 {
+    background: #EC4899
+}
+
+.at-assign-hint {
+    font-size: 12px;
+    color: #6b7280
+}
+
+/* klickbare Subtasks */
+.at-subtask-item {
+    cursor: pointer
+}
+
+/* Add Task – Priority Buttons */
+#addtask-container .priority-btn button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid #D1D5DB;
+    background: #FFF;
+    color: #2A3647;
+    cursor: pointer;
+    transition: background-color .15s ease, color .15s ease, transform .1s ease;
+}
+
+#addtask-container .priority-btn button img {
+    width: 18px;
+    height: 18px;
+}
+
+#addtask-container .priority-btn button[aria-pressed="true"] {
+    transform: scale(1.02);
+    color: #FFF;
+    border-color: transparent;
+}
+
+#addtask-container .priority-btn .btn-urgent[aria-pressed="true"] {
+    background: #FF3D00;
+}
+
+#addtask-container .priority-btn .btn-medium[aria-pressed="true"] {
+    background: #FFA800;
+}
+
+#addtask-container .priority-btn .btn-low[aria-pressed="true"] {
+    background: #7AE229;
+}
+
+#addtask-container .priority-btn button[aria-pressed="true"] img {
+    filter: brightness(0) invert(1);
+}
+
+/* Pflichtfeld-Fehlerzustand */
+.at-error {
+    border-color: #ef4444 !important;
+    background-color: #fff5f5;
+}
+
+.at-error-message {
+    font-size: 12px;
+    color: #ef4444;
+    margin-top: 4px;
+}
