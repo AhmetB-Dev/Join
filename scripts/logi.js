@@ -143,6 +143,10 @@
                 || [user.firstName, user.lastName].filter(Boolean).join(' ').trim();
             localStorage.setItem('isGuest', 'false');
             localStorage.setItem('name', fullName || '');
+
+            sessionStorage.setItem('summary.triggerSplash', '1');
+            localStorage.setItem('summary.triggerSplash', '1');
+
             showMsg('Login successful. Redirecting …', true);
             window.location.href = REDIRECT_AFTER_AUTH;
         } catch {

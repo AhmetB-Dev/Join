@@ -1,203 +1,185 @@
-/* ===== Summary <-> Firebase Sync (nur summary.js) ===== */
 (() => {
   'use strict';
 
-  /*** Konfiguration ***/
-  const FIREBASE_URL =
-    (window.FIREBASE_URL && String(window.FIREBASE_URL)) ||
-    'https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/'; // aus firebase.js bzw. Fallback
-  const TASKS_PATH = 'tasks';
-  const POLL_MS = 1500; // sanftes Live-Update
+  const BASE_URL = (window.FIREBASE_URL && String(window.FIREBASE_URL)) || 'https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/';
+  const TASKS_NODE = 'tasks';
+  const POLL_MS = 1500;
   const DATE_LOCALE = 'en-US';
+  const LABELS = { 'to do': 'todo', 'to-do': 'todo', 'done': 'done', 'tasks in board': 'total', 'tasks in progress': 'inProgress', 'awaiting feedback': 'awaitFeedback' };
 
-  // Mapping sichtbarer Labeltexte -> Counter-Key
-  const LABEL_MAP = {
-    'to do': 'todo',
-    'to-do': 'todo',
-    'done': 'done',
-    'tasks in board': 'total',
-    'tasks in progress': 'inProgress',
-    'awaiting feedback': 'awaitFeedback'
-  };
+  function firebaseGetPath(path) {
+    const helper = typeof window.firebaseGet === 'function';
+    if (helper) return window.firebaseGet(path);
+    return fetch(`${BASE_URL}${path}.json`).then(r => r.json()).catch(() => null);
+  }
 
-  /*** Utils ***/
-  const tryJSON = s => { try { return JSON.parse(s); } catch { return null; } };
-  const isObj = v => v && typeof v === 'object' && !Array.isArray(v);
+  function parseAndNormalizeTasks(data) {
+    const isObj = v => v && typeof v === 'object' && !Array.isArray(v);
+    const rows = isObj(data) ? Object.values(data) : (Array.isArray(data) ? data : []);
+    const normCol = v => {
+      if (v === 'toDoColumn' || v === 'inProgress' || v === 'awaitFeedback' || v === 'done') return v;
+      const s = String(v || '').toLowerCase().replace(/\s|_/g, '');
+      if (s.includes('todo')) return 'toDoColumn';
+      if (s.includes('inprogress') || s === 'progress') return 'inProgress';
+      if (s.includes('await') || s.includes('feedback') || s.includes('review')) return 'awaitFeedback';
+      if (s.includes('done') || s.includes('complete') || s.includes('finished')) return 'done';
+      return '';
+    };
+    const normPrio = v => {
+      const s = String(v || '').toLowerCase();
+      if (s.includes('urgent') || s === 'high') return 'urgent';
+      if (s.includes('low')) return 'low';
+      return (s.includes('medium') || s === 'mid' || s === 'normal') ? 'medium' : 'medium';
+    };
+    const parseDate = v => {
+      if (!v) return null;
+      const s = String(v).trim();
+      let m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/); if (m) return new Date(+m[1], +m[2] - 1, +m[3]);
+      m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/); if (m) return new Date(+m[3], +m[2] - 1, +m[1]);
+      m = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/); if (m) return new Date(+m[3], +m[2] - 1, +m[1]);
+      const d = new Date(s); return isNaN(d) ? null : d;
+    };
+    return rows.filter(isObj).map((row, i) => ({
+      id: row.firebaseKey || row.id || String(i),
+      column: normCol(row.column ?? row.status ?? row.state ?? row.list ?? ''),
+      priority: normPrio(row.priority ?? row.prio ?? ''),
+      dueDate: parseDate(row.dueDate ?? row.deadline ?? row.date ?? '')
+    }));
+  }
 
-  // Labeltext normalisieren (entfernt <br>, Bindestriche, Sonderzeichen etc.)
-  const normLabel = htmlOrText =>
-    String(htmlOrText || '')
-      .replace(/<br\s*\/?>/gi, ' ')
-      .toLowerCase()
-      .replace(/[^\w ]+/g, ' ')
-      .replace(/\s+/g, ' ')
-      .trim();
-
-  const getInitials = name => {
-    const n = String(name || '').trim().split(/\s+/);
-    const a = (n[0] || '')[0] || ''; const b = (n[n.length - 1] || '')[0] || '';
-    return (a + b).toUpperCase();
-  };
-
-  /*** Firebase lesen (robust: Helper oder fetch) ***/
-  async function firebaseGet(path) {
-    // wenn firebase.js geladen ist, nutze dessen Helper
-    if (typeof window.firebaseGet === 'function') {
-      return await window.firebaseGet(path);
+  function computeCounters(tasks) {
+    const out = { total: 0, todo: 0, inProgress: 0, awaitFeedback: 0, done: 0, urgent: 0 };
+    for (const task of tasks) {
+      out.total++;
+      if (task.column === 'toDoColumn') out.todo++;
+      else if (task.column === 'inProgress') out.inProgress++;
+      else if (task.column === 'awaitFeedback') out.awaitFeedback++;
+      else if (task.column === 'done') out.done++;
+      if (task.priority === 'urgent') out.urgent++;
     }
-    // sonst direkter fetch
-    const res = await fetch(`${FIREBASE_URL}${path}.json`);
-    return await res.json();
+    return out;
   }
 
-  /*** Tasks holen & normalisieren ***/
-  async function loadTasks() {
-    const data = await firebaseGet(TASKS_PATH);
-    if (!data) return [];
-    // Firebase liefert Map { id: task, ... } -> Werte extrahieren
-    const raw = isObj(data) ? Object.values(data) : (Array.isArray(data) ? data : []);
-    return normalizeTasks(raw);
+  function formatNextDeadline(tasks) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const dates = tasks.map(t => t.dueDate).filter(d => d && d >= today).sort((a, b) => a - b);
+    const val = dates[0] || null;
+    return val ? val.toLocaleDateString(DATE_LOCALE, { year: 'numeric', month: 'long', day: 'numeric' }) : '—';
   }
 
-  function normalizeTasks(raw) {
-    return raw
-      .filter(isObj)
-      .map((t, i) => {
-        // Spalte
-        const colRaw = t.column ?? t.status ?? t.state ?? t.list ?? '';
-        const column = normalizeColumn(colRaw);
-
-        // Prio (in euren Dateien: Bildpfad enthält 'urgent'/'medium'/'low')
-        const prRaw = t.priority ?? t.prio ?? '';
-        const priority = normalizePriority(prRaw);
-
-        // Fälligkeitsdatum (dd/mm/yyyy, yyyy-mm-dd, dd.mm.yyyy, ISO…)
-        const ddRaw = t.dueDate ?? t.deadline ?? t.date ?? '';
-        const dueDate = parseDueDate(ddRaw);
-
-        return {
-          id: t.firebaseKey || t.id || String(i),
-          column,
-          priority,
-          dueDate
-        };
-      });
-  }
-
-  function normalizeColumn(v) {
-    // Exakte IDs aus board.html zuerst (toDoColumn / inProgress / awaitFeedback / done)
-    if (v === 'toDoColumn' || v === 'inProgress' || v === 'awaitFeedback' || v === 'done') return v;
-    const s = String(v || '').toLowerCase().replace(/\s|_/g, '');
-    if (s.includes('todo')) return 'toDoColumn';
-    if (s.includes('inprogress') || s === 'progress') return 'inProgress';
-    if (s.includes('await') || s.includes('feedback') || s.includes('review')) return 'awaitFeedback';
-    if (s.includes('done') || s.includes('complete') || s.includes('finished')) return 'done';
-    return ''; // unbekannt -> zählt nur in total
-  }
-
-  function normalizePriority(v) {
-    const s = String(v || '').toLowerCase();
-    if (s.includes('urgent') || s === 'high') return 'urgent';
-    if (s.includes('low')) return 'low';
-    return (s.includes('medium') || s === 'mid' || s === 'normal') ? 'medium' : 'medium';
-  }
-
-  function parseDueDate(v) {
-    if (!v) return null;
-    const s = String(v).trim();
-    // yyyy-mm-dd
-    let m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-    if (m) return new Date(+m[1], +m[2] - 1, +m[3]);
-    // dd/mm/yyyy
-    m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-    if (m) return new Date(+m[3], +m[2] - 1, +m[1]);
-    // dd.mm.yyyy
-    m = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
-    if (m) return new Date(+m[3], +m[2] - 1, +m[1]);
-    // ISO / sonstiges
-    const d = new Date(s);
-    return isNaN(d) ? null : d;
-  }
-
-  /*** Zählen & Rendering ***/
-  function computeCounts(tasks) {
-    const c = { total: 0, todo: 0, inProgress: 0, awaitFeedback: 0, done: 0, urgent: 0 };
-    for (const t of tasks) {
-      c.total++;
-      if (t.column === 'toDoColumn') c.todo++;
-      else if (t.column === 'inProgress') c.inProgress++;
-      else if (t.column === 'awaitFeedback') c.awaitFeedback++;
-      else if (t.column === 'done') c.done++;
-      if (t.priority === 'urgent') c.urgent++;
-    }
-    return c;
-  }
-
-  function nextUpcoming(tasks) {
-    const today = new Date(); today.setHours(0, 0, 0, 0);
-    return tasks.map(t => t.dueDate).filter(d => d && d >= today).sort((a, b) => a - b)[0] || null;
-  }
-
-  function formatLong(d) {
-    return d ? d.toLocaleDateString(DATE_LOCALE, { year: 'numeric', month: 'long', day: 'numeric' }) : '—';
-  }
-
-  function renderCounts(counters, tasks) {
-    // Karten mit .js-count-container
+  function renderCounters(counters, tasks) {
+    const normalize = s => String(s || '').replace(/<br\s*\/?>/gi, ' ').toLowerCase().replace(/[^\w ]+/g, ' ').replace(/\s+/g, ' ').trim();
     document.querySelectorAll('.js-count-container').forEach(box => {
-      const labelEl = box.querySelector('.counter-text-design');
-      const valueEl = box.querySelector('.value');
-      if (!labelEl || !valueEl) return;
-      const key = LABEL_MAP[normLabel(labelEl.innerHTML || labelEl.textContent)];
-      if (key) valueEl.textContent = counters[key];
+      const labelNode = box.querySelector('.counter-text-design');
+      const valueNode = box.querySelector('.value');
+      if (!labelNode || !valueNode) return;
+      const key = LABELS[normalize(labelNode.innerHTML || labelNode.textContent)];
+      if (key) valueNode.textContent = counters[key];
     });
-
-    // Urgent
-    const urgentEl = document.querySelector('.js-urgent-container .value');
-    if (urgentEl) urgentEl.textContent = counters.urgent;
-
-    // Nächste Deadline
-    const dEl = document.querySelector('.js-deadline-date');
-    if (dEl) dEl.textContent = formatLong(nextUpcoming(tasks));
+    const urgentNode = document.querySelector('.js-urgent-container .value');
+    if (urgentNode) urgentNode.textContent = counters.urgent;
+    const deadlineNode = document.querySelector('.js-deadline-date');
+    if (deadlineNode) deadlineNode.textContent = formatNextDeadline(tasks);
   }
 
-  function renderGreetingAndBadge() {
-    const greetingEl = document.querySelector('.js-greeting');
-    const nameEl = document.querySelector('.js-user-name');
-    const accEl = document.querySelector('.header-right-side .account div');
+  function renderGreeting() {
+    const greetingNode = document.querySelector('.js-greeting');
+    const nameNode = document.querySelector('.js-user-name');
+    const badgeNode = document.querySelector('.header-right-side .account div');
     const name = (localStorage.getItem('name') || '').trim();
-    const isGuestStored = (localStorage.getItem('isGuest') || 'false') === 'true';
-    const isGuest = name ? false : isGuestStored;
-
-    if (greetingEl) greetingEl.textContent = 'Good morning!';
-    if (nameEl) {
-      if (!isGuest && name) {
-        nameEl.textContent = name;
-        nameEl.style.display = '';
-      } else {
-        nameEl.textContent = '';
-        nameEl.style.display = 'none';
-      }
+    const isGuest = (localStorage.getItem('isGuest') || 'false') === 'true';
+    if (greetingNode) greetingNode.textContent = 'Good morning!';
+    if (nameNode) {
+      if (!isGuest && name) { nameNode.textContent = name; nameNode.style.display = ''; }
+      else { nameNode.textContent = ''; nameNode.style.display = 'none'; }
     }
-    if (accEl) accEl.textContent = (!isGuest && name) ? getInitials(name) : 'G';
+    if (badgeNode) {
+      const parts = name.split(/\s+/), a = (parts[0] || '')[0] || '', b = (parts[parts.length - 1] || '')[0] || '';
+      badgeNode.textContent = (!isGuest && name) ? (a + b).toUpperCase() : 'G';
+    }
   }
 
-  async function update() {
+  async function fetchAndRender() {
     try {
-      const tasks = await loadTasks();
-      const counters = computeCounts(tasks);
-      renderCounts(counters, tasks);
-      renderGreetingAndBadge();
-    } catch (e) {
-      // leise fehlschlagen, UI nicht blockieren
+      const data = await firebaseGetPath(TASKS_NODE);
+      const tasks = parseAndNormalizeTasks(data);
+      const counters = computeCounters(tasks);
+      renderCounters(counters, tasks);
+      renderGreeting();
+    } catch { }
+  }
+
+  function startSummaryLoop() {
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) fetchAndRender(); });
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => { fetchAndRender(); setInterval(fetchAndRender, POLL_MS); });
+    } else {
+      fetchAndRender();
+      setInterval(fetchAndRender, POLL_MS);
     }
   }
 
-  // Events & sanftes Polling
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) update(); });
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => { update(); setInterval(update, POLL_MS); });
-  } else {
-    update(); setInterval(update, POLL_MS);
+  startSummaryLoop();
+})();
+
+(() => {
+  const MAX_WIDTH = 925;
+  const SHOW_MS = 900;
+  const SPLASH_ID = 'greetSplash';
+  const TRIGGER_KEY = 'summary.triggerSplash';
+
+  function shouldShowSplash() {
+    return window.innerWidth <= MAX_WIDTH;
   }
+
+  function buildSplash() {
+    let splash = document.getElementById(SPLASH_ID);
+    if (!splash) {
+      splash = document.createElement('div');
+      splash.id = SPLASH_ID;
+      splash.className = 'greet-splash';
+      splash.innerHTML = `<div class="greet-box"><p class="greet-line">Good morning!</p><h2 class="greet-name"></h2></div>`;
+      document.body.appendChild(splash);
+    }
+    const name = (localStorage.getItem('name') || '').trim();
+    const isGuest = (localStorage.getItem('isGuest') || 'false') === 'true';
+    splash.querySelector('.greet-name').textContent = (!isGuest && name) ? name : '';
+    return splash;
+  }
+
+  function showAndFadeSplash() {
+    if (!shouldShowSplash()) return;
+    const splash = buildSplash();
+    splash.classList.remove('fade-out');
+    setTimeout(() => {
+      splash.classList.add('fade-out');
+      splash.addEventListener('transitionend', () => splash.remove(), { once: true });
+      setTimeout(() => splash.remove(), 600);
+    }, SHOW_MS);
+  }
+
+  function consumeTrigger() {
+    const hasSession = sessionStorage.getItem(TRIGGER_KEY);
+    const hasLocal = localStorage.getItem(TRIGGER_KEY);
+    const active = (hasSession || hasLocal) && shouldShowSplash();
+    if (active) {
+      sessionStorage.removeItem(TRIGGER_KEY);
+      localStorage.removeItem(TRIGGER_KEY);
+      showAndFadeSplash();
+    }
+  }
+
+  function initSplash() {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', consumeTrigger);
+    } else {
+      consumeTrigger();
+    }
+    window.addEventListener('storage', e => {
+      if (e.key === TRIGGER_KEY && (e.newValue === '1' || e.newValue === 'true')) consumeTrigger();
+    });
+  }
+
+  initSplash();
 })();

@@ -67,6 +67,10 @@ function handleGuestLogin() {
         localStorage.removeItem('name');
         localStorage.removeItem('firstName');
         localStorage.removeItem('lastName');
+
+        // ➜ Trigger für Summary-Splash (einmalig, auch wenn in neuem Tab geöffnet)
+        sessionStorage.setItem('summary.triggerSplash', '1');
+        localStorage.setItem('summary.triggerSplash', '1');
     } catch { }
     window.location.href = '../summary.html';
 }
@@ -96,7 +100,6 @@ function setSignContainer(isSignup) {
     if (!signContainer) return;
     signContainer.classList.toggle('hidden', isSignup);
 }
-
 
 window.mode = new URLSearchParams(location.search).get('mode') === 'signup' ? 'signup' : 'login';
 window.renderAuthUI = function renderAuthUI() {
