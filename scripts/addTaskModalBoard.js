@@ -255,7 +255,10 @@ function addContactToAssigned(contactName, initials, avatarClass) {
   profile.setAttribute('data-contact-name', contactName);
   profile.innerHTML = `
       <div class="avatar-contact-circle ${avatarClass}">${initials}</div>
+<<<<<<< HEAD
+=======
       <span>${contactName}</span>
+>>>>>>> ea698481775c62f680c3de8b330a9491c92a3fd4
   `;
   profile.addEventListener('click', function() {
       this.remove();
@@ -367,8 +370,21 @@ function getSelectedPriority() {
 }
 
 function getSelectedUsers() {
-  return [...document.querySelectorAll(".assigned-to-profiles-container div")]
-    .map(user => ({ name: user.innerText.trim() })) || [{ name: "Unassigned" }];
+  const users = [...document.querySelectorAll(".assigned-to-profiles-container div")]
+    .map(user => ({ name: user.innerText.trim() }));
+  
+  // Duplikate entfernen basierend auf Namen
+  const uniqueUsers = [];
+  const seen = new Set();
+  
+  for (const user of users) {
+    if (!seen.has(user.name) && user.name) {
+      seen.add(user.name);
+      uniqueUsers.push(user);
+    }
+  }
+  
+  return uniqueUsers.length > 0 ? uniqueUsers : [{ name: "Unassigned" }];
 }
 
 function getSubtasks() {
@@ -402,10 +418,7 @@ function isTaskFormValid() {
   const title = getInputValue(".input");
   const dueDate = getInputValue(".date-input");
   const category = document.querySelector(".category-item.selected")?.dataset.value;
-  const assignedUsers = document.querySelectorAll(".assigned-to-profiles-container div").length > 0;
-  const prioritySelected = !!document.querySelector(".priority-container .active");
-  const hasSubtask = document.querySelectorAll(".added-subtasks").length > 0;
-  return title && dueDate && category && assignedUsers && prioritySelected && hasSubtask;
+  return title && dueDate && category;
 }
 
 function updateCreateButtonState(isValid) {

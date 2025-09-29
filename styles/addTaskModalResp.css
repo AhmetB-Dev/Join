@@ -440,7 +440,7 @@
 
 .category-dropdown {
     position: relative;
-    width: 95%;
+    width: 94%;
     border: 1px solid #D1D1D1;
     border-radius: 10px;
     background-color: white;
@@ -564,7 +564,7 @@
 
 .subtask {
     height: 48px;
-    width: 83%;
+    width: 88%;
     border-radius: 10px;
     border: 1px solid #D1d1d1;
     background-color: #ffffff;

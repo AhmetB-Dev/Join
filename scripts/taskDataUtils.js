@@ -135,7 +135,26 @@ function setAssigneeBadges(task) {
 
 
 function generateAssigneeBadges(users) {
-  return users.map(user => createBadgeHTML(user)).join("");
+  // Duplikate entfernen vor dem Rendering
+  const uniqueUsers = removeDuplicateUsers(users);
+  return uniqueUsers.map(user => createBadgeHTML(user)).join("");
+}
+
+// Hilfsfunktion zum Entfernen von Duplikaten
+function removeDuplicateUsers(users) {
+  if (!Array.isArray(users)) return [];
+  
+  const seen = new Set();
+  return users.filter(user => {
+    const identifier = user.name || JSON.stringify(user);
+    
+    if (seen.has(identifier)) {
+      return false;
+    }
+    
+    seen.add(identifier);
+    return true;
+  });
 }
 
 
@@ -398,11 +417,18 @@ function createContactBadge(contact, id, container, selectedContacts) {
 function readAssigneesFromBadges() {
   const badges = document.querySelectorAll('#assigneeBadges .assignee-badge');
   const users = [];
+  const seen = new Set();
+  
   badges.forEach(badge => {
-    users.push({
-      name: badge.dataset.contactName || badge.textContent.trim(),
-      color: badge.dataset.contactColor || "default"
-    });
+    const userName = badge.dataset.contactName || badge.textContent.trim();
+    
+    // Duplikate vermeiden basierend auf Namen
+    if (!seen.has(userName) && userName) {
+      seen.add(userName);
+      users.push({
+        name: userName,
+      });
+    }
   });
   return users;
 }
