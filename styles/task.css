@@ -205,7 +205,7 @@ button:hover {
 
 .at-assign-input {
     width: 100%;
-    padding: 10px 12px;
+    padding: 10px 0px;
     border: 1px solid #cbd5e1;
     border-radius: 10px;
     outline: none;
