@@ -385,6 +385,21 @@ function getSelectedUsers() {
   }
   
   return uniqueUsers.length > 0 ? uniqueUsers : [{ name: "Unassigned" }];
+  const users = [...document.querySelectorAll(".assigned-to-profiles-container div")]
+    .map(user => ({ name: user.innerText.trim() }));
+  
+  // Duplikate entfernen basierend auf Namen
+  const uniqueUsers = [];
+  const seen = new Set();
+  
+  for (const user of users) {
+    if (!seen.has(user.name) && user.name) {
+      seen.add(user.name);
+      uniqueUsers.push(user);
+    }
+  }
+  
+  return uniqueUsers.length > 0 ? uniqueUsers : [{ name: "Unassigned" }];
 }
 
 function getSubtasks() {
@@ -418,6 +433,7 @@ function isTaskFormValid() {
   const title = getInputValue(".input");
   const dueDate = getInputValue(".date-input");
   const category = document.querySelector(".category-item.selected")?.dataset.value;
+  return title && dueDate && category;
   return title && dueDate && category;
 }
 

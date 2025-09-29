@@ -84,11 +84,16 @@
         justify-content: space-between;
         width: 100%;
         flex: 1;
+        
     }
     .main-header {
         justify-content: center;
         align-items: center;
         font-size: 18px;
+    }
+    
+    .header-text {
+        display: none;
     }
 
    .headline-header {

@@ -277,10 +277,6 @@
         scrollbar-color: #888 transparent;
     }
 
-    .header-text {
-        display: none;
-    }
-    
     .form-div::-webkit-scrollbar {
         width: 6px;  
     }
