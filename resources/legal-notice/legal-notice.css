@@ -160,7 +160,7 @@ small {
 }
 
 .account {
-  display: none !important;
+  /* display: none !important; */
 }
 
 .header-and-main-container {

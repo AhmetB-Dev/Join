@@ -1,331 +1,417 @@
-const AT = (() => { 
-  let contacts = {};
-  const selected = new Set();
-  let selectEl = null;
-  let previewEl = null;
+(() => {
+  const FIREBASE_BASE_URL = 'https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app';
+  const FIREBASE_TASKS_URL = `${FIREBASE_BASE_URL}/tasks.json`;
+  const FIREBASE_CONTACTS_URL = `${FIREBASE_BASE_URL}/contacts.json`;
 
-  function toObject(maybeArray) {
-    if (Array.isArray(maybeArray)) {
-      const obj = {};
-      maybeArray.forEach((c, i) => (obj['c' + (i + 1)] = c));
-      return obj;
-    }
-    return maybeArray || {};
+  function query(container, selector) {
+    return container.querySelector(selector);
   }
 
-  function initials(name) {
-    if (!name) return '';
-    const parts = String(name).trim().split(/\s+/).slice(0, 2);
-    return parts.map(p => p[0]?.toUpperCase() || '').join('');
+  function getInitialsFromFullName(fullName) {
+    const parts = String(fullName || '').trim().split(/\s+/);
+    if (!parts[0]) return '??';
+    if (parts.length > 1) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    return parts[0].substring(0, 2).toUpperCase();
   }
 
-  function colorFromToken(token) {
-    const t = String(token || '').toLowerCase();
-    if (t.includes('red')) return '#FF5733';
-    if (t.includes('green')) return '#33FF57';
-    if (t.includes('blue')) return '#3357FF';
-    if (t.includes('orange')) return '#FF8C00';
-    if (t.includes('purple')) return '#8E44AD';
-    if (t.includes('teal')) return '#1ABC9C';
-    return '#2A3647';
+  function computeStableColorIndex(fullName) {
+    const sum = Array.from(String(fullName || '')).reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+    return (sum % 7) + 1;
   }
 
-  function ensureAssignStyles() {
-    if (document.getElementById('assign-style')) return;
-    const style = document.createElement('style');
-    style.id = 'assign-style';
-    style.textContent = `
-      #assigned-preview{
-        display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-top:8px;
-      }
-      .assign-badges { display:flex; align-items:center; }
-      .assign-badge{
-        width:32px; height:32px; border-radius:50%;
-        display:flex; align-items:center; justify-content:center;
-        font-weight:700; font-size:12px; color:#fff; cursor:pointer;
-        box-shadow: 0 0 0 2px #fff;
-      }
-      .assign-badge + .assign-badge { margin-left:-8px; } /* overlap */
-      .assign-hint{ font-size:12px; color:#6b7280; margin-left:8px; }
-    `;
-    document.head.appendChild(style);
+  function getLoggedInUserLowercase() {
+    return (
+      localStorage.getItem('name') ||
+      localStorage.getItem('userName') ||
+      localStorage.getItem('displayName') ||
+      ''
+    ).trim().toLowerCase();
   }
 
-  // ---------- Data ----------
-  function loadContacts() {
-    const raw = localStorage.getItem('contacts');
-    if (!raw) {
-      return {
-        c1: { name: 'Max Mustermann', color: 'green' },
-        c2: { name: 'Erika Musterfrau', color: 'blue' },
-        c3: { name: 'John Doe', color: 'orange' }
-      };
-    }
-    return toObject(JSON.parse(raw));
-  }
-
-  function fillSelect() {
-    if (!selectEl) return;
-    selectEl.innerHTML = '';
-    const ph = new Option('Assign to…', '');
-    ph.selected = true;
-    selectEl.add(ph);
-    Object.entries(contacts).forEach(([id, c]) => {
-      selectEl.add(new Option(c.name || id, id));
-    });
-  }
-
-  function renderPreview() {
-    if (!previewEl) return;
-    previewEl.innerHTML = '';
-
-    const ids = Array.from(selected);
-    if (ids.length === 0) return;
-
-    const strip = document.createElement('div');
-    strip.className = 'assign-badges';
-
-    ids.forEach((id) => {
-      const c = contacts[id];
-      if (!c) return;
-      const el = document.createElement('div');
-      el.className = 'assign-badge';
-      el.title = `${c.name} – entfernen`;
-      el.textContent = initials(c.name);
-      el.style.background = colorFromToken(c.color);
-      el.dataset.id = id;
-      el.addEventListener('click', (e) => {
-        e.preventDefault();
-        selected.delete(id);
-        renderPreview();
-      });
-      strip.appendChild(el);
-    });
-
-    const hint = document.createElement('span');
-    hint.className = 'assign-hint';
-    hint.textContent = 'Klicken zum Entfernen';
-
-    previewEl.appendChild(strip);
-    previewEl.appendChild(hint);
-  }
-
-  function onSelectChange() {
-    const id = selectEl.value;
-    if (id) {
-      selected.add(id);
-      renderPreview();
-      selectEl.value = '';
+  function showFieldValidationError(inputElement, message = 'This field is required') {
+    if (!inputElement) return;
+    inputElement.classList.add('at-error');
+    const nextSibling = inputElement.nextElementSibling;
+    const hasMessage = nextSibling && nextSibling.classList.contains('at-error-message');
+    if (!hasMessage) {
+      const hint = document.createElement('div');
+      hint.className = 'at-error-message';
+      hint.textContent = message;
+      inputElement.insertAdjacentElement('afterend', hint);
     }
   }
 
-  function mount(root) {
-    if (!root) return;
-    ensureAssignStyles();
-    selectEl = root.querySelector('#task-assigned');
-    if (!selectEl) return;
-    previewEl = root.querySelector('#assigned-preview');
-    if (!previewEl) {
-      previewEl = document.createElement('div');
-      previewEl.id = 'assigned-preview';
-      selectEl.insertAdjacentElement('afterend', previewEl);
+  function clearFieldValidationError(inputElement) {
+    if (!inputElement) return;
+    inputElement.classList.remove('at-error');
+    const nextSibling = inputElement.nextElementSibling;
+    const isError = nextSibling && nextSibling.classList.contains('at-error-message');
+    if (isError) nextSibling.remove();
+  }
+
+  function ensureCategorySelectHasRealOptions(addTaskContainer) {
+    const categorySelect = query(addTaskContainer, '#task-category');
+    if (!categorySelect) return;
+
+    const optionValues = Array.from(categorySelect.options)
+      .map(o => (o.value || o.text).toLowerCase());
+
+    const hasTechnical = optionValues.some(v => v.includes('technical'));
+    const hasUserStory = optionValues.some(v => v.includes('user'));
+
+    const onlyPlaceholder =
+      categorySelect.options.length === 1 &&
+      String(categorySelect.options[0].value || '').trim() === '';
+
+    if (!hasTechnical && !hasUserStory && onlyPlaceholder) {
+      categorySelect.add(new Option('Technical Task', 'technical'));
+      categorySelect.add(new Option('User Story', 'user'));
     }
-    contacts = loadContacts();
-    fillSelect();
-    selectEl.removeEventListener('change', onSelectChange);
-    selectEl.addEventListener('change', onSelectChange);
-    renderPreview();
   }
 
-  function users() {
-    return Array.from(selected)
-      .map((id) => {
-        const c = contacts[id];
-        return c && c.name ? { name: c.name, color: c.color || 'default' } : null;
-      })
-      .filter(Boolean);
+  function normalizeCategoryForBoard(rawValueOrText) {
+    const value = String(rawValueOrText || '').trim().toLowerCase();
+    if (value.includes('technical')) return 'Technical task';
+    if (value.includes('user')) return 'User Story';
+    return 'Technical task';
   }
 
-  function clear() {
-    selected.clear();
-    renderPreview();
-    if (selectEl) selectEl.value = '';
-  }
+  function initializeAssignedToDropdown(addTaskContainer) {
+    const hiddenSelect = query(addTaskContainer, '#task-assigned');
+    if (!hiddenSelect) return null;
 
-  return { mount, users, clear };
-})();
+    hiddenSelect.style.display = 'none';
 
-function setupAddTaskForm(containerId = 'addtask-container') {
-  const root = document.getElementById(containerId);
-  if (!root) return;
-  if (!root.querySelector('#task-title')) return;
+    const wrapper = document.createElement('div');
+    const inputField = document.createElement('input');
+    const dropdownPanel = document.createElement('div');
+    const previewStrip = document.createElement('div');
 
-  const elTitle = root.querySelector('#task-title');
-  const elDesc = root.querySelector('#task-desc');
-  const elDue = root.querySelector('#task-due');
-  const elAssigned = root.querySelector('#task-assigned');
-  const elCategory = root.querySelector('#task-category');
-  const elSubtaskInput = root.querySelector('#subtask-input');
-  const elAddSubtaskBtn = root.querySelector('#add-subtask-btn');
-  const elSubtaskList = root.querySelector('#subtask-list');
-  const btnCreate = root.querySelector('#create-task-btn');
-  const btnClear = root.querySelector('#clear-task-btn');
+    wrapper.className = 'at-assign-field';
+    inputField.className = 'at-assign-input';
+    dropdownPanel.className = 'at-assign-dd';
+    previewStrip.id = 'at-assigned-preview';
 
-  const btnUrgent = root.querySelector('.btn-urgent');
-  const btnMedium = root.querySelector('.btn-medium');
-  const btnLow = root.querySelector('.btn-low');
+    inputField.type = 'text';
+    inputField.readOnly = true;
+    inputField.placeholder = 'Select contacts to assign';
 
-  let selectedPriority = 'medium';
+    hiddenSelect.insertAdjacentElement('afterend', previewStrip);
+    hiddenSelect.insertAdjacentElement('afterend', dropdownPanel);
+    hiddenSelect.insertAdjacentElement('afterend', wrapper);
+    wrapper.append(inputField, dropdownPanel);
 
-  function ensurePriorityStyles() {
-    if (document.getElementById('priority-style')) return;
-    const style = document.createElement('style');
-    style.id = 'priority-style';
-    style.textContent = `
-      .priority-btn button{
-        display:inline-flex;align-items:center;gap:8px;
-        padding:10px 16px;border-radius:8px;border:1px solid #D1D5DB;
-        background:#FFF;color:#2A3647;font-weight:600;cursor:pointer;
-        transition:background-color .15s ease,color .15s ease,transform .1s ease;
-      }
-      .priority-btn button img{ height:18px; width:18px; }
-      .priority-btn button[aria-pressed="true"]{ transform:scale(1.02); color:#FFF; border-color:transparent; }
-      .priority-btn .btn-urgent[aria-pressed="true"]{ background:#FF3D00; }
-      .priority-btn .btn-medium[aria-pressed="true"]{ background:#FFA800; }
-      .priority-btn .btn-low[aria-pressed="true"]{ background:#7AE229; }
-      .priority-btn button[aria-pressed="true"] img{ filter:brightness(0) invert(1); }
-    `;
-    document.head.appendChild(style);
-  }
-  ensurePriorityStyles();
+    const state = {
+      selectedByName: new Map(),
+      currentUserLower: getLoggedInUserLowercase(),
+      inputField,
+      dropdownPanel,
+      previewStrip
+    };
 
-  function addSubtask(text) {
-    if (!elSubtaskList) return;
-    const li = document.createElement('li');
-    li.textContent = text;
-    li.dataset.text = text;
-    li.addEventListener('click', () => li.remove());
-    elSubtaskList.appendChild(li);
-  }
-
-  if (elAddSubtaskBtn && elSubtaskInput) {
-    elAddSubtaskBtn.addEventListener('click', () => {
-      const t = elSubtaskInput.value.trim();
-      if (t) { addSubtask(t); elSubtaskInput.value = ''; }
-    });
-    elSubtaskInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        const t = elSubtaskInput.value.trim();
-        if (t) { addSubtask(t); elSubtaskInput.value = ''; }
-      }
-    });
-  }
-
-  function selectPriority(p) {
-    selectedPriority = p;
-    [btnUrgent, btnMedium, btnLow].forEach(b => b && b.setAttribute('aria-pressed', 'false'));
-    const map = { urgent: btnUrgent, medium: btnMedium, low: btnLow };
-    map[p] && map[p].setAttribute('aria-pressed', 'true');
-  }
-  btnUrgent && btnUrgent.addEventListener('click', () => selectPriority('urgent'));
-  btnMedium && btnMedium.addEventListener('click', () => selectPriority('medium'));
-  btnLow && btnLow.addEventListener('click', () => selectPriority('low'));
-
-  if (elAssigned) AT.mount(root);
-
-
-  function priorityPath(p) { return `./img/priority-img/${p}.png`; }
-  function formatDateDE(v) {
-    if (!v) return '';
-    const d = new Date(v);
-    return isNaN(d) ? v : d.toLocaleDateString('de-DE');
-  }
-  function mapCategory(val) {
-    if (!val) return '';
-    const v = String(val).toLowerCase();
-    if (v.includes('technical')) return 'Technical task';
-    if (v.includes('user')) return 'User Story';
-    return val;
-  }
-
-  function buildTask() {
-    const id = 'task-' + Date.now();
-    const users = AT.users();
-    const subtasks = Array.from(root.querySelectorAll('#subtask-list li') || [])
-      .map(li => ({ text: li.dataset.text || li.textContent.trim(), completed: false }));
+    attachAssignedDropdownEvents(state);
     return {
-      column: 'toDoColumn',
-      id,
-      firebaseKey: id,
-      title: elTitle?.value.trim() || '',
-      description: elDesc?.value.trim() || 'No description provided',
-      dueDate: formatDateDE(elDue?.value.trim() || ''),
-      priority: priorityPath(selectedPriority),
-      progress: 0,
-      users,
-      subtasks,
-      category: mapCategory(elCategory?.value.trim() || '')
+      getSelectedUsers: () => Array.from(state.selectedByName.values()).map(u => ({ name: u.name })),
+      clearSelection: () => clearAssignedSelectionAndUi(state),
+      inputElement: inputField
     };
   }
 
-  function saveToLocal(task) {
-    const raw = localStorage.getItem('taskData');
-    const obj = raw ? JSON.parse(raw) : {};
-    obj[task.id] = task;
-    localStorage.setItem('taskData', JSON.stringify(obj));
-  }
+  function attachAssignedDropdownEvents(dropdownState) {
+    const { inputField, dropdownPanel } = dropdownState;
 
-  btnCreate && btnCreate.addEventListener('click', () => {
-    const task = buildTask();
-    saveToLocal(task);
-    window.location.href = './board.html';
-  });
-
-  btnClear && btnClear.addEventListener('click', () => {
-    elTitle && (elTitle.value = '');
-    elDesc && (elDesc.value = '');
-    elDue && (elDue.value = '');
-    elAssigned && (elAssigned.value = '');
-    elCategory && (elCategory.value = '');
-    elSubtaskList && (elSubtaskList.innerHTML = '');
-    AT.clear();
-    selectPriority('medium');
-  });
-
-  if (elCategory && elCategory.options.length <= 1) {
-    elCategory.add(new Option('Technical Task', 'Technical task'));
-    elCategory.add(new Option('User Story', 'User Story'));
-  }
-}
-
-function renderTemplate(templateId, containerId) {
-  const template = document.getElementById(templateId);
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  if (template) {
-    container.innerHTML = '';
-    container.appendChild(template.content.cloneNode(true));
-  }
-  setupAddTaskForm(containerId);
-  const closeBtn = container.querySelector('#close-addtask-btn');
-  if (closeBtn) closeBtn.addEventListener('click', () => { container.innerHTML = ''; });
-}
-
-function onAddTaskMenuClick(ev) {
-  ev.preventDefault();
-  renderTemplate('addtask-template', 'addtask-container');
-}
-
-function loadingAddTask() {
-  document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('addtask-container');
-    if (!container) return;
-    const menuItems = document.querySelectorAll('#task-menu');
-    menuItems.forEach((menuItem) => {
-      menuItem.addEventListener('click', onAddTaskMenuClick);
+    inputField.addEventListener('click', async () => {
+      const isClosed = dropdownPanel.style.display !== 'block';
+      if (isClosed) await rebuildContactsListInDropdown(dropdownState);
+      dropdownPanel.style.display = isClosed ? 'block' : 'none';
     });
-    setupAddTaskForm('addtask-container');
+
+    document.addEventListener('click', (event) => {
+      const inside = inputField.parentElement.contains(event.target);
+      if (!inside) dropdownPanel.style.display = 'none';
+    });
+  }
+
+  async function rebuildContactsListInDropdown(dropdownState) {
+    const { dropdownPanel, selectedByName, currentUserLower } = dropdownState;
+    dropdownPanel.innerHTML = '';
+
+    let contacts = [];
+    try {
+      const response = await fetch(FIREBASE_CONTACTS_URL);
+      const payload = await response.json();
+      contacts = (payload && typeof payload === 'object')
+        ? Object.values(payload).map(c => c?.name).filter(Boolean)
+        : [];
+    } catch {}
+
+    if (contacts.length === 0) {
+      contacts = ['Sofia Müller', 'Anton Mayer', 'Anja Schulz', 'Benedikt Ziegler', 'David Eisenberg'];
+    }
+
+    contacts.forEach((name) => {
+      const row = createContactsDropdownRow(name, currentUserLower, selectedByName);
+      row.addEventListener('click', () => toggleAssigneeSelection(dropdownState, name));
+      dropdownPanel.appendChild(row);
+    });
+
+    for (const { name } of selectedByName.values()) {
+      reflectRowSelection(dropdownPanel, name, true);
+    }
+  }
+
+  function createContactsDropdownRow(name, currentUserLower, selectedByName) {
+    const row = document.createElement('div');
+    const avatar = document.createElement('div');
+    const label = document.createElement('div');
+    const check = document.createElement('span');
+
+    row.className = 'at-assign-item';
+    row.dataset.name = name;
+
+    avatar.className = `at-assign-avatar at-av-c${computeStableColorIndex(name)}`;
+    avatar.textContent = getInitialsFromFullName(name);
+
+    label.className = 'at-assign-name';
+    label.textContent = (name.trim().toLowerCase() === currentUserLower) ? `${name} (You)` : name;
+
+    check.className = 'at-assign-check';
+
+    if (selectedByName.has(name)) {
+      row.classList.add('at-is-selected');
+      check.classList.add('at-checked');
+    }
+
+    row.append(avatar, label, check);
+    return row;
+  }
+
+  function toggleAssigneeSelection(dropdownState, name) {
+    const { selectedByName, dropdownPanel, inputField, previewStrip } = dropdownState;
+
+    if (selectedByName.has(name)) {
+      selectedByName.delete(name);
+      reflectRowSelection(dropdownPanel, name, false);
+    } else {
+      selectedByName.set(name, { name, colorIndex: computeStableColorIndex(name) });
+      reflectRowSelection(dropdownPanel, name, true);
+      clearFieldValidationError(inputField);
+    }
+
+    renderAssigneeBadges(previewStrip, dropdownPanel, selectedByName, inputField);
+  }
+
+  function reflectRowSelection(dropdownPanel, name, isSelected) {
+    dropdownPanel.querySelectorAll('.at-assign-item').forEach((row) => {
+      if (row.dataset.name === name) {
+        row.classList.toggle('at-is-selected', isSelected);
+        row.querySelector('.at-assign-check')?.classList.toggle('at-checked', isSelected);
+      }
+    });
+  }
+
+  function renderAssigneeBadges(previewStrip, dropdownPanel, selectedByName, inputField) {
+    previewStrip.innerHTML = '';
+    if (selectedByName.size === 0) return;
+
+    const badgesRow = document.createElement('div');
+    badgesRow.className = 'at-assign-strip';
+
+    for (const person of selectedByName.values()) {
+      const badge = document.createElement('div');
+      badge.className = `at-assign-badge at-badge-c${person.colorIndex}`;
+      badge.textContent = getInitialsFromFullName(person.name);
+      badge.title = `${person.name} – remove`;
+      badge.addEventListener('click', () => {
+        selectedByName.delete(person.name);
+        reflectRowSelection(dropdownPanel, person.name, false);
+        renderAssigneeBadges(previewStrip, dropdownPanel, selectedByName, inputField);
+        clearFieldValidationError(inputField);
+      });
+      badgesRow.appendChild(badge);
+    }
+
+    const hint = document.createElement('span');
+    hint.className = 'at-assign-hint';
+    hint.textContent = 'Click to remove';
+
+    previewStrip.append(badgesRow, hint);
+  }
+
+  function clearAssignedSelectionAndUi(dropdownState) {
+    const { selectedByName, dropdownPanel, previewStrip } = dropdownState;
+    selectedByName.clear();
+    previewStrip.innerHTML = '';
+    dropdownPanel.querySelectorAll('.at-assign-item').forEach((row) => {
+      row.classList.remove('at-is-selected');
+      row.querySelector('.at-assign-check')?.classList.remove('at-checked');
+    });
+  }
+
+  function initializePrioritySelector(addTaskContainer) {
+    const urgentButton = query(addTaskContainer, '.btn-urgent');
+    const mediumButton = query(addTaskContainer, '.btn-medium');
+    const lowButton = query(addTaskContainer, '.btn-low');
+
+    let currentPriorityName = 'medium';
+
+    function updatePriorityButtons(nextPriorityName) {
+      currentPriorityName = nextPriorityName;
+      [urgentButton, mediumButton, lowButton].forEach((btn) => btn?.setAttribute('aria-pressed', 'false'));
+      const map = { urgent: urgentButton, medium: mediumButton, low: lowButton };
+      map[nextPriorityName]?.setAttribute('aria-pressed', 'true');
+    }
+
+    urgentButton?.addEventListener('click', () => updatePriorityButtons('urgent'));
+    mediumButton?.addEventListener('click', () => updatePriorityButtons('medium'));
+    lowButton?.addEventListener('click', () => updatePriorityButtons('low'));
+    updatePriorityButtons('medium');
+
+    return {
+      getCurrentName: () => currentPriorityName,
+      getIconPath: () => `../img/priority-img/${currentPriorityName}.png`,
+      resetToMedium: () => updatePriorityButtons('medium')
+    };
+  }
+
+  function initializeSubtaskComposer(addTaskContainer) {
+    const subtaskInput = query(addTaskContainer, '#subtask-input');
+    const addSubtaskButton = query(addTaskContainer, '#add-subtask-btn');
+    const subtaskList = query(addTaskContainer, '#subtask-list');
+
+    function appendSubtaskItem(text) {
+      if (!text) return;
+      const listItem = document.createElement('li');
+      listItem.className = 'at-subtask-item';
+      listItem.dataset.text = text;
+      listItem.title = 'Click to remove';
+      listItem.textContent = text;
+      listItem.addEventListener('click', () => listItem.remove());
+      subtaskList?.appendChild(listItem);
+    }
+
+    addSubtaskButton?.addEventListener('click', () => {
+      const value = subtaskInput?.value.trim();
+      if (value) { appendSubtaskItem(value); subtaskInput.value = ''; }
+    });
+
+    subtaskInput?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const value = subtaskInput.value.trim();
+        if (value) { appendSubtaskItem(value); subtaskInput.value = ''; }
+      }
+    });
+
+    return {
+      collect: () => Array.from(addTaskContainer.querySelectorAll('#subtask-list li'))
+        .map(li => ({ text: li.dataset.text || li.textContent.trim(), completed: false })),
+      clear: () => { if (subtaskList) subtaskList.innerHTML = ''; }
+    };
+  }
+
+  function buildTaskPayload(addTaskContainer, prioritySelector, subtaskComposer, assignedDropdown) {
+    const titleValue = query(addTaskContainer, '#task-title')?.value.trim() || '';
+    const descriptionValue = query(addTaskContainer, '#task-desc')?.value.trim() || 'No description provided';
+    const dueDateValue = query(addTaskContainer, '#task-due')?.value.trim() || '';
+
+    const categorySelect = query(addTaskContainer, '#task-category');
+    const rawCategory = categorySelect
+      ? (categorySelect.value || categorySelect.options[categorySelect.selectedIndex]?.text)
+      : '';
+
+    const normalizedCategory = normalizeCategoryForBoard(rawCategory);
+
+    return {
+      column: 'toDoColumn',
+      description: descriptionValue,
+      dueDate: dueDateValue,
+      id: null,
+      priority: prioritySelector.getIconPath(),
+      progress: 0,
+      title: titleValue,
+      users: assignedDropdown?.getSelectedUsers() || [],
+      subtasks: subtaskComposer.collect(),
+      category: normalizedCategory
+    };
+  }
+
+  async function persistTaskToFirebase(taskPayload) {
+    const createResponse = await fetch(FIREBASE_TASKS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(taskPayload)
+    });
+
+    const created = await createResponse.json();
+    const firebaseKey = created && created.name;
+    if (!firebaseKey) return null;
+
+    await fetch(`${FIREBASE_BASE_URL}/tasks/${firebaseKey}/id.json`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(firebaseKey)
+    });
+
+    return firebaseKey;
+  }
+
+  function attachFormLifecycle(addTaskContainer, prioritySelector, subtaskComposer, assignedDropdown) {
+    const titleInput = query(addTaskContainer, '#task-title');
+    const dueDateInput = query(addTaskContainer, '#task-due');
+    const categorySelect = query(addTaskContainer, '#task-category');
+    const createButton = query(addTaskContainer, '#create-task-btn');
+    const clearButton = query(addTaskContainer, '#clear-task-btn');
+
+    [titleInput, dueDateInput, categorySelect].forEach((el) => {
+      el?.addEventListener('input', () => clearFieldValidationError(el));
+      el?.addEventListener('change', () => clearFieldValidationError(el));
+    });
+
+    function validateRequiredFields() {
+      let ok = true;
+      if (!titleInput?.value.trim()) { showFieldValidationError(titleInput, 'Title is required'); ok = false; }
+      if (!dueDateInput?.value.trim()) { showFieldValidationError(dueDateInput, 'Due date is required'); ok = false; }
+      if (!categorySelect?.value.trim()) { showFieldValidationError(categorySelect, 'Category is required'); ok = false; }
+      return ok;
+    }
+
+    createButton?.addEventListener('click', async () => {
+      if (!validateRequiredFields()) return;
+      const payload = buildTaskPayload(addTaskContainer, prioritySelector, subtaskComposer, assignedDropdown);
+      try {
+        const key = await persistTaskToFirebase(payload);
+        if (key) window.location.href = './board.html';
+      } catch (error) {
+        console.error('Error saving task:', error);
+      }
+    });
+
+    clearButton?.addEventListener('click', () => {
+      const descriptionInput = query(addTaskContainer, '#task-desc');
+      if (titleInput) titleInput.value = '';
+      if (descriptionInput) descriptionInput.value = '';
+      if (dueDateInput) dueDateInput.value = '';
+      if (categorySelect) categorySelect.value = '';
+      subtaskComposer.clear();
+      assignedDropdown?.clearSelection();
+      [titleInput, dueDateInput, categorySelect, assignedDropdown?.inputElement, descriptionInput]
+        .forEach(clearFieldValidationError);
+      prioritySelector.resetToMedium();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const addTaskContainer = document.getElementById('addtask-container');
+    if (!addTaskContainer) return;
+
+    ensureCategorySelectHasRealOptions(addTaskContainer);
+
+    const prioritySelector = initializePrioritySelector(addTaskContainer);
+    const subtaskComposer = initializeSubtaskComposer(addTaskContainer);
+    const assignedDropdown = initializeAssignedToDropdown(addTaskContainer);
+
+    attachFormLifecycle(addTaskContainer, prioritySelector, subtaskComposer, assignedDropdown);
   });
-}
-loadingAddTask();
+})();
+

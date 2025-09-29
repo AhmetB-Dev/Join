@@ -13,11 +13,21 @@
   <link rel="stylesheet" href="../../styles/standard.css" />
   <link rel="stylesheet" href="../../styles/header.css" />
   <link rel="stylesheet" href="../../styles/side-menu.css" />
-  <link rel="stylesheet" href="../private-policy/privacy-policy.css" />
+  <link rel="stylesheet" href="../private-policy/privacy-policy-guest.css" />
   <link rel="stylesheet" href="../../styles/profile-dropdown.css" />
   <script src="../../scripts/dropdown.js"></script>
-  <script src="../../scripts/account-name.js"></script>
   <title>Join Help Page</title>
+
+  <style>
+    .logo-content-container {
+      gap: 3pc;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+  </style>
 </head>
 
 <body>
@@ -27,30 +37,18 @@
         <img src="../../img/capa_white.png" alt="Join.Logo" class="logo" />
       </div>
       <div class="menu-content">
-        <div class="menu-content-div">
-          <a href="../../summary.html"><img src="../../img/icon/summary.png" alt="summary"
-              class="not-hover" />Summary</a>
-        </div>
-        <div class="menu-content-div">
-          <a href="../../html/add_task.html"><img src="../../img/icon/add_task.png" alt="add_task" /> Add
-            Task</a>
-        </div>
-        <div class="menu-content-div">
-          <a href="../../html/board.html"><img src="../../img/icon/board.png" alt="board" />Board</a>
-        </div>
-        <div class="menu-content-div">
-          <a href="../../html/contacts.html"><img src="../../img/icon/contacts.png" alt="contacts" />Contacts</a>
-        </div>
+        <div class="menu-content-div"><a href="../../html/log.html"><img src="../../img/logout.png" alt="summary">Log
+            in</a></div>
       </div>
     </div>
 
     <div class="policy-container">
       <div class="policy-container-div">
         <div class="selected-menu-resources">
-          <a href="./privacy-policy.html">Privacy Policy</a>
+          <a href="./privacy-policy-guest.html">Privacy Policy</a>
         </div>
         <div>
-          <a href="../legal-notice/legal-notice.html">Legal Notice</a>
+          <a href="../legal-notice/legal-notice-guest.html">Legal Notice</a>
         </div>
       </div>
     </div>
@@ -146,7 +144,7 @@
       <div class="dropdown-content-div">
         <div class="dropdown-content-div-text">
           <div>
-            <a href="../../html/log.html">Log out</a> <!--hier muss noch der link und onclick eingefügt werden-->
+            <a href="##">Logout</a> <!--hier muss noch der link und onclick eingefügt werden-->
           </div>
         </div>
       </div>
@@ -182,22 +180,26 @@
 
   <!-- Footer-Navigation für Mobile -->
   <div class="footer-navigation">
-    <a href="../../summary.html" class="nav-item">
-      <img src="../../img/icon/summary.png" alt="">
-      <span>Summary</span>
-    </a>
-    <a href="../../html/add_task.html" class="nav-item">
-      <img src="../../img/icon/add_task.png" alt="">
-      <span style="white-space: nowrap;">Add Tasks</span>
-    </a>
-    <a href="../../html/board.html" class="nav-item">
-      <img src="../../img/icon/board.png" alt="">
-      <span>Board</span>
-    </a>
-    <a href="../../html/contacts.html" class="nav-item">
-      <img src="../../img/icon/contacts.png" alt="">
-      <span>Contacts</span>
-    </a>
+    <div style="
+    display: contents;
+">
+      <div style="
+    margin-bottom: 28px;
+">
+        <a href="../../html/log.html" class="nav-item">
+          <img src="../../img/logout.png" alt="">
+          <span>Log in</span>
+        </a>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <a href="../private-policy/privacy-policy-guest.html" class="nav-item">
+          <span>Privacy Police</span>
+        </a>
+        <a href="../legal-notice/legal-notice-guest.html" class="nav-item">
+          <span>Legal Notice</span>
+        </a>
+      </div>
+    </div>
   </div>
 </body>
 

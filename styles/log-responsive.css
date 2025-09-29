@@ -1,0 +1,104 @@
+    @media (min-width: 0px) and (max-width: 400px) {
+
+        html,
+        body {
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .arrow-left-line {
+            border: none;
+            background-color: white;
+            margin-left: -5em;
+        }
+
+        .header-right {
+            display: none;
+        }
+
+        .sign-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+            gap: 3em;
+            align-items: center;
+        }
+
+        main {
+            opacity: 0;
+            filter: blur(6px);
+            transition: opacity .5s ease, filter .5s ease;
+            display: flex;
+            justify-content: center;
+            padding-top: 8em;
+            padding-bottom: 6em;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .login-section {
+            background-color: #FFFFFF;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 5% 4%;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        input {
+            width: 18em;
+        }
+    }
+
+    @media (min-width: 400px) and (max-width: 500px) {
+
+        html,
+        body {
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .arrow-left-line {
+            border: none;
+            background-color: white;
+            margin-left: -5em;
+        }
+
+        .header-right {
+            display: none;
+        }
+
+        .sign-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+            gap: 3em;
+            align-items: center;
+        }
+
+        main {
+            opacity: 0;
+            filter: blur(6px);
+            transition: opacity .5s ease, filter .5s ease;
+            display: flex;
+            justify-content: center;
+            padding-top: 8em;
+            padding-bottom: 6em;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .login-section {
+            background-color: #FFFFFF;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 5% 12%;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+    }

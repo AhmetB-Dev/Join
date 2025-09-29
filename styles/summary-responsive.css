@@ -917,7 +917,7 @@
     /* Header kompakter */
     .page-summary .summary-header {
         display: flex;
-        align-items: flex-end;
+        align-items: center;
         padding-top: 2pc;
         gap: 15px;
     }
@@ -1105,7 +1105,7 @@
     /* Header kompakter */
     .page-summary .summary-header {
         display: flex;
-        align-items: flex-end;
+        align-items: center;
         padding-top: 2pc;
         gap: 15px;
     }

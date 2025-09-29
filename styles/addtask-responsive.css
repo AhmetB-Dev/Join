@@ -513,12 +513,19 @@
     }
 }
 
-@media (min-width: 925px) and (max-width: 1950px) {
+@media (min-width: 925px) and (max-width: 2450px) {
 
     /* HEADER */
     #addtask-container h2 {
         font-size: 61px;
         margin-top: 0px;
+    }
+
+    .page-summary .summary-header {
+        display: flex;
+        align-items: center;
+        padding-top: 2pc;
+        gap: 15px;
     }
 
     #addtask-container {

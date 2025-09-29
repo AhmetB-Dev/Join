@@ -13,6 +13,12 @@ body {
   flex-direction: row;
 }
 
+section {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .sticky-link {
   position: sticky;
   top: 0;
@@ -102,10 +108,6 @@ h4 {
   width: 100%;
 }
 
-.account {
-  /* display: none !important; */
-}
-
 .footer-navigation {
   display: none;
 }
@@ -115,7 +117,7 @@ h4 {
 }
 
 small {
-  padding-bottom: 32px;
+  padding-bottom: 162px;
 }
 
 .help-container {
@@ -157,8 +159,11 @@ small {
   gap: 10px;
 }
 
+.account {
+  display: none !important;
+}
+
 .header-and-main-container {
-  height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -167,6 +172,7 @@ small {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: auto;
 }
 
 .logo-content-container {
@@ -217,17 +223,10 @@ small {
 
 .main-container {
   overflow-x: hidden;
-  height: 100vh;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #28abe2 #f1f1f1;
 }
-.footer-navigation {
-  display: none;
-}
-
-.logo-content-container-bottom {
-  display: none;
-}
-
 
 @media (max-width: 925px) and (min-width: 300px) {
   main {
@@ -286,28 +285,6 @@ small {
     height: auto !important;
   }
 
-  .nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: white;
-    text-decoration: none;
-    font-size: 14px;
-  }
-
-  .nav-item img {
-    width: 24px;
-    height: 24px;
-    margin-bottom: 5px;
-  }
-
-  .nav-item.active {
-    color: #29ABE2;
-  }
-
-  .side-menu-bottom {
-    display: none;
-  }
   .footer-navigation {
     display: flex !important;
     position: fixed;
@@ -354,12 +331,8 @@ small {
     padding: 10px 16px;
   }
 
-  .main-container {
-    margin-top: 86px;
-  }
-
   .help-container {
-    padding: 100px 0 0 16px;
+    padding: 0 0 0 16px;
   }
 }
 
@@ -390,6 +363,10 @@ small {
     font-size: 16px;
   }
 
+  .help-container {
+    margin-top: 56px !important;
+  }
+
   .logo-container-side-menu-responsive {
     width: 32px;
     height: 32px;
@@ -407,6 +384,13 @@ small {
   }
 }
 
+@media (max-width: 600px) {
+  section {
+    scrollbar-width: thin;
+    scrollbar-color: #28abe2 #f1f1f1;
+  }
+}
+
 @media (max-width: 480px) {
   .main-header {
     padding: 8px 12px;
@@ -418,7 +402,6 @@ small {
 
   .help-container {
     padding: 0 12px;
-    margin-top: 82px !important;
   }
 
   .help-container h1 {
@@ -427,7 +410,7 @@ small {
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 440px) {
   .footer-navigation-external span {
     width: 100px;
   }
@@ -462,7 +445,7 @@ small {
   }
 
   .help-container h1 {
-    font-size: 42px;
+    font-size: 47px;
   }
 }
 
@@ -481,4 +464,10 @@ small {
   section {
     scrollbar-width: none;
   }
+}
+
+@media (min-width: 0px) and (max-width: 925px) {
+ .account{
+  display: none !important;
+ }
 }

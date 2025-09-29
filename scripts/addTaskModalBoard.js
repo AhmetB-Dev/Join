@@ -255,6 +255,10 @@ function addContactToAssigned(contactName, initials, avatarClass) {
   profile.setAttribute('data-contact-name', contactName);
   profile.innerHTML = `
       <div class="avatar-contact-circle ${avatarClass}">${initials}</div>
+<<<<<<< HEAD
+=======
+      <span>${contactName}</span>
+>>>>>>> ea698481775c62f680c3de8b330a9491c92a3fd4
   `;
   profile.addEventListener('click', function() {
       this.remove();

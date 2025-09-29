@@ -1,164 +1,187 @@
-(function () {
-    'use strict';
+(() => {
+  'use strict';
 
-    const SUMMARY_CONFIG = {
-        storageKey: 'taskData',
-        dateLocale: 'en-US',
-        pollIntervalMs: 1000,
-        selectors: {
-            countContainer: '.js-count-container',
-            countLabel: '.counter-text-design',
-            countValue: '.value',
-            urgentValue: '.js-urgent-container .value',
-            deadlineDate: '.js-deadline-date',
-            userName: '.js-user-name'
-        },
-        labelTextToCounterKey: {
-            'to do': 'todo',
-            'done': 'done',
-            'tasks in board': 'total',
-            'tasks in progress': 'inProgress',
-            'awaiting feedback': 'awaitFeedback'
-        }
+  const BASE_URL = (window.FIREBASE_URL && String(window.FIREBASE_URL)) || 'https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/';
+  const TASKS_NODE = 'tasks';
+  const POLL_MS = 1500;
+  const DATE_LOCALE = 'en-US';
+  const LABELS = { 'to do': 'todo', 'to-do': 'todo', 'done': 'done', 'tasks in board': 'total', 'tasks in progress': 'inProgress', 'awaiting feedback': 'awaitFeedback' };
+
+  function firebaseGetPath(path) {
+    const helper = typeof window.firebaseGet === 'function';
+    if (helper) return window.firebaseGet(path);
+    return fetch(`${BASE_URL}${path}.json`).then(r => r.json()).catch(() => null);
+  }
+
+  function parseAndNormalizeTasks(data) {
+    const isObj = v => v && typeof v === 'object' && !Array.isArray(v);
+    const rows = isObj(data) ? Object.values(data) : (Array.isArray(data) ? data : []);
+    const normCol = v => {
+      if (v === 'toDoColumn' || v === 'inProgress' || v === 'awaitFeedback' || v === 'done') return v;
+      const s = String(v || '').toLowerCase().replace(/\s|_/g, '');
+      if (s.includes('todo')) return 'toDoColumn';
+      if (s.includes('inprogress') || s === 'progress') return 'inProgress';
+      if (s.includes('await') || s.includes('feedback') || s.includes('review')) return 'awaitFeedback';
+      if (s.includes('done') || s.includes('complete') || s.includes('finished')) return 'done';
+      return '';
     };
+    const normPrio = v => {
+      const s = String(v || '').toLowerCase();
+      if (s.includes('urgent') || s === 'high') return 'urgent';
+      if (s.includes('low')) return 'low';
+      return (s.includes('medium') || s === 'mid' || s === 'normal') ? 'medium' : 'medium';
+    };
+    const parseDate = v => {
+      if (!v) return null;
+      const s = String(v).trim();
 
-    function parseJSONSafe(text) {
-        try { return JSON.parse(text); } catch { return null; }
+      let m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/); if (m) return new Date(+m[1], +m[2]-1, +m[3]);
+      m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/); if (m) return new Date(+m[3], +m[2]-1, +m[1]);
+      m = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/); if (m) return new Date(+m[3], +m[2]-1, +m[1]);
+      
+      const d = new Date(s); return isNaN(d) ? null : d;
+    };
+    return rows.filter(isObj).map((row, i) => ({
+      id: row.firebaseKey || row.id || String(i),
+      column: normCol(row.column ?? row.status ?? row.state ?? row.list ?? ''),
+      priority: normPrio(row.priority ?? row.prio ?? ''),
+      dueDate: parseDate(row.dueDate ?? row.deadline ?? row.date ?? '')
+    }));
+  }
+
+  function computeCounters(tasks) {
+    const out = { total: 0, todo: 0, inProgress: 0, awaitFeedback: 0, done: 0, urgent: 0 };
+    for (const task of tasks) {
+      out.total++;
+      if (task.column === 'toDoColumn') out.todo++;
+      else if (task.column === 'inProgress') out.inProgress++;
+      else if (task.column === 'awaitFeedback') out.awaitFeedback++;
+      else if (task.column === 'done') out.done++;
+      if (task.priority === 'urgent') out.urgent++;
     }
+    return out;
+  }
 
-    function fetchTasksFromStorage() {
-        const rawJSON = localStorage.getItem(SUMMARY_CONFIG.storageKey);
-        if (!rawJSON) return [];
-        const storedObject = parseJSONSafe(rawJSON) || {};
-        return Object.entries(storedObject).map(([taskId, taskData]) => ({ id: taskId, ...taskData }));
-    }
+  function formatNextDeadline(tasks) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const dates = tasks.map(t => t.dueDate).filter(d => d && d >= today).sort((a, b) => a - b);
+    const val = dates[0] || null;
+    return val ? val.toLocaleDateString(DATE_LOCALE, { year: 'numeric', month: 'long', day: 'numeric' }) : '—';
+  }
 
-    function derivePriority(value) {
-        if (!value) return 'medium';
-        const lower = String(value).toLowerCase();
-        if (lower.includes('urgent')) return 'urgent';
-        if (lower.includes('low')) return 'low';
-        return 'medium';
-    }
-
-    function computeStatusCounts(tasks) {
-        const statusCounts = { total: 0, todo: 0, inProgress: 0, awaitFeedback: 0, done: 0, urgent: 0 };
-        for (const task of tasks) {
-            statusCounts.total++;
-            const columnId = String(task.column || '');
-            if (columnId === 'toDoColumn') statusCounts.todo++;
-            else if (columnId === 'inProgress') statusCounts.inProgress++;
-            else if (columnId === 'awaitFeedback') statusCounts.awaitFeedback++;
-            else if (columnId === 'done') statusCounts.done++;
-            if (derivePriority(task.priority) === 'urgent') statusCounts.urgent++;
-        }
-        return statusCounts;
-    }
-
-    function parseDueDate(value) {
-        if (!value) return null;
-        const text = String(value).trim();
-        let matches = text.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-        if (matches) return new Date(+matches[1], +matches[2] - 1, +matches[3]);
-        matches = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-        if (matches) return new Date(+matches[3], +matches[2] - 1, +matches[1]);
-        matches = text.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
-        if (matches) return new Date(+matches[3], +matches[2] - 1, +matches[1]);
-        const parsed = new Date(text);
-        return isNaN(parsed) ? null : parsed;
-    }
-
-    function findNextUpcomingDueDate(tasks) {
-        const midnightToday = new Date();
-        midnightToday.setHours(0, 0, 0, 0);
-        const dueDates = tasks
-            .map(task => parseDueDate(task.dueDate))
-            .filter(date => date && date >= midnightToday)
-            .sort((a, b) => a - b);
-        return dueDates[0] || null;
-    }
-
-    function formatDateLong(date) {
-        return date
-            ? date.toLocaleDateString(SUMMARY_CONFIG.dateLocale, { year: 'numeric', month: 'long', day: 'numeric' })
-            : '—';
-    }
-
-    function normalizeSummaryLabel(text) {
-        return String(text)
-            .toLowerCase()
-            .replace(/[-_]+/g, ' ')
-            .replace(/[^\w ]+/g, ' ')
-            .replace(/\s+/g, ' ')
-            .trim();
-    }
-
-    function renderStatusCounters(statusCounts) {
-        document.querySelectorAll(SUMMARY_CONFIG.selectors.countContainer).forEach(container => {
-            const labelElement = container.querySelector(SUMMARY_CONFIG.selectors.countLabel);
-            const valueElement = container.querySelector(SUMMARY_CONFIG.selectors.countValue);
-            if (!labelElement || !valueElement) return;
-            const counterKey = SUMMARY_CONFIG.labelTextToCounterKey[normalizeSummaryLabel(labelElement.textContent)];
-            if (counterKey) valueElement.textContent = statusCounts[counterKey];
-        });
-    }
-
-    function renderUrgentCount(statusCounts) {
-        const element = document.querySelector(SUMMARY_CONFIG.selectors.urgentValue);
-        if (element) element.textContent = statusCounts.urgent;
-    }
-
-    function renderUpcomingDeadline(tasks) {
-        const element = document.querySelector(SUMMARY_CONFIG.selectors.deadlineDate);
-        if (element) element.textContent = formatDateLong(findNextUpcomingDueDate(tasks));
-    }
-    function renderUserNameFromStorage() {
-        const greetingEl = document.querySelector('.js-greeting');
-        const nameEl = document.querySelector(SUMMARY_CONFIG.selectors.userName);
-        const accountEl = document.querySelector('.account div'); // der ## Platzhalter
-        if (!greetingEl || !nameEl || !accountEl) return;
-
-        const firstName = localStorage.getItem('firstName') || '';
-        const lastName = localStorage.getItem('lastName') || '';
-        const fullName = `${firstName} ${lastName}`.trim();
-
-        if (fullName) {
-            greetingEl.textContent = 'Good morning,';
-            nameEl.textContent = fullName;
-
-            // Initialen bilden (Max Mustermann -> MM)
-            const initials = `${firstName.charAt(0) || ''}${lastName.charAt(0) || ''}`.toUpperCase();
-            accountEl.textContent = initials || 'G'; // Fallback Icon wenn kein Name
-        } else {
-            greetingEl.textContent = 'Good morning!';
-            nameEl.textContent = '';
-            accountEl.textContent = 'G'; // Guest-Login → nur Icon oder leer
-        }
-    }
-
-
-
-    function renderSummary(tasks) {
-        const statusCounts = computeStatusCounts(tasks);
-        renderStatusCounters(statusCounts);
-        renderUrgentCount(statusCounts);
-        renderUpcomingDeadline(tasks);
-        renderUserNameFromStorage();
-    }
-
-    function updateSummaryFromStorage() {
-        renderSummary(fetchTasksFromStorage());
-    }
-
-    window.addEventListener('storage', event => {
-        if (event.key === SUMMARY_CONFIG.storageKey) updateSummaryFromStorage();
+  function renderCounters(counters, tasks) {
+    const normalize = s => String(s || '').replace(/<br\s*\/?>/gi, ' ').toLowerCase().replace(/[^\w ]+/g, ' ').replace(/\s+/g, ' ').trim();
+    document.querySelectorAll('.js-count-container').forEach(box => {
+      const labelNode = box.querySelector('.counter-text-design');
+      const valueNode = box.querySelector('.value');
+      if (!labelNode || !valueNode) return;
+      const key = LABELS[normalize(labelNode.innerHTML || labelNode.textContent)];
+      if (key) valueNode.textContent = counters[key];
     });
+    const urgentNode = document.querySelector('.js-urgent-container .value');
+    if (urgentNode) urgentNode.textContent = counters.urgent;
+    const deadlineNode = document.querySelector('.js-deadline-date');
+    if (deadlineNode) deadlineNode.textContent = formatNextDeadline(tasks);
+  }
 
-    setInterval(updateSummaryFromStorage, SUMMARY_CONFIG.pollIntervalMs);
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', updateSummaryFromStorage);
-    } else {
-        updateSummaryFromStorage();
+  function renderGreeting() {
+    const greetingNode = document.querySelector('.js-greeting');
+    const nameNode = document.querySelector('.js-user-name');
+    const badgeNode = document.querySelector('.header-right-side .account div');
+    const name = (localStorage.getItem('name') || '').trim();
+    const isGuest = (localStorage.getItem('isGuest') || 'false') === 'true';
+    if (greetingNode) greetingNode.textContent = 'Good morning!';
+    if (nameNode) {
+      if (!isGuest && name) { nameNode.textContent = name; nameNode.style.display = ''; }
+      else { nameNode.textContent = ''; nameNode.style.display = 'none'; }
     }
+    if (badgeNode) {
+      const parts = name.split(/\s+/), a = (parts[0] || '')[0] || '', b = (parts[parts.length - 1] || '')[0] || '';
+      badgeNode.textContent = (!isGuest && name) ? (a + b).toUpperCase() : 'G';
+    }
+  }
+
+  async function fetchAndRender() {
+    try {
+      const data = await firebaseGetPath(TASKS_NODE);
+      const tasks = parseAndNormalizeTasks(data);
+      const counters = computeCounters(tasks);
+      renderCounters(counters, tasks);
+      renderGreeting();
+    } catch { }
+  }
+
+  function startSummaryLoop() {
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) fetchAndRender(); });
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => { fetchAndRender(); setInterval(fetchAndRender, POLL_MS); });
+    } else {
+      fetchAndRender();
+      setInterval(fetchAndRender, POLL_MS);
+    }
+  }
+
+  startSummaryLoop();
+})();
+
+(() => {
+  const MAX_WIDTH = 925;
+  const SHOW_MS = 900;
+  const SPLASH_ID = 'greetSplash';
+  const TRIGGER_KEY = 'summary.triggerSplash';
+
+  function shouldShowSplash() {
+    return window.innerWidth <= MAX_WIDTH;
+  }
+
+  function buildSplash() {
+    let splash = document.getElementById(SPLASH_ID);
+    if (!splash) {
+      splash = document.createElement('div');
+      splash.id = SPLASH_ID;
+      splash.className = 'greet-splash';
+      splash.innerHTML = `<div class="greet-box"><p class="greet-line">Good morning!</p><h2 class="greet-name"></h2></div>`;
+      document.body.appendChild(splash);
+    }
+    const name = (localStorage.getItem('name') || '').trim();
+    const isGuest = (localStorage.getItem('isGuest') || 'false') === 'true';
+    splash.querySelector('.greet-name').textContent = (!isGuest && name) ? name : '';
+    return splash;
+  }
+
+  function showAndFadeSplash() {
+    if (!shouldShowSplash()) return;
+    const splash = buildSplash();
+    splash.classList.remove('fade-out');
+    setTimeout(() => {
+      splash.classList.add('fade-out');
+      splash.addEventListener('transitionend', () => splash.remove(), { once: true });
+      setTimeout(() => splash.remove(), 600);
+    }, SHOW_MS);
+  }
+
+  function consumeTrigger() {
+    const hasSession = sessionStorage.getItem(TRIGGER_KEY);
+    const hasLocal = localStorage.getItem(TRIGGER_KEY);
+    const active = (hasSession || hasLocal) && shouldShowSplash();
+    if (active) {
+      sessionStorage.removeItem(TRIGGER_KEY);
+      localStorage.removeItem(TRIGGER_KEY);
+      showAndFadeSplash();
+    }
+  }
+
+  function initSplash() {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', consumeTrigger);
+    } else {
+      consumeTrigger();
+    }
+    window.addEventListener('storage', e => {
+      if (e.key === TRIGGER_KEY && (e.newValue === '1' || e.newValue === 'true')) consumeTrigger();
+    });
+  }
+
+  initSplash();
 })();
