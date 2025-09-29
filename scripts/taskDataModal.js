@@ -48,6 +48,7 @@ function registerBlurHandler(input, container, originalText) {
     if (window.currentTask && window.currentTask.subtasks && index !== undefined) {
       window.currentTask.subtasks[index].text = finalText;
       await updateTaskInFirebase(window.currentTask);
+      location.reload(); 
     }
 });
 }
@@ -87,6 +88,7 @@ async function saveEditedTaskToFirebase() {
   updateTaskFromInputs();
   await updateTaskInFirebase(currentTask);
   closeEditModal();
+  location.reload(); 
 }
 
 function updateTaskFromInputs() {
@@ -107,7 +109,7 @@ function updateTaskFromInputs() {
 
 async function updateTaskInFirebase(task) {
   if (!task || !task.firebaseKey) return;
-  const url = `####`;// hier link einfügen!!
+  const url = `https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks/${task.firebaseKey}.json`;
   try {
     const response = await fetch(url, {
       method: 'PUT',

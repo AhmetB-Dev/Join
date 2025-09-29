@@ -1,7 +1,7 @@
 
 async function loadContacts(assignedUsers = []) {
   try {
-    const response = await fetch('##');// hier link einfügen!!
+    const response = await fetch('https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/contacts.json');
     const contacts = await response.json();
     populateAssigneeDropdown(contacts, assignedUsers);
   } catch (error) {
@@ -159,11 +159,19 @@ function createContactBadge(contact, id, container, selectedContacts) {
 function readAssigneesFromBadges() {
   const badges = document.querySelectorAll('#assigneeBadges .assignee-badge');
   const users = [];
+  const seen = new Set();
+  
   badges.forEach(badge => {
-    users.push({
-      name: badge.dataset.contactName || badge.textContent.trim(),
-      color: badge.dataset.contactColor || "default"
-    });
+    const userName = badge.dataset.contactName || badge.textContent.trim();
+    
+    // Duplikate vermeiden basierend auf Namen
+    if (!seen.has(userName) && userName) {
+      seen.add(userName);
+      users.push({
+        name: userName,
+        color: badge.dataset.contactColor || "default"
+      });
+    }
   });
   return users;
 }

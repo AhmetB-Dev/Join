@@ -20,7 +20,7 @@ async function deleteTaskFromFirebase() {
     return;
   }
   try {
-    const url = `##`;// hier link einfügen!!
+    const url = `https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks/${currentTaskId}.json`;
     const response = await fetch(url, { method: 'DELETE' });
     if (!response.ok) {
       throw new Error(`Error deleting task: ${response.statusText}`);

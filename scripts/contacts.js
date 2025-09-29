@@ -55,7 +55,59 @@ function selectContact(id) {
     }
     selectedContact = contacts.find(contact => contact.id === id);
     displayContactDetails();
+
+    if (isMobile()) {
+        showMobileDetailView();
+    }
 };
+
+function isMobile() {
+    return window.innerWidth <= 600;
+}
+
+function showMobileDetailView() {
+    const listPanel = document.querySelector('.contacts-list-panel');
+    const detailPanel = document.querySelector('.contact-details-panel');
+
+    listPanel.classList.add('hide-mobile');
+    detailPanel.classList.add('show-mobile');
+
+    if (selectedContact) {
+        setMobileHeaderWithBackButton();
+        setMobileActionMenu();
+    }
+}
+
+function showMobileListView() {
+    const listPanel = document.querySelector('.contacts-list-panel');
+    const detailPanel = document.querySelector('.contact-details-panel');
+
+    listPanel.classList.remove('hide-mobile');
+    detailPanel.classList.remove('show-mobile');
+
+    const contactsHeader = document.querySelector('.contacts-header');
+    if (isMobile() && contactsHeader) {
+        contactsHeader.innerHTML = `
+            <h1>Contacts</h1>
+            <hr>
+            <span class="contact-subtitle">Better with a team</span>
+        `;
+    }
+}
+
+function setMobileHeaderWithBackButton() {
+    const contactsHeader = document.querySelector('.contacts-header');
+    if (isMobile() && contactsHeader) {
+        contactsHeader.innerHTML = `
+            <h1>Contacts</h1>
+            <hr>
+            <span class="contact-subtitle">Better with a team</span>
+            <button class="mobile-back-button" onclick="showMobileListView()">
+                <img src="../img/icon/return-icon.png" alt="return button" class="return-button-contacts">
+            </button>
+        `;
+    }
+}
 
 function displayContactDetails() {
 
@@ -65,11 +117,12 @@ function displayContactDetails() {
     const initials = getInitials(selectedContact.name);
     const avatarClass = getAvatarClass(selectedContact.name);
     contactDetailsContent.innerHTML = '';
+    setMobileHeaderWithBackButton();
     let html = '';
     html += `<div class="contact-details-content">`;
     html += `<div class="contact-details-content-header">`;
     html += `<div class="contact-avatar-large">`;
-    html += `<div class="avatar-circle ${avatarClass}">${initials}</div>`;
+    html += `<div class="avatar-circle-contact-details ${avatarClass}">${initials}</div>`;
     html += `</div>`;
     html += `<div class="contact-info-section">`;
     html += `<h2 class="contact-name-large">${selectedContact.name}</h2>`;
@@ -87,9 +140,47 @@ function displayContactDetails() {
     html += `<div class="contact-detail-phone"><h4>Phone</h4><span>${selectedContact.phone}</span></div>`;
     html += `</div>`;
     html += `</div>`;
+   
+    
     contactDetailsContent.innerHTML = html;
-
 };
+
+function setMobileActionMenu() {
+    const detailsContent = document.getElementById('contactDetailsContent');
+    if (isMobile() && detailsContent) {
+        if (!detailsContent.querySelector('.mobile-action-menu-container')) {
+            detailsContent.innerHTML += `
+            <div class="mobile-action-menu-container">
+            <button class="mobile-action-button" onclick="toggleMobileActionMenu()">
+                <span class="three-dots">⋮</span>
+            </button>
+            <div class="mobile-action-menu" id="mobileActionMenu" style="display: none;">
+                <div class="action-menu-item" onclick="editContact('${selectedContact.id}')">
+                    <img src="../img/edit-contacts.png" alt="edit">
+                </div>
+                <div class="action-menu-item" onclick="deleteContact('${selectedContact.id}')">
+                    <img src="../img/delete-contacts.png" alt="delete">
+                </div>
+            </div>
+        </div>
+`;
+        }
+    }
+}
+
+function toggleMobileActionMenu() {
+    const menu = document.getElementById('mobileActionMenu');
+    menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+}
+
+document.addEventListener('click', function(event) {
+    const menu = document.getElementById('mobileActionMenu');
+    const button = document.querySelector('.mobile-action-button');
+    
+    if (menu && button && !menu.contains(event.target) && !button.contains(event.target)) {
+        menu.style.display = 'none';
+    }
+});
 
 function openAddContactModal() {
     document.getElementById('addContactModal').style.display = 'block';
@@ -122,37 +213,46 @@ async function deleteContact(contactId) {
     await firebaseDelete(`/contacts/${contactId}`);
     selectedContact = null;
     document.getElementById('contactDetailsContent').innerHTML = '';
+
+    if (isMobile()) {
+        showMobileListView();
+    }
+
     loadContacts();
     closeContactModal();
 }
 
 async function editDeleteContact() {
-   await deleteContact(selectedContact.id);
+    await deleteContact(selectedContact.id);
     loadContacts();
     closeContactModal();
 }
 
 async function saveContact() {
-        const name = document.getElementById('editContactName').value.trim();
-        const email = document.getElementById('editContactEmail').value.trim();
-        const phone = document.getElementById('editContactPhone').value.trim();
-        if (!name || !email || !phone) {
-            alert('Bitte alle Felder ausfüllen');
-            return;
-        }
-        const updatedContact = {
-            name: name,
-            email: email,
-            phone: phone
-        };
-        await firebasePut(`/contacts/${selectedContact.id}`, updatedContact);
-        selectedContact.name = name;
-        selectedContact.email = email;
-        selectedContact.phone = phone;
-        loadContacts();
-        displayContactDetails();
-        closeContactModal();
+    const name = document.getElementById('editContactName').value.trim();
+    const email = document.getElementById('editContactEmail').value.trim();
+    const phone = document.getElementById('editContactPhone').value.trim();
+    if (!name || !email || !phone) {
+        alert('Bitte alle Felder ausfüllen');
+        return;
     }
+    const updatedContact = {
+        name: name,
+        email: email,
+        phone: phone
+    };
+    await firebasePut(`/contacts/${selectedContact.id}`, updatedContact);
+    selectedContact.name = name;
+    selectedContact.email = email;
+    selectedContact.phone = phone;
+    loadContacts();
+    displayContactDetails();
+    if (isMobile()) {
+        setMobileActionMenu();
+    }
+    
+    closeContactModal();
+}
 
 
 async function createAddContact() {
@@ -175,4 +275,34 @@ async function createAddContact() {
     document.getElementById('addInputEmail').value = '';
     document.getElementById('addInputPhone').value = '';
 }
+
+window.addEventListener('resize', function () {
+    const listPanel = document.querySelector('.contacts-list-panel');
+    const detailPanel = document.querySelector('.contact-details-panel');
+
+    if (!isMobile()) {
+        listPanel.classList.remove('hide-mobile');
+        detailPanel.classList.remove('show-mobile');
+
+        const contactsHeader = document.querySelector('.contacts-header');
+        if (contactsHeader) {
+            contactsHeader.innerHTML = `
+                <h1>Contacts</h1>
+                <hr>
+                <span class="contact-subtitle">Better with a team</span>
+            `;
+        }
+    } else if (selectedContact) {
+        showMobileDetailView();
+        setMobileHeaderWithBackButton();
+    } else {
+        showMobileListView();
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    if (isMobile()) {
+        showMobileListView();
+    }
+});
 
