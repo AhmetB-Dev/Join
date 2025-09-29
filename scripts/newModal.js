@@ -51,10 +51,27 @@ function createBadgeHTML(user) {
 function setAssigneeBadges(task) {
   const badges = document.getElementById('assigneeBadges');
   if (badges && task.users && task.users.length > 0) {
-    badges.innerHTML = task.users.map(createBadgeHTML).join("");
+    const uniqueUsers = removeDuplicateUsers(task.users);
+    badges.innerHTML = uniqueUsers.map(createBadgeHTML).join("");
   } else {
     badges.innerHTML = "";
   }
+}
+
+function removeDuplicateUsers(users) {
+  if (!Array.isArray(users)) return [];
+  
+  const seen = new Set();
+  return users.filter(user => {
+    const identifier = user.name || JSON.stringify(user);
+    
+    if (seen.has(identifier)) {
+      return false;
+    }
+    
+    seen.add(identifier);
+    return true;
+  });
 }
 
 function setSubtasksList(task) {

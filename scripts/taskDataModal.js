@@ -48,6 +48,7 @@ function registerBlurHandler(input, container, originalText) {
     if (window.currentTask && window.currentTask.subtasks && index !== undefined) {
       window.currentTask.subtasks[index].text = finalText;
       await updateTaskInFirebase(window.currentTask);
+      location.reload(); 
     }
 });
 }
@@ -87,6 +88,7 @@ async function saveEditedTaskToFirebase() {
   updateTaskFromInputs();
   await updateTaskInFirebase(currentTask);
   closeEditModal();
+  location.reload(); 
 }
 
 function updateTaskFromInputs() {

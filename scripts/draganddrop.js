@@ -1,6 +1,23 @@
 const dragPlaceholder = document.createElement("div");
 dragPlaceholder.classList.add("placeholder-drag");
 
+let selectedTask = null;
+
+function removePlaceholder() {
+  if (dragPlaceholder && dragPlaceholder.parentNode) {
+    dragPlaceholder.parentNode.removeChild(dragPlaceholder);
+  }
+}
+
+function cleanupPlaceholders() {
+  const allPlaceholders = document.querySelectorAll('.placeholder-drag');
+  allPlaceholders.forEach(placeholder => {
+    if (placeholder.parentNode) {
+      placeholder.parentNode.removeChild(placeholder);
+    }
+  });
+}
+
 function ensureEmptyStateImages() {
   document.querySelectorAll(".task-board-container").forEach(column => {
     const hasTasks = column.querySelectorAll(".draggable-cards").length > 0;
@@ -49,7 +66,7 @@ function handleTaskDragEnd() {
     selectedTask.style.transform = "rotate(0deg) scale(1)";
     selectedTask = null;
   }
-  if (dragPlaceholder.parentNode) dragPlaceholder.parentNode.removeChild(dragPlaceholder);
+  removePlaceholder();
   checkColumns();
 }
 
@@ -154,18 +171,33 @@ function handleTouchMove(e) {
 }
 
 function handleTouchEnd(e) {
-  const task = e.currentTarget, state = task._touchDragState; clearTimeout(state.longPressTimeout);
+  const task = e.currentTarget, state = task._touchDragState; 
+  clearTimeout(state.longPressTimeout);
+  
   if (state.isTouchDragging && selectedTask === task) {
     const touch = e.changedTouches[0], dropTarget = getDropTargetFromTouch(touch);
+    
     if (dropTarget) {
-      dropTarget.contains(dragPlaceholder)
-        ? dropTarget.insertBefore(task, dragPlaceholder)
-        : dropTarget.appendChild(task), updateTaskColumnInFirebase(task.id, dropTarget.id);
+      let insertPosition = null;
+      if (dropTarget.contains(dragPlaceholder)) {
+        insertPosition = dragPlaceholder.nextSibling;
+      }
+      removePlaceholder();
+      if (insertPosition) {
+        dropTarget.insertBefore(task, insertPosition);
+      } else {
+        dropTarget.appendChild(task);
+      }
+      
+      updateTaskColumnInFirebase(task.id, dropTarget.id);
     } else {
       task.style.position = "";
+      removePlaceholder();
     }
+    
     resetTask(task);
-    selectedTask = null; state.isTouchDragging = false; dragPlaceholder.parentNode && dragPlaceholder.parentNode.removeChild(dragPlaceholder);
+    selectedTask = null; 
+    state.isTouchDragging = false; 
     checkColumns();
   }
 }
@@ -174,6 +206,11 @@ function handleTouchCancel(e) {
   const task = e.currentTarget, state = task._touchDragState;
   clearTimeout(state.longPressTimeout);
   state.isTouchDragging = false;
+  if (state.isTouchDragging) {
+    removePlaceholder();
+    resetTask(task);
+    selectedTask = null;
+  }
 }
 
 function attachTouchDragEvents(task, columns) {
@@ -209,16 +246,22 @@ function attachColumnDropEvent(column) {
   column.addEventListener("drop", e => {
     e.preventDefault();
     if (selectedTask) {
+      let insertPosition = null;
       if (column.contains(dragPlaceholder)) {
-        column.insertBefore(selectedTask, dragPlaceholder);
+        insertPosition = dragPlaceholder.nextSibling;
+      }
+      removePlaceholder();
+      if (insertPosition) {
+        column.insertBefore(selectedTask, insertPosition);
       } else {
         column.appendChild(selectedTask);
-      }
+      }      
       selectedTask.classList.remove("dragging");
       selectedTask.style.transform = "rotate(0deg) scale(1)";
       updateTaskColumnInFirebase(selectedTask.id, column.id);
+    } else {
+      removePlaceholder();
     }
-    dragPlaceholder.parentNode && dragPlaceholder.parentNode.removeChild(dragPlaceholder);
     checkColumns();
   });
 }
@@ -247,4 +290,8 @@ function initializeDragAndDrop() {
 document.addEventListener("DOMContentLoaded", () => {
   ensureEmptyStateImages();
   initializeDragAndDrop();
+  
+  document.addEventListener('mouseup', cleanupPlaceholders);
+  document.addEventListener('touchend', cleanupPlaceholders);
+  document.addEventListener('dragend', cleanupPlaceholders);
 });
