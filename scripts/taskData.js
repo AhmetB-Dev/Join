@@ -25,7 +25,7 @@ function enrichTasksWithUserData(tasks) {
 }
 
 async function loadTasksFromFirebase() {
-  const url = "####";// hier link einfügen!!
+  const url = "https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks.json";
   try {
     const response = await fetch(url);
     if (!response.ok) throw new Error("Error loading tasks");

@@ -51,3 +51,13 @@ document.addEventListener("DOMContentLoaded", () => {
   setupAccountDropdown();
   window.toggleModal = toggleModal;
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+  const addTaskBtn = document.getElementById('addTaskButton');
+  const taskModal = document.getElementById('taskModal');
+
+  addTaskBtn.addEventListener('click', function (){
+taskModal.style.display = 'block';
+  });
+});
+

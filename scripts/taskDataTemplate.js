@@ -35,17 +35,62 @@ function extractPlaceholder(users) {
   return { updatedUsers, placeholderCount };
 }
 
+// Funktion zum Entfernen von Duplikaten basierend auf User-Namen
+function removeDuplicateUsers(users) {
+  if (!Array.isArray(users)) return [];
+  
+  const seen = new Set();
+  return users.filter(user => {
+    // Verwende Name als eindeutigen Identifikator (falls vorhanden)
+    const identifier = user.name || JSON.stringify(user);
+    
+    if (seen.has(identifier)) {
+      return false; // Duplikat gefunden, nicht hinzufügen
+    }
+    
+    seen.add(identifier);
+    return true; // Ersten Eintrag behalten
+  });
+}
+
 function renderUserBadges(users, maxToShow = 3) {
   const { realUsers, totalCount } = getRealUserArrayAndCount(users);
+  
+  // Duplikate entfernen basierend auf User-Namen
+  const uniqueUsers = removeDuplicateUsers(realUsers);
+  
   let badges = '';
-  realUsers.slice(0, maxToShow).forEach(u => {
+  uniqueUsers.slice(0, maxToShow).forEach(u => {
     const initials = u.initials || '?';
-    badges += `<div class="profile-badge-floating-${u.color || 'gray'}">${initials}</div>`;
+    // Verwende die richtige Farbe oder 'default' als Fallback
+    const colorClass = u.color || 'default';
+    badges += `<div class="profile-badge-floating-${colorClass}">${initials}</div>`;
   });
-  if (totalCount > maxToShow) {
-    badges += `<div class="profile-badge-floating-gray">+${totalCount - maxToShow}</div>`;
+  
+  // Korrigiere die Anzahl für das +X Badge basierend auf einzigartigen Usern
+  const uniqueCount = uniqueUsers.length;
+  if (uniqueCount > maxToShow) {
+    badges += `<div class="profile-badge-floating-gray">+${uniqueCount - maxToShow}</div>`;
   }
   return badges;
+}
+
+// Funktion zum Entfernen von Duplikaten basierend auf User-Namen
+function removeDuplicateUsers(users) {
+  if (!Array.isArray(users)) return [];
+  
+  const seen = new Set();
+  return users.filter(user => {
+    // Verwende Name als eindeutigen Identifikator (falls vorhanden)
+    const identifier = user.name || JSON.stringify(user);
+    
+    if (seen.has(identifier)) {
+      return false; // Duplikat gefunden, nicht hinzufügen
+    }
+    
+    seen.add(identifier);
+    return true; // Ersten Eintrag behalten
+  });
 }
 
 function updateSubtaskStatus(taskId, subtaskIndex, newStatus) {
@@ -54,13 +99,14 @@ function updateSubtaskStatus(taskId, subtaskIndex, newStatus) {
   const total = window.currentTask.subtasks.length;
   const completed = window.currentTask.subtasks.filter(st => st.completed).length;
   const newProgress = total ? (completed / total) * 100 : 0;
-  const url = `####`;// hier link einfügen!!
+  const url = `https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks/${taskId}.json`;
   fetch(url, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ subtasks: window.currentTask.subtasks, progress: newProgress })
   }).then(r => {
     if (!r.ok) throw new Error("Error updating subtask status.");
+    location.reload();
   }).catch(() => {});
 }
 
@@ -100,9 +146,11 @@ function setModalFields(task) {
 function setAssignedUsers(task) {
   const assign = document.getElementById('modalAssignedTo');
   if (task.users && Array.isArray(task.users)) {
-    assign.innerHTML = task.users.map(u =>
+    // Duplikate entfernen auch in der Modal-Ansicht
+    const uniqueUsers = removeDuplicateUsers(task.users);
+    assign.innerHTML = uniqueUsers.map(u =>
       `<div class="flexrow profile-names">
-         <div class="profile-badge-floating-${u.color || 'gray'}">${u.initials || '?'}</div>
+          <div class="profile-badge-floating-${u.color || 'default'}">${u.initials || '?'}</div>
          <span class="account-name">${u.name || 'Unknown'}</span>
        </div>`
     ).join("");
@@ -163,14 +211,33 @@ function openTaskModal(task) {
 
 async function updateTaskColumnInFirebase(taskId, newColumn) {
   try {
-    const url = `####`;// hier link einfügen!!
+    const url = `https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks/${taskId}.json`;
     const r = await fetch(url, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ column: newColumn })
     });
     if (!r.ok) throw new Error(`Error updating task column: ${r.statusText}`);
-  } catch (e) {}
+    
+    updateTaskDOMPosition(taskId, newColumn);
+  } catch (e) {
+    console.error('Error updating task column:', e);
+  }
+}
+
+function updateTaskDOMPosition(taskId, newColumn) {
+  const taskElement = document.getElementById(taskId);
+  const targetColumn = document.getElementById(newColumn);
+  
+  if (taskElement && targetColumn) {
+    if (taskElement.parentNode && taskElement.parentNode !== targetColumn) {
+      taskElement.parentNode.removeChild(taskElement);
+    }
+    if (!targetColumn.contains(taskElement)) {
+      targetColumn.appendChild(taskElement);
+    }
+    checkColumns();
+  }
 }
 
 function checkColumns() {

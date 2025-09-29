@@ -1,5 +1,5 @@
 const FIREBASE_CONFIG = {
-    databaseURL: "https://join-aen-default-rtdb.europe-west1.firebasedatabase.app/"
+    databaseURL: "https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/"
 };
 
 window.FIREBASE_URL = FIREBASE_CONFIG.databaseURL;
