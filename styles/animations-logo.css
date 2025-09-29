@@ -31,22 +31,24 @@
     100% {
         top: 26px;
         left: 28px;
-        transform: scale(0.70);
+        transform: scale(0.5);
     }
-}
-
-body.show-login .splash {
-    background: transparent;
 }
 
 .logo-stick {
     position: fixed;
     top: 26px;
     left: 28px;
-    transform: scale(0.70);
+    transform: scale(0.5);
     animation: none;
     z-index: 1001;
 }
+
+
+body.show-login .splash {
+    background: transparent;
+}
+
 
 
 @media (prefers-reduced-motion: reduce) {
