@@ -14,7 +14,6 @@ header {
     max-width: 1950px;
 }
 
-
 .header-right {
     margin-left: auto;
     display: flex;
@@ -216,8 +215,10 @@ body {
     height: 100%;
     margin: 0;
     display: flex;
-    flex-direction: column;    justify-content: center;
+    flex-direction: column;
+    justify-content: center;
 }
+
 
 footer a {
     text-decoration: none;
@@ -270,26 +271,20 @@ footer a {
     border: 1px solid #DC2626 !important;
 }
 
-/* Reserviere immer Platz für die globale Meldung über dem Formular */
 #authMessage {
     min-height: 28px;
-    /* fixe Höhe – verhindert Layout-Shift */
     line-height: 28px;
     margin: 8px 0 16px;
-    /* gleicher Abstand, egal ob Text da ist */
     text-align: center;
     font-weight: 500;
     transition: opacity .18s ease;
 }
 
-/* Wenn leer, unsichtbar – aber Platz bleibt bestehen */
 #authMessage:empty {
     opacity: 0;
     visibility: hidden;
-    /* belegt weiter Platz, aber nicht sichtbar/anklickbar */
 }
 
-/* Bonus: reduziert Sprünge durch automatische Scroll-Anker-Anpassung */
 .auth-card,
 .auth-container {
     overflow-anchor: none;
@@ -338,4 +333,28 @@ footer a {
 
 .hidden {
     display: none;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    flex-shrink: 0;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+footer {
+    flex-shrink: 0;
 }
