@@ -13,7 +13,7 @@ function validateEmailInput(input) {
     }
     
     if (email && !emailPattern.test(email)) {
-        input.setCustomValidity('Bitte geben Sie eine gültige E-Mail-Adresse ein (z.B. name@domain.com)');
+        input.setCustomValidity('');
         input.style.borderColor = '#ff0000';
         if (errorElement) {
             errorElement.textContent = 'Bitte eine gültige E-Mail-Adresse eingeben';
@@ -27,6 +27,33 @@ function validateEmailInput(input) {
             errorElement.classList.remove('show');
         }
     }
+}
+
+function validateAllFields(){
+    const name = document.getElementById('addInputName');
+    const email = document.getElementById('addInputEmail');
+    const phone = document.getElementById('addInputPhone');
+    const errorElement = document.getElementById('addInputError');
+ 
+    if (!name.value.trim() || !email.value.trim() || !phone.value.trim()) {
+        name.style.borderColor = '#ff0000';
+        email.style.borderColor = '#ff0000';
+        phone.style.borderColor = '#ff0000';
+        
+        if (errorElement) {
+            errorElement.textContent = 'Bitte alle Felder ausfüllen';
+            errorElement.classList.add('show');
+        }
+        return false;
+    }
+    name.style.borderColor = '#ccc';
+    email.style.borderColor = '#ccc';
+    phone.style.borderColor = '#ccc';
+    if (errorElement) {
+        errorElement.textContent = '';
+        errorElement.classList.remove('show');
+    }
+    return true;
 }
 
 function isValidEmail(email) {
@@ -299,7 +326,7 @@ async function createAddContact() {
     const email = document.getElementById('addInputEmail').value.trim();
     const phone = document.getElementById('addInputPhone').value.trim();
     
-    if (!name || !email || !phone) {
+    if (!validateAllFields()) {
         return;
     }
     
