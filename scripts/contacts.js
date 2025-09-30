@@ -3,7 +3,7 @@ let selectedContact = null;
 
 function validateEmailInput(input) {
     const email = input.value.trim();
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     
     let errorElement;
     if (input.id === 'editContactEmail') {
@@ -30,7 +30,7 @@ function validateEmailInput(input) {
 }
 
 function isValidEmail(email) {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailPattern.test(email.trim());
 }
 
@@ -267,7 +267,7 @@ async function saveContact() {
     const phone = document.getElementById('editContactPhone').value.trim();
     
     if (!name || !email || !phone) {
-        alert('Bitte alle Felder ausfüllen');
+        
         return;
     }
     
@@ -300,7 +300,6 @@ async function createAddContact() {
     const phone = document.getElementById('addInputPhone').value.trim();
     
     if (!name || !email || !phone) {
-        alert('Bitte alle Felder ausfüllen');
         return;
     }
     

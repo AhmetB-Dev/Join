@@ -2,6 +2,10 @@ window.currentTask = null;
 
 window.currentTaskId = null;
 
+function isTouchDevice() {
+  return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+}
+
 function getRealUserArrayAndCount(users) {
   if (!isValidUserArray(users)) {
     return { realUsers: [], totalCount: 0 };
@@ -250,17 +254,20 @@ function checkColumns() {
 }
 
 function enableDragAndDrop() {
-  document.querySelectorAll('.draggable-cards').forEach(card => {
-    card.addEventListener('dragstart', () => card.classList.add('dragging'));
-    card.addEventListener('dragend', () => card.classList.remove('dragging'));
-  });
-  document.querySelectorAll('.task-board-container').forEach(col => {
-    col.addEventListener('dragover', e => {
-      e.preventDefault();
-      const dragCard = document.querySelector('.dragging');
-      if (dragCard) col.appendChild(dragCard);
+  // Nur für Desktop-Geräte aktivieren
+  if (!isTouchDevice()) {
+    document.querySelectorAll('.draggable-cards').forEach(card => {
+      card.addEventListener('dragstart', () => card.classList.add('dragging'));
+      card.addEventListener('dragend', () => card.classList.remove('dragging'));
     });
-  });
+    document.querySelectorAll('.task-board-container').forEach(col => {
+      col.addEventListener('dragover', e => {
+        e.preventDefault();
+        const dragCard = document.querySelector('.dragging');
+        if (dragCard) col.appendChild(dragCard);
+      });
+    });
+  }
 }
 
 function calculateProgress(task) {
@@ -331,7 +338,8 @@ function createTaskElement(task) {
   const el = document.createElement("div");
   el.classList.add("draggable-cards");
   el.id = task.firebaseKey || task.id;
-  el.setAttribute("draggable", "true");
+  // Draggable nur für Desktop-Geräte aktivieren
+  el.setAttribute("draggable", isTouchDevice() ? "false" : "true");
   el.dataset.title = task.title.toLowerCase();
   el.dataset.description = task.description.toLowerCase();
   el.innerHTML = `
@@ -345,10 +353,13 @@ function createTaskElement(task) {
 
 function attachTaskListeners(task, taskEl) {
   taskEl.addEventListener("click", () => openTaskModal(task));
-  taskEl.addEventListener("dragend", async function () {
-    const newCol = taskEl.closest(".task-board-container")?.id;
-    if (newCol) await updateTaskColumnInFirebase(taskEl.id, newCol);
-  });
+  // Dragend-Event nur für Desktop-Geräte
+  if (!isTouchDevice()) {
+    taskEl.addEventListener("dragend", async function () {
+      const newCol = taskEl.closest(".task-board-container")?.id;
+      if (newCol) await updateTaskColumnInFirebase(taskEl.id, newCol);
+    });
+  }
 }
 
 

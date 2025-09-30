@@ -2,6 +2,10 @@ window.closeModalAndReload = closeModalAndReload;
 
 let tasks = [];
 
+function isTouchDevice() {
+  return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+}
+
 function getInitials(fullName) {
   const parts = fullName.trim().split(" ");
   return parts.length > 1
@@ -64,8 +68,11 @@ function filterTasks(searchTerm) {
 }
 
 function enableDragAndDrop() {
-  attachDragListenersToCards();
-  attachDragOverListenersToColumns();
+  // Nur für Desktop-Geräte aktivieren
+  if (!isTouchDevice()) {
+    attachDragListenersToCards();
+    attachDragOverListenersToColumns();
+  }
 }
 
 function attachDragListenersToCards() {
