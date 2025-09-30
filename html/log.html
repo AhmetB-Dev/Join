@@ -16,96 +16,100 @@
 </head>
 
 <body>
-    <div class="splash" id="splash">
-        <img class="splash-logo" id="joinLogo" src="../img/capa.png" alt="Join Logo">
-    </div>
+    <div>
 
-    <header>
-        <div class="header-left">
-            <div class="account" id="account">
-                <div id="userBadge" class="user-badge" hidden></div>
-                <span id="greeting" class="greeting"></span>
+
+        <header>
+            <div class="header-right ">
+                <div class="splash" id="splash">
+                    <img class="splash-logo" id="joinLogo" src="../img/capa.png" alt="Join Logo">
+                </div>
+                <div>
+                    <span>Not a join user?</span>
+                    <button id="switchAuthBtn" type="button">Sign up</button>
+                </div>
             </div>
-        </div>
-        <div class="header-right ">
-            <span>Not a join user?</span>
-            <button id="switchAuthBtn" type="button">Sign up</button>
-        </div>
-    </header>
+        </header>
 
-    <main>
-        <!-- LOGIN -->
-        <section class="login-section margin-footer auth-panel show" id="loginPanel" aria-labelledby="loginTitle">
-            <div class="login-header">
-                <h1 class="panel-title" id="loginTitle">Log in</h1>
-                <img src="../img/Vector 5.png" alt="">
-            </div>
+        <main>
+            <div>
 
-            <div id="authMessage" aria-live="polite" style="text-align:center;margin-bottom:8px;"></div>
-
-            <div class="form-grid" role="form">
-                <input class="email-icon" id="loginEmail" type="email" class="padding-bottom" placeholder="Email"
-                    autocomplete="username">
-
-                <input class="passwort-icon" class="visibile-icon" id="loginPassword" type="password"
-                    class="padding-bottom" placeholder="Password" autocomplete="current-password">
-            </div>
-
-            <div class="btn-row">
-                <button id="loginBtn" class="btn" type="button">Log in</button>
-                <button id="btn-guest-log-in" class="btn outline" type="button">Guest log in</button>
-            </div>
-        </section>
-
-        <div class="sign-container">
-            <span>Not a join user?</span>
-            <button id="switchAuthBtnBottom" type="button">Sign up</button>
-        </div>
-
-        <!-- SIGNUP -->
-        <section class="login-section signup-section auth-panel" id="signupPanel" aria-labelledby="signupTitle">
-            <div class="signup-header">
-                <div style="display:flex;align-items:center;justify-content:center;margin-bottom: 1em;">
-                    <div>
-                        <button class="arrow-left-line" id="backToLoginBtn" type="button" aria-label="Zurück zum Login">
-                            <img src="../img/arrow-left-line.png" alt="">
-                        </button>
-                    </div>
-                    <div class="signup-title">
-                        <h1 class="panel-title" id="signupTitle">Sign up</h1>
+                <!-- LOGIN -->
+                <section class="login-section margin-footer auth-panel show" id="loginPanel"
+                    aria-labelledby="loginTitle">
+                    <div class="login-header">
+                        <h1 class="panel-title" id="loginTitle">Log in</h1>
                         <img src="../img/Vector 5.png" alt="">
                     </div>
-                </div>
-                <div class="form-grid" role="form">
-                    <input class="name-icon" id="signupName" type="text" class="padding-bottom" placeholder="Name"
-                        autocomplete="name">
-                    <input class="email-icon" id="signupEmail" type="email" class="padding-bottom" placeholder="Email"
-                        autocomplete="email">
-                    <input class="passwort-icon" class="visibile-icon" id="signupPassword" type="password"
-                        class="padding-bottom" placeholder="Password" autocomplete="new-password">
-                    <input class="passwort-icon" class="visibile-icon" id="signupPasswordConfirm" type="password"
-                        class="padding-bottom" placeholder="Confirm password" autocomplete="new-password">
+
+                    <div id="authMessage" aria-live="polite" style="text-align:center;margin-bottom:8px;"></div>
+
+                    <div class="form-grid" role="form">
+                        <input class="email-icon" id="loginEmail" type="email" class="padding-bottom"
+                            placeholder="Email" autocomplete="username">
+
+                        <input class="passwort-icon" class="visibile-icon" id="loginPassword" type="password"
+                            class="padding-bottom" placeholder="Password" autocomplete="current-password">
+                    </div>
+
+                    <div class="btn-row">
+                        <button id="loginBtn" class="btn" type="button">Log in</button>
+                        <button id="btn-guest-log-in" class="btn outline" type="button">Guest log in</button>
+                    </div>
+                </section>
+
+                <div class="sign-container">
+                    <span>Not a join user?</span>
+                    <button id="switchAuthBtnBottom" type="button">Sign up</button>
                 </div>
 
-                <div class="checkbox-row">
-                    <input class="checkbox-input" type="checkbox" id="acceptPolicy">
-                    <label for="acceptPolicy">I accept the <a
-                            href="../resources/private-policy/privacy-policy.html">Privacy Policy</a></label>
-                </div>
+                <!-- SIGNUP -->
+                <section class="login-section signup-section auth-panel" id="signupPanel" aria-labelledby="signupTitle">
+                    <div class="signup-header">
+                        <div style="display:flex;align-items:center;justify-content:center;margin-bottom: 1em;">
+                            <div>
+                                <button class="arrow-left-line" id="backToLoginBtn" type="button"
+                                    aria-label="Zurück zum Login">
+                                    <img src="../img/arrow-left-line.png" alt="">
+                                </button>
+                            </div>
+                            <div class="signup-title">
+                                <h1 class="panel-title" id="signupTitle">Sign up</h1>
+                                <img src="../img/Vector 5.png" alt="">
+                            </div>
+                        </div>
+                        <div class="form-grid" role="form">
+                            <input class="name-icon" id="signupName" type="text" class="padding-bottom"
+                                placeholder="Name" autocomplete="name">
+                            <input class="email-icon" id="signupEmail" type="email" class="padding-bottom"
+                                placeholder="Email" autocomplete="email">
+                            <input class="passwort-icon" class="visibile-icon" id="signupPassword" type="password"
+                                class="padding-bottom" placeholder="Password" autocomplete="new-password">
+                            <input class="passwort-icon" class="visibile-icon" id="signupPasswordConfirm"
+                                type="password" class="padding-bottom" placeholder="Confirm password"
+                                autocomplete="new-password">
+                        </div>
 
-                <div class="btn-row">
-                    <button id="createAccountBtn" class="btn" type="button">Sign up</button>
-                </div>
+                        <div class="checkbox-row">
+                            <input class="checkbox-input" type="checkbox" id="acceptPolicy">
+                            <label for="acceptPolicy">I accept the <a
+                                    href="../resources/private-policy/privacy-policy.html">Privacy Policy</a></label>
+                        </div>
+
+                        <div class="btn-row">
+                            <button id="createAccountBtn" class="btn" type="button">Sign up</button>
+                        </div>
+                    </div>
+                </section>
             </div>
-        </section>
 
-    </main>
+        </main>
 
-
-    <footer>
-        <a href="../resources/private-policy/privacy-policy-guest.html">Privacy Policy</a>
-        <a href="../resources/legal-notice/legal-notice-guest.html">Legal notice</a>
-    </footer>
+        <footer>
+            <a href="../resources/private-policy/privacy-policy-guest.html">Privacy Policy</a>
+            <a href="../resources/legal-notice/legal-notice-guest.html">Legal notice</a>
+        </footer>
+    </div>
 </body>
 
 </html>

@@ -50,9 +50,18 @@
         input {
             width: 18em;
         }
+
+        .auth-panel.show {
+            padding-right: 1rem;
+            padding-left: 1rem;
+        }
     }
 
     @media (min-width: 400px) and (max-width: 500px) {
+        .auth-panel.show {
+            padding-right: 1rem;
+            padding-left: 1rem;
+        }
 
         html,
         body {
