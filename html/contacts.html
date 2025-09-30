@@ -198,10 +198,13 @@
                   title="Nur Buchstaben, Bindestrich oder Leerzeichen erlaubt"
                   oninput="this.value = this.value.replace(/[^A-Za-zÄäÖöÜüßçéèêëáàâäíìîïóòôöúùûüÇÉÈÊËÁÀÂÄÍÌÎÏÓÒÔÖÚÙÛÜ \-]/g, '')"><img
                   src="../img/icon/person.png" class="input-icon"></div>
-              <div class="input-group-item"><input id="editContactEmail" type="email" name="email" placeholder="Email"
-                  required="" pattern="^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
-                  title="Bitte eine gültige E-Mail-Adresse eingeben"><img src="../img/icon/mail.png" class="input-icon">
+              <div class="input-group-item">
+                <input id="editContactEmail" type="email" name="email" placeholder="Email"
+                    required=""
+                    oninput="validateEmailInput(this)">
+                <img src="../img/icon/mail.png" class="input-icon">
               </div>
+              <div class="error-message" id="editEmailError"></div>
               <div class="input-group-item"><input id="editContactPhone" type="tel" name="phone"
                   placeholder="Telefonnummer" required="" title="Bitte nur Zahlen eingeben (mind. 6 Zeichen)"
                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"><img src="../img/icon/phone.png"
@@ -249,10 +252,13 @@
                   title="Nur Buchstaben, Bindestrich oder Leerzeichen erlaubt"
                   oninput="this.value = this.value.replace(/[^A-Za-zÄäÖöÜüßçéèêëáàâäíìîïóòôöúùûüÇÉÈÊËÁÀÂÄÍÌÎÏÓÒÔÖÚÙÛÜ \-]/g, '')"><img
                   src="../img/icon/person.png" class="input-icon"></div>
-              <div class="input-group-item"><input id="addInputEmail" type="email" name="email" placeholder="Email"
-                  required="" pattern="^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
-                  title="Bitte eine gültige E-Mail-Adresse eingeben"><img src="../img/icon/mail.png" class="input-icon">
+              <div class="input-group-item">
+                <input id="addInputEmail" type="email" name="email" placeholder="Email"
+                    required=""
+                    oninput="validateEmailInput(this)">
+                <img src="../img/icon/mail.png" class="input-icon">
               </div>
+              <div class="error-message" id="addEmailError"></div>
               <div class="input-group-item"><input id="addInputPhone" type="tel" name="phone"
                   placeholder="Telefonnummer" required="" title="Bitte nur Zahlen eingeben (mind. 6 Zeichen)"
                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"><img src="../img/icon/phone.png"

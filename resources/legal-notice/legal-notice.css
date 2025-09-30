@@ -166,6 +166,7 @@ small {
 .header-and-main-container {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 .side-menu {
