@@ -3,6 +3,10 @@ dragPlaceholder.classList.add("placeholder-drag");
 
 let selectedTask = null;
 
+function isTouchDevice() {
+  return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+}
+
 function removePlaceholder() {
   if (dragPlaceholder && dragPlaceholder.parentNode) {
     dragPlaceholder.parentNode.removeChild(dragPlaceholder);
@@ -146,9 +150,12 @@ function handleTouchStart(e) {
   const touch = e.touches[0];
   state.initialTouchX = touch.clientX;
   state.initialTouchY = touch.clientY;
+  state.hasMoved = false;
   state.longPressTimeout = setTimeout(() => {
-    state.isTouchDragging = true;
-    startTouchDragging(task, touch);
+    if (!state.isTouchDragging) {
+      state.isTouchDragging = true;
+      startTouchDragging(task, touch);
+    }
   }, 500);
 }
 
@@ -160,12 +167,15 @@ function handleTouchMove(e) {
     const dx = Math.abs(touch.clientX - state.initialTouchX);
     const dy = Math.abs(touch.clientY - state.initialTouchY);
     if (dx > state.moveThreshold || dy > state.moveThreshold) {
+      state.hasMoved = true;
       clearTimeout(state.longPressTimeout);
+      state.longPressTimeout = null;
       return;
     }
   }
   if (!state.isTouchDragging) return;
   e.preventDefault();
+  e.stopPropagation();
   updateTaskPosition(task, touch);
   updateDragPlaceholderForColumns(touch, state.columns);
 }
@@ -173,6 +183,7 @@ function handleTouchMove(e) {
 function handleTouchEnd(e) {
   const task = e.currentTarget, state = task._touchDragState; 
   clearTimeout(state.longPressTimeout);
+  state.longPressTimeout = null;
   
   if (state.isTouchDragging && selectedTask === task) {
     const touch = e.changedTouches[0], dropTarget = getDropTargetFromTouch(touch);
@@ -200,13 +211,25 @@ function handleTouchEnd(e) {
     state.isTouchDragging = false; 
     checkColumns();
   }
+  
+  // Verhindere Click-Event wenn ein Drag stattgefunden hat
+  if (state.hasMoved || state.isTouchDragging) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  
+  // Reset state
+  state.hasMoved = false;
 }
 
 function handleTouchCancel(e) {
   const task = e.currentTarget, state = task._touchDragState;
   clearTimeout(state.longPressTimeout);
+  state.longPressTimeout = null;
+  const wasDragging = state.isTouchDragging;
   state.isTouchDragging = false;
-  if (state.isTouchDragging) {
+  state.hasMoved = false;
+  if (wasDragging) {
     removePlaceholder();
     resetTask(task);
     selectedTask = null;
@@ -220,12 +243,22 @@ function attachTouchDragEvents(task, columns) {
     initialTouchX: 0,
     initialTouchY: 0,
     moveThreshold: 10,
+    hasMoved: false,
     columns: columns
   };
-  task.addEventListener("touchstart", handleTouchStart);
-  task.addEventListener("touchmove", handleTouchMove);
-  task.addEventListener("touchend", handleTouchEnd);
-  task.addEventListener("touchcancel", handleTouchCancel);
+  task.addEventListener("touchstart", handleTouchStart, { passive: true });
+  task.addEventListener("touchmove", handleTouchMove, { passive: false });
+  task.addEventListener("touchend", handleTouchEnd, { passive: false });
+  task.addEventListener("touchcancel", handleTouchCancel, { passive: true });
+  
+  // Verhindere Click-Event wenn ein Drag stattgefunden hat
+  task.addEventListener("click", function(e) {
+    if (task._touchDragState && (task._touchDragState.hasMoved || task._touchDragState.isTouchDragging)) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    }
+  });
 }
 
 function attachColumnDragOverEvent(column) {
@@ -268,15 +301,27 @@ function attachColumnDropEvent(column) {
 
 function initializeTasks(tasks, columns) {
   tasks.forEach(task => {
-    attachDesktopDragEvents(task);
+    // Draggable-Attribut für Touch-Geräte deaktivieren
+    if (isTouchDevice()) {
+      task.setAttribute('draggable', 'false');
+    }
+    
+    // Nur Desktop-Drag-Events für Desktop-Geräte
+    if (!isTouchDevice()) {
+      attachDesktopDragEvents(task);
+    }
+    // Touch-Events für alle Geräte (funktioniert auch auf Desktop)
     attachTouchDragEvents(task, Array.from(columns));
   });
 }
 
 function initializeColumns(columns) {
   columns.forEach(column => {
-    attachColumnDragOverEvent(column);
-    attachColumnDropEvent(column);
+    // Nur Desktop-Drag-Events für Desktop-Geräte
+    if (!isTouchDevice()) {
+      attachColumnDragOverEvent(column);
+      attachColumnDropEvent(column);
+    }
   });
 }
 
