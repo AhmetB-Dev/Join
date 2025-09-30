@@ -50,6 +50,7 @@
         flex: 1 1 auto;
         overflow: auto;
         -webkit-overflow-scrolling: touch;
+        overflow: hidden;
         box-sizing: border-box;
         padding: 20px;
         padding: 55px 25px 80px 25px;
@@ -234,12 +235,6 @@
         background-color: #f5f7f9;
     }
 
-    /* ==== Layout-Grundidee ====
-     .main-div -> flex column
-     .header bleibt oben
-     .summary wird der SCROLLER
-     .side-menu-bottom fix unten
-  */
     .page-summary .main-div {
         display: flex;
         flex-direction: column;
@@ -273,6 +268,7 @@
         -webkit-overflow-scrolling: touch;
         box-sizing: border-box;
         padding: 25px;
+        overflow: hidden;
         padding: 55px 25px 0px 25px;
     }
 
@@ -298,6 +294,7 @@
     .page-summary .summary-header {
         display: flex;
         gap: 15px;
+        margin-bottom: 25px;
         flex-direction: column;
         align-items: flex-start;
     }
@@ -491,10 +488,12 @@
     /* === Der tatsächliche Scroller: .summary === */
     .page-summary .summary {
         flex: 1 1 auto;
+        overflow: hidden;
         overflow: auto;
         -webkit-overflow-scrolling: touch;
         box-sizing: border-box;
         padding: 55px 25px 0px 25px;
+        overflow: hidden;
     }
 
     /* Mobiler Feinschliff (aus deiner Datei übernommen) */
@@ -514,6 +513,7 @@
     .page-summary .summary-header {
         display: flex;
         gap: 15px;
+        margin-bottom: 25px;
         flex-direction: column;
         align-items: flex-start;
     }
@@ -700,6 +700,7 @@
         -webkit-overflow-scrolling: touch;
         box-sizing: border-box;
         padding: 55px 25px 0px 25px;
+        overflow: hidden;
     }
 
     /* Mobiler Feinschliff (aus deiner Datei übernommen) */
@@ -897,6 +898,7 @@
         flex: 1 1 auto;
         overflow: auto;
         box-sizing: border-box;
+        overflow: hidden;
         -webkit-overflow-scrolling: touch;
         padding: 1pc 1pc 2pc 2pc;
     }
@@ -1087,6 +1089,7 @@
         box-sizing: border-box;
         -webkit-overflow-scrolling: touch;
         padding: 1pc 1pc 2pc 2pc;
+        overflow: hidden;
     }
 
     /* Mobiler Feinschliff (aus deiner Datei übernommen) */
