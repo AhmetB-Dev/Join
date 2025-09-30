@@ -1,8 +1,7 @@
 (() => {
     const REDIRECT_AFTER_AUTH = '../summary.html';
-
-    // ---------- Utilities ----------
-    const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
 
     function showGlobalMessage(text, isOk = false) {
         const el = document.getElementById('authMessage');
@@ -11,7 +10,6 @@
         el.style.color = isOk ? '#1B5E20' : '#DC2626';
         el.classList.toggle('is-hidden', !text);
     }
-
 
     function displaySignupToast(message = 'You Signed Up successfully') {
         document.querySelector('.toast-signup')?.remove();
@@ -102,7 +100,6 @@
     const signupAcceptCheckbox = document.getElementById('acceptPolicy'); // optional, keine Pflicht
     const signupSubmitButton = document.getElementById('createAccountBtn');
 
-    // ---------- Signup helpers ----------
     function collectSignupData() {
         return {
             name: getTrimmedValue(signupNameInput),
@@ -129,7 +126,6 @@
         if (payload.password !== payload.passwordConfirm) {
             return { ok: false, reason: 'Passwords do not match.', fields: [signupPasswordInput, signupPasswordConfirmInput] };
         }
-        // Privacy-Checkbox NICHT mehr verpflichtend
         return { ok: true };
     }
 
@@ -148,7 +144,6 @@
         );
     }
 
-    // ---------- Event handlers ----------
     async function handleSignupSubmit(evt) {
         evt && evt.preventDefault();
         clearInvalidState(
@@ -219,7 +214,7 @@
             window.location.href = REDIRECT_AFTER_AUTH;
         } catch {
             applyInvalidState(loginEmailInput, loginPasswordInput);
-            showGlobalMessage('Check your email and password. Please try again.');
+            showGlobalMessage('Check your email and password.');
         }
     }
 
@@ -229,6 +224,5 @@
         window.AuthLocal = { handleSignupSubmit, handleLoginSubmit };
     }
 
-    // ---------- boot ----------
     initAuthHandlers();
 })();
