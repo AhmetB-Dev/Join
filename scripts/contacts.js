@@ -1,6 +1,39 @@
 let contacts = [];
 let selectedContact = null;
 
+function validateEmailInput(input) {
+    const email = input.value.trim();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    let errorElement;
+    if (input.id === 'editContactEmail') {
+        errorElement = document.getElementById('editEmailError');
+    } else if (input.id === 'addInputEmail') {
+        errorElement = document.getElementById('addEmailError');
+    }
+    
+    if (email && !emailPattern.test(email)) {
+        input.setCustomValidity('Bitte geben Sie eine gültige E-Mail-Adresse ein (z.B. name@domain.com)');
+        input.style.borderColor = '#ff0000';
+        if (errorElement) {
+            errorElement.textContent = 'Bitte eine gültige E-Mail-Adresse eingeben';
+            errorElement.classList.add('show');
+        }
+    } else {
+        input.setCustomValidity('');
+        input.style.borderColor = '#ccc';
+        if (errorElement) {
+            errorElement.textContent = '';
+            errorElement.classList.remove('show');
+        }
+    }
+}
+
+function isValidEmail(email) {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email.trim());
+}
+
 async function loadContacts() {
     const fetchedContacts = await firebaseGet('/contacts');
     if (fetchedContacts) {
@@ -232,8 +265,14 @@ async function saveContact() {
     const name = document.getElementById('editContactName').value.trim();
     const email = document.getElementById('editContactEmail').value.trim();
     const phone = document.getElementById('editContactPhone').value.trim();
+    
     if (!name || !email || !phone) {
         alert('Bitte alle Felder ausfüllen');
+        return;
+    }
+    
+    if (!isValidEmail(email)) {
+       
         return;
     }
     const updatedContact = {
@@ -259,8 +298,13 @@ async function createAddContact() {
     const name = document.getElementById('addInputName').value.trim();
     const email = document.getElementById('addInputEmail').value.trim();
     const phone = document.getElementById('addInputPhone').value.trim();
+    
     if (!name || !email || !phone) {
         alert('Bitte alle Felder ausfüllen');
+        return;
+    }
+    
+    if (!isValidEmail(email)) {
         return;
     }
     const contact = {

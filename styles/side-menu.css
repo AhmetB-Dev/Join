@@ -224,6 +224,10 @@
 
     .side-menu-bottom {
         display: block;
+        display: block;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
     }
 
     .side-menu a {
