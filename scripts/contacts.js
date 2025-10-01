@@ -3,7 +3,7 @@ let selectedContact = null;
 
 function validateEmailInput(input) {
     const email = input.value.trim();
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(de|com|net)$/;
     
     let errorElement;
     if (input.id === 'editContactEmail') {
@@ -57,7 +57,7 @@ function validateAllFields(){
 }
 
 function isValidEmail(email) {
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(de|com|net)$/;
     return emailPattern.test(email.trim());
 }
 
