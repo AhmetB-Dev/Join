@@ -210,6 +210,7 @@
                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"><img src="../img/icon/phone.png"
                   class="input-icon">
               </div>
+              <div class="error-message-phone" id="editPhoneError"></div>
             </div>
             <div class="button-group">
               <button class="delete-btn" onclick="editDeleteContact()">Delete</button>
@@ -247,7 +248,7 @@
           </div>
           <div class="input-and-button-add">
             <div class="input-group-add">
-              <div class="error-message" id="addInputError"></div>
+              <div class="error-message-add" id="addInputError"></div>
               <div class="input-group-item"><input id="addInputName" type="text" name="name" placeholder="Name"
                   required="" pattern="^[A-Za-zÄäÖöÜüßçéèêëáàâäíìîïóòôöúùûüÇÉÈÊËÁÀÂÄÍÌÎÏÓÒÔÖÚÙÛÜ\- ]+$"
                   title="Nur Buchstaben, Bindestrich oder Leerzeichen erlaubt"
@@ -262,9 +263,10 @@
               <div class="error-message" id="addEmailError"></div>
               <div class="input-group-item"><input id="addInputPhone" type="tel" name="phone"
                   placeholder="Telefonnummer" required="" title="Bitte nur Zahlen eingeben (mind. 6 Zeichen)"
-                  oninput="this.value = this.value.replace(/[^0-9]/g, '')"><img src="../img/icon/phone.png"
+                  oninput="this.value = this.value.replace(/[^0-9]/g, '');"><img src="../img/icon/phone.png"
                   class="input-icon">
               </div>
+              <div class="error-message-phone" id="addPhoneError"></div>
             </div>
             <div class="button-group-add">
               <button class="cancel-btn" onclick="cancelAddContact()">Cancel X</button>

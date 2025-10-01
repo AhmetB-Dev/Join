@@ -16,7 +16,7 @@ function validateEmailInput(input) {
         input.setCustomValidity('');
         input.style.borderColor = '#ff0000';
         if (errorElement) {
-            errorElement.textContent = 'Bitte eine gültige E-Mail-Adresse eingeben';
+            errorElement.textContent = '';
             errorElement.classList.add('show');
         }
     } else {
@@ -46,6 +46,27 @@ function validateAllFields(){
         }
         return false;
     }
+    
+    if (!isValidEmail(email.value)) {
+        email.style.borderColor = '#ff0000';
+        const emailError = document.getElementById('addEmailError');
+        if (emailError) {
+            emailError.textContent = 'Bitte eine gültige E-Mail-Adresse eingeben';
+            emailError.classList.add('show');
+        }
+        return false;
+    }
+    
+    if (!isValidPhone(phone.value)) {
+        phone.style.borderColor = '#ff0000';
+        const phoneError = document.getElementById('addPhoneError');
+        if (phoneError) {
+            phoneError.textContent = 'Bitte eine gültige Telefonnummer eingeben';
+            phoneError.classList.add('show');
+        }
+        return false;
+    }
+    
     name.style.borderColor = '#ccc';
     email.style.borderColor = '#ccc';
     phone.style.borderColor = '#ccc';
@@ -53,12 +74,26 @@ function validateAllFields(){
         errorElement.textContent = '';
         errorElement.classList.remove('show');
     }
+    const emailError = document.getElementById('addEmailError');
+    const phoneError = document.getElementById('addPhoneError');
+    if (emailError) {
+        emailError.textContent = '';
+        emailError.classList.remove('show');
+    }
+    if (phoneError) {
+        phoneError.textContent = '';
+        phoneError.classList.remove('show');
+    }
     return true;
 }
 
 function isValidEmail(email) {
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(de|com|net)$/;
     return emailPattern.test(email.trim());
+}
+
+function isValidPhone(phone) {
+    return phone.trim().length >= 6;
 }
 
 async function loadContacts() {
@@ -294,14 +329,28 @@ async function saveContact() {
     const phone = document.getElementById('editContactPhone').value.trim();
     
     if (!name || !email || !phone) {
-        
         return;
     }
     
-    if (!isValidEmail(email)) {
-       
+    if (!isValidPhone(phone)) {
+        const phoneError = document.getElementById('editPhoneError');
+        const phoneInput = document.getElementById('editContactPhone');
+        phoneInput.style.borderColor = '#ff0000';
+        if (phoneError) {
+            phoneError.textContent = 'Bitte eine gültige Telefonnummer eingeben';
+            phoneError.classList.add('show');
+        }
         return;
     }
+    
+    const phoneError = document.getElementById('editPhoneError');
+    const phoneInput = document.getElementById('editContactPhone');
+    phoneInput.style.borderColor = '#ccc';
+    if (phoneError) {
+        phoneError.textContent = '';
+        phoneError.classList.remove('show');
+    }
+    
     const updatedContact = {
         name: name,
         email: email,

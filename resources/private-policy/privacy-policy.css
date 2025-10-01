@@ -5,6 +5,9 @@ body {
   padding: 0;
   scroll-behavior: smooth;
 }
+.main-container-privacy{
+  width: 80%;
+}
 
 .help-header {
   display: flex;

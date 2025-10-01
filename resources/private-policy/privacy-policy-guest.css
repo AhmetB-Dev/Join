@@ -6,6 +6,10 @@ body {
   scroll-behavior: smooth;
 }
 
+.main-container-privacy{
+  width: 80%;
+}
+
 .help-header {
   display: flex;
   justify-content: space-between;
