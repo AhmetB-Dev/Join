@@ -223,6 +223,7 @@ small {
 }
 
 .main-container {
+  width: 80%;
   overflow-x: hidden;
   overflow-y: auto;
   scrollbar-width: thin;

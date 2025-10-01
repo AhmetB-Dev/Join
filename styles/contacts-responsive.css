@@ -46,6 +46,52 @@
         width: 56px;
         height: 66px;
     }
+    .error-message{
+        color: #ff0000;
+        font-size: 14px;
+        margin-top: 5px;
+        display: none;
+        font-weight: 400;
+        position: absolute;
+        top: 53%;
+        left: 153px;
+        right: 0px;
+        z-index: 10;
+        padding: 4px 0;
+    }
+    .error-message-phone {
+        color: #ff0000;
+        font-size: 14px;
+        margin-top: 5px;
+        font-weight: 400;
+        position: absolute;
+        top: 71%;
+        left: 153px;
+        z-index: 10;
+        padding: 2px 0;
+    }
+    .error-message-add{
+        color: #ff0000;
+        font-size: 14px;
+        font-weight: 400;
+        position: absolute;
+        top: 21%;
+        left: 156px;
+        z-index: 10;
+        padding: 2px 0;
+    }
+    .error-message-edit-mail{
+        color: #ff0000;
+        font-size: 14px;
+        margin-top: 5px;
+        display: none;
+        font-weight: 400;
+        position: absolute;
+        top: 54%;
+        left: 156px;
+        z-index: 10;
+        padding: 2px 0;
+    }
 }
 
 @media (max-width: 925px) {
@@ -195,6 +241,52 @@
         right: 218px;
         font-weight: 400;
         font-size: 36px;
+    }
+    .error-message {
+        color: #ff0000;
+        font-size: 14px;
+        margin-top: 5px;
+        display: none;
+        font-weight: 400;
+        position: absolute;
+        top: 53%;
+        left: 93px;
+        right: 0px;
+        z-index: 10;
+        padding: 4px 0;
+    }
+    .error-message-phone {
+        color: #ff0000;
+        font-size: 14px;
+        margin-top: 5px;
+        font-weight: 400;
+        position: absolute;
+        top: 74%;
+        left: 93px;
+        z-index: 10;
+        padding: 2px 0;
+    }
+    .error-message-add{
+        color: #ff0000;
+        font-size: 14px;
+        font-weight: 400;
+        position: absolute;
+        top: 18%;
+        left: 90px;
+        z-index: 10;
+        padding: 2px 0;
+    }
+    .error-message-edit-mail{
+        color: #ff0000;
+        font-size: 14px;
+        margin-top: 5px;
+        display: none;
+        font-weight: 400;
+        position: absolute;
+        top: 52%;
+        left: 106px;
+        z-index: 10;
+        padding: 2px 0;
     }
 }
 
@@ -435,6 +527,51 @@
         right: 165px;
         font-weight: 400;
     }
+    .error-message {
+        color: #ff0000;
+        font-size: 14px;
+        margin-top: 5px;
+        display: none;
+        font-weight: 400;
+        position: absolute;
+        top: 53%;
+        left: 30px;
+        right: 0px;
+        z-index: 10;
+        padding: 6px 0;
+    }
+    .error-message-phone {
+        color: #ff0000;
+        font-size: 14px;
+        margin-top: 5px;
+        font-weight: 400;
+        position: absolute;
+        left: 30px;
+        z-index: 10;
+        padding: 2px 0;
+    }
+    .error-message-add{
+        color: #ff0000;
+        font-size: 14px;
+        font-weight: 400;
+        position: absolute;
+        top: 18%;
+        left: 33px;
+        z-index: 10;
+        padding: 2px 0;
+    }
+    .error-message-edit-mail{
+        color: #ff0000;
+        font-size: 14px;
+        margin-top: 5px;
+        display: none;
+        font-weight: 400;
+        position: absolute;
+        top: 52%;
+        left: 48px;
+        z-index: 10;
+        padding: 2px 0;
+    }
 }
 
 @media (max-width: 380px) {
@@ -462,5 +599,50 @@
 
 .cancel-btn{
     display: none;
+}
+.error-message {
+    color: #ff0000;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+    font-weight: 400;
+    position: absolute;
+    top: 53%;
+    left: 40px;
+    right: 0px;
+    z-index: 10;
+    padding: 6px 0;
+}
+.error-message-phone {
+    color: #ff0000;
+    font-size: 14px;
+    margin-top: 5px;
+    font-weight: 400;
+    position: absolute;
+    left: 40px;
+    z-index: 10;
+    padding: 2px 0;
+}
+.error-message-add{
+    color: #ff0000;
+    font-size: 14px;
+    font-weight: 400;
+    position: absolute;
+    top: 18%;
+    left: 38px;
+    z-index: 10;
+    padding: 2px 0;
+}
+.error-message-edit-mail{
+    color: #ff0000;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+    font-weight: 400;
+    position: absolute;
+    top: 52%;
+    left: 34px;
+    z-index: 10;
+    padding: 2px 0;
 }
 }
