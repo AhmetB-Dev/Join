@@ -6,58 +6,35 @@
     background: #fff;
     z-index: 1000;
     pointer-events: none;
-    transition: background .2s ease;
+    transition: background .8s ease, opacity .8s ease;
+}
+
+.splash.is-fading {
+    opacity: 0;
+    background: transparent;
 }
 
 .splash-logo {
     width: 140px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(1);
-    transform-origin: top left;
-    animation: moveAndStick .8s cubic-bezier(.4, 0, .2, 1) forwards;
-    animation-delay: 1s;
-    will-change: transform, top, left;
+    height: auto;
+    display: block;
+    will-change: transform, opacity;
 }
 
-@keyframes moveAndStick {
-    0% {
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(1);
-    }
-
-    100% {
-        top: 26px;
-        left: 28px;
-        transform: scale(0.5);
-    }
+.header-logo {
+    display: block;
+    height: auto;
+    width: clamp(56px, 7vw, 70px);
 }
-
-.logo-stick {
-    position: fixed;
-    top: 26px;
-    left: 28px;
-    transform: scale(0.5);
-    animation: none;
-    z-index: 1001;
-}
-
-
-body.show-login .splash {
-    background: transparent;
-}
-
-
 
 @media (prefers-reduced-motion: reduce) {
     .splash {
-        background: transparent;
+        transition: none;
     }
 
     .splash-logo {
-        animation: none;
-        display: none;
+        transition: none;
+        transform: none !important;
+        opacity: 1 !important;
     }
 }

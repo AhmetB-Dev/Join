@@ -1,49 +1,42 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>Log in</title>
     <link rel="icon" href="../img/capa.png" type="image/png" />
+
+    <!-- Styles -->
     <link rel="stylesheet" href="../styles/animations-logo.css">
     <link rel="stylesheet" href="../styles/log.css">
     <link rel="stylesheet" href="../styles/log-responsive.css">
 
+    <!-- Scripts -->
     <script src="../scripts/firebase.js" defer></script>
     <script src="../scripts/log.js" defer></script>
     <script src="../scripts/logi.js" defer></script>
 </head>
 
 <body>
-    <!-- <header>
+    <!-- Splash (immer vorhanden, Overlay) -->
+    <div class="splash" id="splash">
+        <img class="splash-logo" id="joinLogo" src="../img/capa.png" alt="Join Logo">
+    </div>
 
-            <div class="splash" id="splash">
-                <img class="splash-logo" id="joinLogo" src="../img/capa.png" alt="Join Logo">
-            </div>
-            <div>
-                <span>Not a join user?</span>
-                <button id="switchAuthBtn" type="button">Sign up</button>
-            </div>
- 
-    </header> -->
-    <header>
-        <div class="splash" id="splash">
-            <img class="splash-logo" id="joinLogo" src="../img/capa.png" alt="Join Logo">
-        </div>
-
+    <!-- Header: Full-Width Bar, Inhalt in .header-inner (max 1950px) -->
+    <header class="site-header">
+      <div class="header-inner">
         <div class="header-left">
-            <a class="brand" href="#" aria-label="Home">
-                <!-- Logo wird automatisch hierhin verschoben -->
-            </a>
+          <!-- Ziel-Slot für das Logo; das <img id="joinLogo"> wird hierhin animiert/reparented -->
+          <a class="brand" id="brandSlot" href="#" aria-label="Home"></a>
         </div>
 
         <div class="header-right">
-            <span>Not a join user?</span>
-            <button id="switchAuthBtn" type="button">Sign up</button>
+          <span>Not a join user?</span>
+          <button id="switchAuthBtn" type="button">Sign up</button>
         </div>
+      </div>
     </header>
-
 
     <main>
         <div>
@@ -54,13 +47,14 @@
                     <img src="../img/Vector 5.png" alt="">
                 </div>
 
-                <div id="authMessage" aria-live="polite" style="text-align:center;margin-bottom:8px;"></div>
+                <!-- Platzhalter NUR für Login-Meldungen -->
+                <div id="authMessageLogin" class="auth-message" aria-live="polite"></div>
 
                 <div class="form-grid" role="form">
                     <input class="email-icon" id="loginEmail" type="email" class="padding-bottom" placeholder="Email"
                         autocomplete="username">
 
-                    <input class="passwort-icon" class="visibile-icon" id="loginPassword" type="password"
+                    <input class="passwort-icon visibile-icon" id="loginPassword" type="password"
                         class="padding-bottom" placeholder="Password" autocomplete="current-password">
                 </div>
 
@@ -80,8 +74,7 @@
                 <div class="signup-header">
                     <div style="display:flex;align-items:center;justify-content:center;margin-bottom: 1em;">
                         <div>
-                            <button class="arrow-left-line" id="backToLoginBtn" type="button"
-                                aria-label="Zurück zum Login">
+                            <button class="arrow-left-line" id="backToLoginBtn" type="button" aria-label="Zurück zum Login">
                                 <img src="../img/arrow-left-line.png" alt="">
                             </button>
                         </div>
@@ -90,14 +83,18 @@
                             <img src="../img/Vector 5.png" alt="">
                         </div>
                     </div>
+
+                    <!-- Platzhalter NUR für Signup-Meldungen -->
+                    <div id="authMessageSignup" class="auth-message" aria-live="polite"></div>
+
                     <div class="form-grid" role="form">
                         <input class="name-icon" id="signupName" type="text" class="padding-bottom" placeholder="Name"
                             autocomplete="name">
                         <input class="email-icon" id="signupEmail" type="email" class="padding-bottom"
                             placeholder="Email" autocomplete="email">
-                        <input class="passwort-icon" class="visibile-icon" id="signupPassword" type="password"
+                        <input class="passwort-icon visibile-icon" id="signupPassword" type="password"
                             class="padding-bottom" placeholder="Password" autocomplete="new-password">
-                        <input class="passwort-icon" class="visibile-icon" id="signupPasswordConfirm" type="password"
+                        <input class="passwort-icon visibile-icon" id="signupPasswordConfirm" type="password"
                             class="padding-bottom" placeholder="Confirm password" autocomplete="new-password">
                     </div>
 
@@ -113,7 +110,6 @@
                 </div>
             </section>
         </div>
-
     </main>
 
     <footer>
@@ -121,5 +117,4 @@
         <a href="../resources/legal-notice/legal-notice-guest.html">Legal notice</a>
     </footer>
 </body>
-
 </html>

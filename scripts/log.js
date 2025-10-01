@@ -1,64 +1,70 @@
-const logo = document.getElementById('joinLogo');
-const splash = document.getElementById('splash');
+/* =========================================================================
+   Splash → Header Logo (FLIP) + Auth-UI Umschalten + Password Toggle
+   ========================================================================= */
 
-function startSplash() {
+const splash = document.getElementById('splash');
+const logo = document.getElementById('joinLogo');
+
+/** Wie lange der Splash beim (Neu-)Start sichtbar gehalten wird,
+ *  bevor die Header-Animation beginnt (in Millisekunden). */
+const SPLASH_HOLD_MS = 800;
+
+/** Zeigt den Main-Content an (entschärft Blur). */
+function revealMain() {
     document.body.classList.add('show-login');
 }
 
-function finishSplash() {
-    document.body.appendChild(logo);
-    logo.classList.add('logo-stick');
-    splash && splash.remove();
-}
+/** FLIP-Animation: animiert das aktuelle Logo exakt zum Header-Ziel-Slot. */
+function animateLogoIntoHeader() {
+    const brand = document.getElementById('brandSlot') || document.querySelector('header .brand');
+    if (!logo || !brand) {
+        // Fallback: Kein Ziel gefunden → Splash entfernen
+        splash?.remove();
+        return;
+    }
 
-logo?.addEventListener('animationstart', startSplash, { once: true });
-logo?.addEventListener('animationend', finishSplash, { once: true });
+    const prefersReduced =
+        window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-function getInitialsFromName(name) {
-    if (!name) return '';
-    const p = String(name).trim().split(/\s+/);
-    const a = (p[0] || '')[0] || '';
-    const b = (p[p.length - 1] || '')[0] || '';
-    return (a + b).toUpperCase();
-}
+    // FIRST: Start-Rect im Splash messen
+    const first = logo.getBoundingClientRect();
 
-function readAuthState() {
-    const isGuest = (localStorage.getItem('isGuest') || 'false') === 'true';
-    const name = (localStorage.getItem('name') || '').trim();
-    return { isGuest, name };
-}
+    // Reparent: Logo in den Header einsortieren + Endklasse setzen
+    brand.appendChild(logo);
+    logo.classList.remove('splash-logo');
+    logo.classList.add('header-logo');
 
-function applyHeaderHidden(badge, greeting) {
-    if (!badge || !greeting) return;
-    badge.setAttribute('hidden', '');
-    badge.textContent = '';
-    greeting.textContent = '';
-}
+    const last = logo.getBoundingClientRect();
 
-function applyHeaderGuest(badge, greeting) {
-    if (!badge || !greeting) return;
-    badge.removeAttribute('hidden');
-    badge.textContent = 'G';
-    greeting.textContent = 'Good morning';
-}
+    if (prefersReduced) {
+        splash?.remove();
+        return;
+    }
 
-function applyHeaderUser(badge, greeting, name) {
-    if (!badge || !greeting) return;
-    badge.removeAttribute('hidden');
-    badge.textContent = getInitialsFromName(name);
-    greeting.textContent = 'Good morning';
-}
+    const dx = first.left - last.left;
+    const dy = first.top - last.top;
+    const sx = first.width / Math.max(last.width, 1);
+    const sy = first.height / Math.max(last.height, 1);
 
-function updateAccountUI() {
-    const badge = document.getElementById('userBadge');
-    const greeting = document.getElementById('greeting');
-    const onLogin = window.location.pathname.includes('log.html');
-    if (onLogin) return applyHeaderHidden(badge, greeting);
+    logo.style.transformOrigin = 'top left';
+    logo.style.willChange = 'transform, opacity';
+    logo.style.transform = `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`;
 
-    const { isGuest, name } = readAuthState();
-    if (isGuest) return applyHeaderGuest(badge, greeting);
-    if (name) return applyHeaderUser(badge, greeting, name);
-    applyHeaderHidden(badge, greeting);
+    void logo.getBoundingClientRect();
+
+    logo.style.transition = 'transform 1400ms cubic-bezier(.2,.8,.2,1), opacity 1400ms ease';
+    logo.style.transform = 'none';
+
+    splash && splash.classList.add('is-fading');
+
+    const cleanup = () => {
+        logo.style.transition = '';
+        logo.style.transform = '';
+        logo.style.willChange = '';
+        splash?.remove();
+        logo.removeEventListener('transitionend', cleanup);
+    };
+    logo.addEventListener('transitionend', cleanup);
 }
 
 function handleGuestLogin() {
@@ -67,14 +73,11 @@ function handleGuestLogin() {
         localStorage.removeItem('name');
         localStorage.removeItem('firstName');
         localStorage.removeItem('lastName');
-
         sessionStorage.setItem('summary.triggerSplash', '1');
         localStorage.setItem('summary.triggerSplash', '1');
-
     } catch { }
     window.location.href = '../summary.html';
 }
-document.getElementById('btn-guest-log-in')?.addEventListener('click', handleGuestLogin);
 
 const loginPanel = document.getElementById('loginPanel');
 const signupPanel = document.getElementById('signupPanel');
@@ -107,7 +110,6 @@ window.renderAuthUI = function renderAuthUI() {
     setPanels(isSignup);
     setHeaderRight(isSignup);
     setSignContainer(isSignup);
-    updateAccountUI();
 };
 
 const openSignupBtns = [
@@ -130,25 +132,18 @@ document.getElementById('backToLoginBtn')?.addEventListener('click', (e) => {
     window.renderAuthUI();
 });
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', window.renderAuthUI);
-} else {
-    window.renderAuthUI();
-}
-window.updateAccountUI = updateAccountUI;
+document.getElementById('btn-guest-log-in')?.addEventListener('click', handleGuestLogin);
 
 function isRightHitbox(ev, el, px = 36) {
     const r = el.getBoundingClientRect();
     return (r.right - ev.clientX) <= px;
 }
-
 function togglePassword(el) {
     const pass = el.type === 'password';
     el.type = pass ? 'text' : 'password';
     el.classList.toggle('passwort-icon', !pass);
     el.classList.toggle('visibile-icon', pass);
 }
-
 (function setupPasswordToggle() {
     const ids = ['loginPassword', 'signupPassword', 'signupPasswordConfirm'];
     ids.forEach(id => {
@@ -161,3 +156,30 @@ function togglePassword(el) {
         });
     });
 })();
+
+function boot() {
+    revealMain();
+    setTimeout(() => {
+        try {
+            animateLogoIntoHeader();
+        } catch {
+            const brand = document.getElementById('brandSlot') || document.querySelector('header .brand');
+            if (logo && brand) {
+                brand.appendChild(logo);
+                logo.classList.remove('splash-logo');
+                logo.classList.add('header-logo');
+            }
+            splash?.remove();
+        }
+    }, SPLASH_HOLD_MS + 60);
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        window.renderAuthUI();
+        boot();
+    });
+} else {
+    window.renderAuthUI();
+    boot();
+}
