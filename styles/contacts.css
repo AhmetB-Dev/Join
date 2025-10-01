@@ -650,6 +650,18 @@
     z-index: 10;
     padding: 2px 0;
 }
+.error-message-edit-mail{
+    color: #ff0000;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+    font-weight: 400;
+    position: absolute;
+    top: 53%;
+    left: 322px;
+    z-index: 10;
+    padding: 2px 0;
+}
 
 
 .error-message.show {
@@ -657,5 +669,8 @@
 }
 
 .error-message-phone.show {
+    display: block;
+}
+.error-message-edit-mail.show{
     display: block;
 }

@@ -80,6 +80,18 @@
         z-index: 10;
         padding: 2px 0;
     }
+    .error-message-edit-mail{
+        color: #ff0000;
+        font-size: 14px;
+        margin-top: 5px;
+        display: none;
+        font-weight: 400;
+        position: absolute;
+        top: 54%;
+        left: 156px;
+        z-index: 10;
+        padding: 2px 0;
+    }
 }
 
 @media (max-width: 925px) {
@@ -261,6 +273,18 @@
         position: absolute;
         top: 18%;
         left: 90px;
+        z-index: 10;
+        padding: 2px 0;
+    }
+    .error-message-edit-mail{
+        color: #ff0000;
+        font-size: 14px;
+        margin-top: 5px;
+        display: none;
+        font-weight: 400;
+        position: absolute;
+        top: 52%;
+        left: 106px;
         z-index: 10;
         padding: 2px 0;
     }
@@ -536,6 +560,18 @@
         z-index: 10;
         padding: 2px 0;
     }
+    .error-message-edit-mail{
+        color: #ff0000;
+        font-size: 14px;
+        margin-top: 5px;
+        display: none;
+        font-weight: 400;
+        position: absolute;
+        top: 52%;
+        left: 48px;
+        z-index: 10;
+        padding: 2px 0;
+    }
 }
 
 @media (max-width: 380px) {
@@ -594,6 +630,18 @@
     position: absolute;
     top: 18%;
     left: 38px;
+    z-index: 10;
+    padding: 2px 0;
+}
+.error-message-edit-mail{
+    color: #ff0000;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+    font-weight: 400;
+    position: absolute;
+    top: 52%;
+    left: 34px;
     z-index: 10;
     padding: 2px 0;
 }
