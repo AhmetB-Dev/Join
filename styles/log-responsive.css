@@ -6,6 +6,18 @@
             height: 100%;
         }
 
+
+        .header-inner {
+            max-width: 1950px;
+            margin: 0 auto;
+            padding: 48px 28px 0 28px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 12px;
+            box-sizing: border-box;
+        }
+
         .arrow-left-line {
             border: none;
             background-color: white;
@@ -30,7 +42,7 @@
             transition: opacity .5s ease, filter .5s ease;
             display: flex;
             justify-content: center;
-            padding-top: 8em;
+            padding-top: 5em;
             padding-bottom: 6em;
             flex-direction: column;
             align-items: center;
@@ -43,12 +55,21 @@
             padding: 5% 4%;
         }
 
+        .margin-footer {
+            margin-bottom: 3em;
+        }
+
+
         .hidden {
             display: none;
         }
 
         input {
             width: 18em;
+        }
+
+        .form-grid input {
+            padding-right: unset;
         }
 
         .auth-panel.show {
@@ -59,8 +80,19 @@
 
     @media (min-width: 400px) and (max-width: 500px) {
         .auth-panel.show {
-            padding-right: 1rem;
-            padding-left: 1rem;
+            padding-right: 2.5rem;
+            padding-left: 2.5rem;
+        }
+
+        .header-inner {
+            max-width: 1950px;
+            margin: 0 auto;
+            padding: 48px 28px 0 28px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 12px;
+            box-sizing: border-box;
         }
 
         html,
@@ -93,8 +125,8 @@
             transition: opacity .5s ease, filter .5s ease;
             display: flex;
             justify-content: center;
-            padding-top: 8em;
-            padding-bottom: 6em;
+            padding-top: 5em;
+            padding-bottom: 5em;
             flex-direction: column;
             align-items: center;
         }
@@ -105,6 +137,11 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             padding: 5% 12%;
         }
+
+        .margin-footer {
+            margin-bottom: 3em;
+        }
+
 
         .hidden {
             display: none;

@@ -1,10 +1,24 @@
 (() => {
     const REDIRECT_AFTER_AUTH = '../summary.html';
-    
-    const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+
+    const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function getMessageElement() {
+        const mode = (typeof window !== 'undefined' && window.mode) ||
+            (document.getElementById('signupPanel')?.classList.contains('show') ? 'signup' : 'login');
+
+        let el = null;
+        if (mode === 'signup') {
+            el = document.getElementById('authMessageSignup');
+        } else {
+            el = document.getElementById('authMessageLogin');
+        }
+        if (!el) el = document.getElementById('authMessage');
+        return el;
+    }
 
     function showGlobalMessage(text, isOk = false) {
-        const el = document.getElementById('authMessage');
+        const el = getMessageElement();
         if (!el) return;
         el.textContent = text || '';
         el.style.color = isOk ? '#1B5E20' : '#DC2626';
@@ -97,9 +111,10 @@
     const signupEmailInput = document.getElementById('signupEmail');
     const signupPasswordInput = document.getElementById('signupPassword');
     const signupPasswordConfirmInput = document.getElementById('signupPasswordConfirm');
-    const signupAcceptCheckbox = document.getElementById('acceptPolicy'); // optional, keine Pflicht
+    const signupAcceptCheckbox = document.getElementById('acceptPolicy'); // → jetzt Pflicht!
     const signupSubmitButton = document.getElementById('createAccountBtn');
 
+    // ---------- Signup helpers ----------
     function collectSignupData() {
         return {
             name: getTrimmedValue(signupNameInput),
@@ -116,6 +131,9 @@
         if (!payload.email) missing.push(signupEmailInput);
         if (!payload.password) missing.push(signupPasswordInput);
         if (!payload.passwordConfirm) missing.push(signupPasswordConfirmInput);
+
+        if (!payload.acceptedPolicy) missing.push(signupAcceptCheckbox);
+
         if (missing.length) {
             return { ok: false, reason: 'Please fill out all fields.', fields: missing };
         }
@@ -144,6 +162,7 @@
         );
     }
 
+    // ---------- Event handlers ----------
     async function handleSignupSubmit(evt) {
         evt && evt.preventDefault();
         clearInvalidState(
@@ -188,7 +207,7 @@
         const email = getTrimmedValue(loginEmailInput);
         const password = getTrimmedValue(loginPasswordInput);
 
-        if (!isValidEmailAddress(email)) {
+        if (!EMAIL_REGEX.test((email || '').trim())) {
             applyInvalidState(loginEmailInput);
             showGlobalMessage('Please enter a valid email address.');
             return;
@@ -224,5 +243,17 @@
         window.AuthLocal = { handleSignupSubmit, handleLoginSubmit };
     }
 
+    function attachCheckboxFixup() {
+        if (!signupAcceptCheckbox) return;
+        signupAcceptCheckbox.addEventListener('change', () => {
+            if (signupAcceptCheckbox.checked) {
+                clearInvalidState(signupAcceptCheckbox);
+                showGlobalMessage('');
+            }
+        });
+    }
+
+    // ---------- boot ----------
     initAuthHandlers();
+    attachCheckboxFixup();
 })();
