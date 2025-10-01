@@ -332,6 +332,25 @@ async function saveContact() {
         return;
     }
     
+    if (!isValidEmail(email)) {
+        const emailError = document.getElementById('editEmailError');
+        const emailInput = document.getElementById('editContactEmail');
+        emailInput.style.borderColor = '#ff0000';
+        if (emailError) {
+            emailError.textContent = 'Bitte eine gültige E-Mail-Adresse eingeben';
+            emailError.classList.add('show');
+        }
+        return;
+    }
+    
+    const emailError = document.getElementById('editEmailError');
+    const emailInput = document.getElementById('editContactEmail');
+    emailInput.style.borderColor = '#ccc';
+    if (emailError) {
+        emailError.textContent = '';
+        emailError.classList.remove('show');
+    }
+    
     if (!isValidPhone(phone)) {
         const phoneError = document.getElementById('editPhoneError');
         const phoneInput = document.getElementById('editContactPhone');
