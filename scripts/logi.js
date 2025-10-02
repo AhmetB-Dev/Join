@@ -3,6 +3,7 @@
 
     const EMAIL_REGEX = /^[^\s@]+@([A-Za-z0-9-]+\.)+[A-Za-z]{2}$/;
 
+
     function getMessageElement() {
         const mode = (typeof window !== 'undefined' && window.mode) ||
             (document.getElementById('signupPanel')?.classList.contains('show') ? 'signup' : 'login');
