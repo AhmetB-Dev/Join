@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
@@ -18,24 +19,21 @@
 </head>
 
 <body>
-    <!-- Splash (immer vorhanden, Overlay) -->
     <div class="splash" id="splash">
         <img class="splash-logo" id="joinLogo" src="../img/capa.png" alt="Join Logo">
     </div>
 
-    <!-- Header: Full-Width Bar, Inhalt in .header-inner (max 1950px) -->
     <header class="site-header">
-      <div class="header-inner">
-        <div class="header-left">
-          <!-- Ziel-Slot für das Logo; das <img id="joinLogo"> wird hierhin animiert/reparented -->
-          <a class="brand" id="brandSlot" href="#" aria-label="Home"></a>
-        </div>
+        <div class="header-inner">
+            <div class="header-left">
+                <a class="brand" id="brandSlot" href="#" aria-label="Home"></a>
+            </div>
 
-        <div class="header-right">
-          <span>Not a join user?</span>
-          <button id="switchAuthBtn" type="button">Sign up</button>
+            <div class="header-right">
+                <span>Not a join user?</span>
+                <button id="switchAuthBtn" type="button">Sign up</button>
+            </div>
         </div>
-      </div>
     </header>
 
     <main>
@@ -47,15 +45,14 @@
                     <img src="../img/Vector 5.png" alt="">
                 </div>
 
-                <!-- Platzhalter NUR für Login-Meldungen -->
                 <div id="authMessageLogin" class="auth-message" aria-live="polite"></div>
 
                 <div class="form-grid" role="form">
                     <input class="email-icon" id="loginEmail" type="email" class="padding-bottom" placeholder="Email"
                         autocomplete="username">
 
-                    <input class="passwort-icon visibile-icon" id="loginPassword" type="password"
-                        class="padding-bottom" placeholder="Password" autocomplete="current-password">
+                    <input class="passwort-icon visibile-icon" id="loginPassword" type="password" class="padding-bottom"
+                        placeholder="Password" autocomplete="current-password">
                 </div>
 
                 <div class="btn-row">
@@ -72,9 +69,10 @@
             <!-- SIGNUP -->
             <section class="login-section signup-section auth-panel" id="signupPanel" aria-labelledby="signupTitle">
                 <div class="signup-header">
-                    <div style="display:flex;align-items:center;justify-content:center;margin-bottom: 1em;">
+                    <div class="signup-header-title">
                         <div>
-                            <button class="arrow-left-line" id="backToLoginBtn" type="button" aria-label="Zurück zum Login">
+                            <button class="arrow-left-line" id="backToLoginBtn" type="button"
+                                aria-label="Zurück zum Login">
                                 <img src="../img/arrow-left-line.png" alt="">
                             </button>
                         </div>
@@ -117,4 +115,5 @@
         <a href="../resources/legal-notice/legal-notice-guest.html">Legal notice</a>
     </footer>
 </body>
+
 </html>

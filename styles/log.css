@@ -25,6 +25,13 @@ body {
     box-sizing: border-box;
 }
 
+.signup-header-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+}
+
 .header-left {
     display: flex;
     align-items: center;
@@ -89,7 +96,7 @@ body.show-login main {
 
 .login-header img {
     width: 75px;
-    margin-bottom: 1em;
+    /* margin-bottom: 1em; */
     height: 2px;
 }
 
@@ -289,7 +296,7 @@ footer a {
 #authMessageSignup {
     min-height: 28px;
     line-height: 28px;
-    margin: 8px 0 16px;
+    margin: 0px 0 8px;
     text-align: center;
     font-weight: 500;
     transition: opacity .18s ease;

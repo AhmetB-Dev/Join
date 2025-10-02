@@ -1,24 +1,15 @@
-/* =========================================================================
-   Splash → Header Logo (FLIP) + Auth-UI Umschalten + Password Toggle
-   ========================================================================= */
-
 const splash = document.getElementById('splash');
 const logo = document.getElementById('joinLogo');
 
-/** Wie lange der Splash beim (Neu-)Start sichtbar gehalten wird,
- *  bevor die Header-Animation beginnt (in Millisekunden). */
 const SPLASH_HOLD_MS = 800;
 
-/** Zeigt den Main-Content an (entschärft Blur). */
 function revealMain() {
     document.body.classList.add('show-login');
 }
 
-/** FLIP-Animation: animiert das aktuelle Logo exakt zum Header-Ziel-Slot. */
 function animateLogoIntoHeader() {
     const brand = document.getElementById('brandSlot') || document.querySelector('header .brand');
     if (!logo || !brand) {
-        // Fallback: Kein Ziel gefunden → Splash entfernen
         splash?.remove();
         return;
     }
@@ -26,10 +17,8 @@ function animateLogoIntoHeader() {
     const prefersReduced =
         window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // FIRST: Start-Rect im Splash messen
-    const first = logo.getBoundingClientRect();
+        const first = logo.getBoundingClientRect();
 
-    // Reparent: Logo in den Header einsortieren + Endklasse setzen
     brand.appendChild(logo);
     logo.classList.remove('splash-logo');
     logo.classList.add('header-logo');
