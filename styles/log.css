@@ -50,7 +50,7 @@ main {
     transition: opacity 1s ease, filter 1s ease;
     display: flex;
     justify-content: center;
-    padding-top: 5em;
+    padding-top: 4em;
     padding-bottom: 6em;
 }
 
