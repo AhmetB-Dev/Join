@@ -1,7 +1,8 @@
 (() => {
     const REDIRECT_AFTER_AUTH = '../summary.html';
 
-    const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const EMAIL_REGEX = /^[^\s@]+@([A-Za-z0-9-]+\.)+[A-Za-z]{2}$/;
+
 
     function getMessageElement() {
         const mode = (typeof window !== 'undefined' && window.mode) ||
