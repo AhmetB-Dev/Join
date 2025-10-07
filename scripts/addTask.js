@@ -4,224 +4,292 @@
   const FIREBASE_TASKS_URL = `${FIREBASE_BASE_URL}/tasks.json`;
   const FIREBASE_CONTACTS_URL = `${FIREBASE_BASE_URL}/contacts.json`;
 
-  function query(container, selector) { return container.querySelector(selector); }
+  const $ = (root, sel) => root.querySelector(sel);
 
-  function getInitialsFromFullName(fullName) {
-    const parts = String(fullName || "").trim().split(/\s+/);
+  const initials = (fullName) => {
+    const parts = String(fullName || "")
+      .trim()
+      .split(/\s+/);
     if (!parts[0]) return "??";
-    if (parts.length > 1) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-    return parts[0].substring(0, 2).toUpperCase();
-  }
-
-  function computeStableColorIndex(fullName) {
-    const sum = Array.from(String(fullName || "")).reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
-    return (sum % 7) + 1;
-  }
-
-  function getLoggedInUserLowercase() {
     return (
+      parts[0][0] + (parts[1] ? parts[parts.length - 1][0] : parts[0][1] || "")
+    ).toUpperCase();
+  };
+
+  const colorIdx = (name) =>
+    (Array.from(String(name || "")).reduce((a, c) => a + c.charCodeAt(0), 0) %
+      7) +
+    1;
+
+  const currentUserLower = () =>
+    (
       localStorage.getItem("name") ||
       localStorage.getItem("userName") ||
       localStorage.getItem("displayName") ||
       ""
-    ).trim().toLowerCase();
-  }
+    )
+      .trim()
+      .toLowerCase();
 
-  function showFieldValidationError(inputElement, message = "This field is required") {
-    if (!inputElement) return;
-    inputElement.classList.add("at-error");
-    const nextSibling = inputElement.nextElementSibling;
-    const hasMessage = nextSibling && nextSibling.classList.contains("at-error-message");
-    if (!hasMessage) {
+  const showErr = (el, msg = "This field is required") => {
+    if (!el) return;
+    el.classList.add("at-error");
+    const nxt = el.nextElementSibling;
+    if (!(nxt && nxt.classList.contains("at-error-message"))) {
       const hint = document.createElement("div");
       hint.className = "at-error-message";
-      hint.textContent = message;
-      inputElement.insertAdjacentElement("afterend", hint);
+      hint.textContent = msg;
+      el.insertAdjacentElement("afterend", hint);
     }
-  }
+  };
+  const clearErr = (el) => {
+    if (!el) return;
+    el.classList.remove("at-error");
+    const nxt = el.nextElementSibling;
+    if (nxt && nxt.classList.contains("at-error-message")) nxt.remove();
+  };
 
-  function clearFieldValidationError(inputElement) {
-    if (!inputElement) return;
-    inputElement.classList.remove("at-error");
-    const nextSibling = inputElement.nextElementSibling;
-    const isError = nextSibling && nextSibling.classList.contains("at-error-message");
-    if (isError) nextSibling.remove();
-  }
-
-  function ensureCategorySelectHasRealOptions(addTaskContainer) {
-    const categorySelect = query(addTaskContainer, "#task-category");
-    if (!categorySelect) return;
-
-    if (categorySelect.options.length > 0) {
-      const first = categorySelect.options[0];
+  const ensureCategoryOptions = (wrap) => {
+    const sel = $(wrap, "#task-category");
+    if (!sel) return;
+    if (sel.options.length > 0) {
+      const first = sel.options[0];
       if ((first.value || "").trim() === "") {
-        first.disabled = true; first.hidden = true; first.selected = true;
+        first.disabled = true;
+        first.hidden = true;
+        first.selected = true;
       }
     }
-
-    const optionValues = Array.from(categorySelect.options).map((o) => (o.value || o.text).toLowerCase());
-    const hasTechnical = optionValues.some((v) => v.includes("technical"));
-    const hasUserStory = optionValues.some((v) => v.includes("user"));
-    const onlyPlaceholder =
-      categorySelect.options.length === 1 &&
-      String(categorySelect.options[0].value || "").trim() === "";
-
-    if (!hasTechnical && !hasUserStory && onlyPlaceholder) {
-      categorySelect.add(new Option("Technical Task", "technical"));
-      categorySelect.add(new Option("User Story", "user"));
+    const vals = Array.from(sel.options).map((o) =>
+      (o.value || o.text).toLowerCase()
+    );
+    const hasTech = vals.some((v) => v.includes("technical"));
+    const hasUser = vals.some((v) => v.includes("user"));
+    const onlyPH =
+      sel.options.length === 1 &&
+      String(sel.options[0].value || "").trim() === "";
+    if (!hasTech && !hasUser && onlyPH) {
+      sel.add(new Option("Technical Task", "technical"));
+      sel.add(new Option("User Story", "user"));
     }
-  }
+  };
 
-  function normalizeCategoryForBoard(rawValueOrText) {
-    const value = String(rawValueOrText || "").trim().toLowerCase();
-    if (value.includes("technical")) return "Technical task";
-    if (value.includes("user")) return "User Story";
+  const normCategory = (raw) => {
+    const v = String(raw || "")
+      .trim()
+      .toLowerCase();
+    if (v.includes("technical")) return "Technical task";
+    if (v.includes("user")) return "User Story";
     return "Technical task";
-  }
+  };
 
-  function initializeAssignedToDropdown(addTaskContainer) {
-    const hiddenSelect = query(addTaskContainer, "#task-assigned");
-    if (!hiddenSelect) return null;
-
-    hiddenSelect.style.display = "none";
+  function initAssigned(wrap) {
+    const hidden = $(wrap, "#task-assigned");
+    if (!hidden) return null;
+    hidden.style.display = "none";
 
     const wrapper = document.createElement("div");
-    const inputField = document.createElement("input");
-    const dropdownPanel = document.createElement("div");
-    const previewStrip = document.createElement("div");
+    const input = document.createElement("input");
+    const panel = document.createElement("div");
+    const preview = document.createElement("div");
 
     wrapper.className = "at-assign-field";
-    inputField.className = "at-assign-input";
-    dropdownPanel.className = "at-assign-dd";
-    previewStrip.id = "at-assigned-preview";
+    input.className = "at-assign-input";
+    panel.className = "at-assign-dd";
+    preview.id = "at-assigned-preview";
 
-    inputField.type = "text";
-    inputField.readOnly = true;
-    inputField.placeholder = "Select contacts to assign";
+    input.type = "text";
+    input.readOnly = true;
+    input.placeholder = "Select contacts to assign";
 
-    hiddenSelect.insertAdjacentElement("afterend", previewStrip);
-    hiddenSelect.insertAdjacentElement("afterend", dropdownPanel);
-    hiddenSelect.insertAdjacentElement("afterend", wrapper);
-    wrapper.append(inputField, dropdownPanel);
+    hidden.insertAdjacentElement("afterend", preview);
+    hidden.insertAdjacentElement("afterend", panel);
+    hidden.insertAdjacentElement("afterend", wrapper);
+    wrapper.append(input, panel);
 
     const state = {
       selectedByName: new Map(),
-      currentUserLower: getLoggedInUserLowercase(),
-      inputField,
-      dropdownPanel,
-      previewStrip,
+      currentUserLower: currentUserLower(),
+      input,
+      panel,
+      preview,
     };
 
-    attachAssignedDropdownEvents(state);
+    input.addEventListener("click", async () => {
+      const closed = panel.style.display !== "block";
+      if (closed) await rebuildContacts(state);
+      panel.style.display = closed ? "block" : "none";
+    });
+    document.addEventListener("click", (e) => {
+      if (!input.parentElement.contains(e.target)) panel.style.display = "none";
+    });
+
     return {
-      getSelectedUsers: () => Array.from(state.selectedByName.values()).map((u) => ({ name: u.name })),
-      clearSelection: () => clearAssignedSelectionAndUi(state),
-      inputElement: inputField,
+      getSelectedUsers: () =>
+        Array.from(state.selectedByName.values()).map((u) => ({
+          name: u.name,
+        })),
+      clearSelection: () => {
+        state.selectedByName.clear();
+        renderAssigneePreview(state); // Preview sauber leeren
+        panel.querySelectorAll(".at-assign-item").forEach((row) => {
+          row.classList.remove("at-is-selected");
+          row.querySelector(".at-assign-check")?.classList.remove("at-checked");
+        });
+      },
+      inputElement: input,
+      _state: state,
     };
   }
 
-  function attachAssignedDropdownEvents(dropdownState) {
-    const { inputField, dropdownPanel } = dropdownState;
-
-    inputField.addEventListener("click", async () => {
-      const isClosed = dropdownPanel.style.display !== "block";
-      if (isClosed) await rebuildContactsListInDropdown(dropdownState);
-      dropdownPanel.style.display = isClosed ? "block" : "none";
-    });
-
-    document.addEventListener("click", (event) => {
-      const inside = inputField.parentElement.contains(event.target);
-      if (!inside) dropdownPanel.style.display = "none";
-    });
-  }
-
-  async function rebuildContactsListInDropdown(dropdownState) {
-    const { dropdownPanel, selectedByName, currentUserLower } = dropdownState;
-    dropdownPanel.innerHTML = "";
+  async function rebuildContacts(state) {
+    const { panel, selectedByName, currentUserLower } = state;
+    panel.innerHTML = "";
 
     let contacts = [];
     try {
-      const response = await fetch(FIREBASE_CONTACTS_URL);
-      const payload = await response.json();
+      const resp = await fetch(FIREBASE_CONTACTS_URL);
+      const payload = await resp.json();
       contacts =
         payload && typeof payload === "object"
-          ? Object.values(payload).map((c) => c?.name).filter(Boolean)
+          ? Object.values(payload)
+              .map((c) => c?.name)
+              .filter(Boolean)
           : [];
     } catch {}
 
     if (contacts.length === 0) {
-      contacts = ["Sofia Müller","Anton Mayer","Anja Schulz","Benedikt Ziegler","David Eisenberg"];
+      contacts = [
+        "Sofia Müller",
+        "Anton Mayer",
+        "Anja Schulz",
+        "Benedikt Ziegler",
+        "David Eisenberg",
+      ];
     }
 
     contacts.forEach((name) => {
-      const row = createContactsDropdownRow(name, currentUserLower, selectedByName);
-      row.addEventListener("click", () => toggleAssigneeSelection(dropdownState, name));
-      dropdownPanel.appendChild(row);
+      const row = document.createElement("div");
+      row.className = "at-assign-item";
+      row.dataset.name = name;
+
+      const avatar = document.createElement("div");
+      avatar.className = `at-assign-avatar at-av-c${colorIdx(name)}`;
+      avatar.textContent = initials(name);
+
+      const label = document.createElement("div");
+      label.className = "at-assign-name";
+      label.textContent =
+        name.trim().toLowerCase() === currentUserLower ? `${name} (You)` : name;
+
+      const check = document.createElement("span");
+      check.className = "at-assign-check";
+
+      if (selectedByName.has(name)) {
+        row.classList.add("at-is-selected");
+        check.classList.add("at-checked");
+      }
+
+      row.append(avatar, label, check);
+      row.addEventListener("click", () => toggleAssignee(state, name));
+      panel.appendChild(row);
     });
 
+    // markiere bereits ausgewählte erneut
     for (const { name } of selectedByName.values()) {
-      reflectRowSelection(dropdownPanel, name, true);
+      panel.querySelectorAll(".at-assign-item").forEach((r) => {
+        if (r.dataset.name === name) r.classList.add("at-is-selected");
+      });
     }
   }
 
-  function createContactsDropdownRow(name, currentUserLower, selectedByName) {
+  // 🔧 NEU: einheitliches Rendern der Badges, inkl. sauberem Entfernen
+  function renderAssigneePreview(state) {
+    const { preview, selectedByName, panel } = state;
+    preview.innerHTML = "";
+
+    const selected = Array.from(selectedByName.values());
+    if (!selected.length) return;
+
     const row = document.createElement("div");
-    const avatar = document.createElement("div");
-    const label = document.createElement("div");
-    const check = document.createElement("span");
+    row.className = "at-assign-strip";
 
-    row.className = "at-assign-item";
-    row.dataset.name = name;
+    selected.slice(0, 3).forEach((p) => {
+      const b = document.createElement("div");
+      b.className = `at-assign-badge at-badge-c${p.colorIndex}`;
+      b.textContent = initials(p.name);
+      b.title = `${p.name} – remove`;
 
-    avatar.className = `at-assign-avatar at-av-c${computeStableColorIndex(name)}`;
-    avatar.textContent = getInitialsFromFullName(name);
+      // ⛔ ohne toggleAssignee – sonst wird wieder hinzugefügt
+      b.addEventListener("click", (e) => {
+        e.stopPropagation();
+        // 1) aus Auswahl entfernen
+        selectedByName.delete(p.name);
+        // 2) im Panel Checkbox/Row visuell entmarkieren
+        panel.querySelectorAll(".at-assign-item").forEach((r) => {
+          if (r.dataset.name === p.name) {
+            r.classList.remove("at-is-selected");
+            r.querySelector(".at-assign-check")?.classList.remove("at-checked");
+          }
+        });
+        // 3) Preview neu zeichnen
+        renderAssigneePreview(state);
+      });
 
-    label.className = "at-assign-name";
-    label.textContent = name.trim().toLowerCase() === currentUserLower ? `${name} (You)` : name;
+      row.appendChild(b);
+    });
 
-    check.className = "at-assign-check";
-
-    if (selectedByName.has(name)) {
-      row.classList.add("at-is-selected");
-      check.classList.add("at-checked");
+    if (selected.length > 3) {
+      const more = document.createElement("div");
+      more.className = "at-assign-more";
+      more.textContent = `+${selected.length - 3}`;
+      more.title = selected
+        .slice(3)
+        .map((p) => p.name)
+        .join(", ");
+      row.appendChild(more);
     }
 
-    row.append(avatar, label, check);
-    return row;
+    const hint = document.createElement("span");
+    hint.className = "at-assign-hint";
+    hint.textContent = "Click to remove";
+
+    preview.append(row, hint);
   }
 
-  function toggleAssigneeSelection(dropdownState, name) {
-    const { selectedByName, dropdownPanel, inputField, previewStrip } = dropdownState;
+  function toggleAssignee(state, name) {
+    const { selectedByName, panel, input } = state;
 
     if (selectedByName.has(name)) {
       selectedByName.delete(name);
-      reflectRowSelection(dropdownPanel, name, false);
+      panel.querySelectorAll(".at-assign-item").forEach((r) => {
+        if (r.dataset.name === name) {
+          r.classList.remove("at-is-selected");
+          r.querySelector(".at-assign-check")?.classList.remove("at-checked");
+        }
+      });
     } else {
-      selectedByName.set(name, { name, colorIndex: computeStableColorIndex(name) });
-      reflectRowSelection(dropdownPanel, name, true);
-      clearFieldValidationError(inputField);
+      selectedByName.set(name, { name, colorIndex: colorIdx(name) });
+      panel.querySelectorAll(".at-assign-item").forEach((r) => {
+        if (r.dataset.name === name) {
+          r.classList.add("at-is-selected");
+          r.querySelector(".at-assign-check")?.classList.add("at-checked");
+        }
+      });
+      clearErr(input);
     }
 
-    renderAssigneeBadges(previewStrip, dropdownPanel, selectedByName, inputField);
+    // 🔄 einheitlich Preview updaten
+    renderAssigneePreview(state);
   }
 
-  function reflectRowSelection(dropdownPanel, name, isSelected) {
-    dropdownPanel.querySelectorAll(".at-assign-item").forEach((row) => {
-      if (row.dataset.name === name) {
-        row.classList.toggle("at-is-selected", isSelected);
-        row.querySelector(".at-assign-check")?.classList.toggle("at-checked", isSelected);
-      }
-    });
-  }
-
-  // ======= Subtasks =======
-  function ensureSubtaskShell(addTaskContainer) {
-    let shell = query(addTaskContainer, "#subtask-shell");
+  // ===== Subtasks: fester Container + Composer =====
+  function ensureSubtaskShell(root) {
+    let shell = $(root, "#subtask-shell");
     if (!shell) {
       shell = document.createElement("div");
       shell.id = "subtask-shell";
-      const rightCol = query(addTaskContainer, ".task-form-right");
-      rightCol?.appendChild(shell);
+      $(root, ".task-form-right")?.appendChild(shell);
     }
     let list = shell.querySelector("#subtask-list");
     if (!list) {
@@ -232,60 +300,54 @@
     return list;
   }
 
-  function initializeSubtaskComposer(addTaskContainer) {
-    const subtaskInput = query(addTaskContainer, "#subtask-input");
-    const addSubtaskButton = query(addTaskContainer, "#add-subtask-btn");
-    const subtaskList = ensureSubtaskShell(addTaskContainer); // <<< immer vorhanden
+  function initSubtaskComposer(root) {
+    const input = $(root, "#subtask-input");
+    const addBtn = $(root, "#add-subtask-btn");
+    const list = ensureSubtaskShell(root);
 
-    function createActionButton(svgPathD, title) {
+    const actBtn = (d, title) => {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "at-subtask-action-btn";
       btn.title = title;
-      btn.innerHTML = `
-        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-          <path d="${svgPathD}" />
-        </svg>`;
+      btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="${d}" /></svg>`;
       return btn;
-    }
+    };
 
-    function enterEditMode(listItem) {
-      const already = listItem.querySelector(".at-subtask-edit");
-      if (already) {
-        already.focus();
-        const len = already.value.length;
-        already.setSelectionRange(len, len);
+    const editMode = (li) => {
+      const existing = li.querySelector(".at-subtask-edit");
+      if (existing) {
+        existing.focus();
+        const L = existing.value.length;
+        existing.setSelectionRange(L, L);
         return;
       }
-      const textSpan = listItem.querySelector(".at-subtask-text");
-      if (!textSpan) return;
-
-      const oldText = (listItem.dataset.text || textSpan.textContent).trim();
-      const input = document.createElement("input");
-      input.type = "text";
-      input.value = oldText;
-      input.className = "at-subtask-edit";
-      textSpan.replaceWith(input);
-      input.focus();
-      input.setSelectionRange(oldText.length, oldText.length);
-
+      const span = li.querySelector(".at-subtask-text");
+      if (!span) return;
+      const old = (li.dataset.text || span.textContent).trim();
+      const inp = document.createElement("input");
+      inp.type = "text";
+      inp.value = old;
+      inp.className = "at-subtask-edit";
+      span.replaceWith(inp);
+      inp.focus();
+      inp.setSelectionRange(old.length, old.length);
       const finish = (commit) => {
-        const newValue = commit ? input.value.trim() : oldText;
-        const newSpan = document.createElement("span");
-        newSpan.className = "at-subtask-text";
-        newSpan.textContent = newValue || oldText;
-        listItem.dataset.text = newValue || oldText;
-        if (input.parentElement) input.replaceWith(newSpan);
+        const val = commit ? inp.value.trim() : old;
+        const ns = document.createElement("span");
+        ns.className = "at-subtask-text";
+        ns.textContent = val || old;
+        li.dataset.text = val || old;
+        if (inp.parentElement) inp.replaceWith(ns);
       };
-
-      input.addEventListener("keydown", (e) => {
+      inp.addEventListener("keydown", (e) => {
         if (e.key === "Enter") finish(true);
         if (e.key === "Escape") finish(false);
       });
-      input.addEventListener("blur", () => finish(true));
-    }
+      inp.addEventListener("blur", () => finish(true));
+    };
 
-    function appendSubtaskItem(text) {
+    const appendItem = (text) => {
       if (!text) return;
       const li = document.createElement("li");
       li.className = "at-subtask-item";
@@ -294,164 +356,192 @@
       const row = document.createElement("div");
       row.className = "at-subtask-row";
 
-      const textSpan = document.createElement("span");
-      textSpan.className = "at-subtask-text";
-      textSpan.textContent = text;
+      const txt = document.createElement("span");
+      txt.className = "at-subtask-text";
+      txt.textContent = text;
 
       const actions = document.createElement("div");
       actions.className = "at-subtask-actions";
 
-      const editBtn = createActionButton(
+      const edit = actBtn(
         "M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25Zm15.71-9.04c.39-.39.39-1.03 0-1.41l-2.5-2.5a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.99-1.67Z",
         "Edit"
       );
-      const delBtn = createActionButton(
+      const del = actBtn(
         "M6 7h12v2H6V7Zm2 3h8l-1 9H9L8 10Zm3-7h2v2h-2V3Z",
         "Delete"
       );
 
-      editBtn.addEventListener("click", (e) => { e.stopPropagation(); enterEditMode(li); });
-      delBtn.addEventListener("click", (e) => { e.stopPropagation(); li.remove(); });
+      edit.addEventListener("click", (e) => {
+        e.stopPropagation();
+        editMode(li);
+      });
+      del.addEventListener("click", (e) => {
+        e.stopPropagation();
+        li.remove();
+      });
 
-      actions.append(editBtn, delBtn);
-      row.append(textSpan, actions);
+      actions.append(edit, del);
+      row.append(txt, actions);
       li.append(row);
-      subtaskList?.appendChild(li);
-    }
+      list.appendChild(li);
+    };
 
-    addSubtaskButton?.addEventListener("click", () => {
-      const value = subtaskInput?.value.trim();
-      if (value) {
-        appendSubtaskItem(value);
-        subtaskInput.value = "";
+    addBtn?.addEventListener("click", () => {
+      const v = input?.value.trim();
+      if (v) {
+        appendItem(v);
+        input.value = "";
       }
     });
-
-    subtaskInput?.addEventListener("keydown", (e) => {
+    input?.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
-        const value = subtaskInput.value.trim();
-        if (value) {
-          appendSubtaskItem(value);
-          subtaskInput.value = "";
+        const v = input.value.trim();
+        if (v) {
+          appendItem(v);
+          input.value = "";
         }
       }
     });
 
     return {
       collect: () =>
-        Array.from(addTaskContainer.querySelectorAll("#subtask-list li")).map((li) => ({
+        Array.from(root.querySelectorAll("#subtask-list li")).map((li) => ({
           text: li.dataset.text || li.textContent.trim(),
           completed: false,
         })),
       clear: () => {
-        const list = ensureSubtaskShell(addTaskContainer);
-        if (list) list.innerHTML = "";
+        const l = ensureSubtaskShell(root);
+        if (l) l.innerHTML = "";
       },
     };
   }
 
-  function buildTaskPayload(addTaskContainer, prioritySelector, subtaskComposer, assignedDropdown) {
-    const titleValue = query(addTaskContainer, "#task-title")?.value.trim() || "";
-    const descriptionValue =
-      query(addTaskContainer, "#task-desc")?.value.trim() || "No description provided";
-    const dueDateValue = query(addTaskContainer, "#task-due")?.value.trim() || "";
-
-    const categorySelect = query(addTaskContainer, "#task-category");
-    const rawCategory = categorySelect
-      ? categorySelect.value || categorySelect.options[categorySelect.selectedIndex]?.text
-      : "";
-
-    const normalizedCategory = normalizeCategoryForBoard(rawCategory);
-
+  function initPriority(wrap) {
+    const urgent = $(wrap, ".btn-urgent");
+    const medium = $(wrap, ".btn-medium");
+    const low = $(wrap, ".btn-low");
+    let current = "medium";
+    const set = (n) => {
+      current = n;
+      [urgent, medium, low].forEach((b) =>
+        b?.setAttribute("aria-pressed", "false")
+      );
+      ({ urgent, medium, low })[n]?.setAttribute("aria-pressed", "true");
+    };
+    urgent?.addEventListener("click", () => set("urgent"));
+    medium?.addEventListener("click", () => set("medium"));
+    low?.addEventListener("click", () => set("low"));
+    set("medium");
     return {
-      column: "toDoColumn",
-      description: descriptionValue,
-      dueDate: dueDateValue,
-      id: null,
-      priority: prioritySelector.getIconPath(),
-      progress: 0,
-      title: titleValue,
-      users: assignedDropdown?.getSelectedUsers() || [],
-      subtasks: subtaskComposer.collect(),
-      category: normalizedCategory,
+      getCurrentName: () => current,
+      getIconPath: () => `../img/priority-img/${current}.png`,
+      resetToMedium: () => set("medium"),
     };
   }
 
-  async function persistTaskToFirebase(taskPayload) {
-    const createResponse = await fetch(FIREBASE_TASKS_URL, {
+  const buildPayload = (wrap, prio, subt, assigned) => {
+    const title = $(wrap, "#task-title")?.value.trim() || "";
+    const desc =
+      $(wrap, "#task-desc")?.value.trim() || "No description provided";
+    const due = $(wrap, "#task-due")?.value.trim() || "";
+    const catSel = $(wrap, "#task-category");
+    const rawCat = catSel
+      ? catSel.value || catSel.options[catSel.selectedIndex]?.text
+      : "";
+    return {
+      column: "toDoColumn",
+      description: desc,
+      dueDate: due,
+      id: null,
+      priority: prio.getIconPath(),
+      progress: 0,
+      title,
+      users: assigned?.getSelectedUsers() || [],
+      subtasks: subt.collect(),
+      category: normCategory(rawCat),
+    };
+  };
+
+  async function persistTask(task) {
+    const resp = await fetch(FIREBASE_TASKS_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(taskPayload),
+      body: JSON.stringify(task),
     });
-    const created = await createResponse.json();
-    const firebaseKey = created && created.name;
-    if (!firebaseKey) return null;
-
-    await fetch(`${FIREBASE_BASE_URL}/tasks/${firebaseKey}/id.json`, {
+    const created = await resp.json();
+    const key = created && created.name;
+    if (!key) return null;
+    await fetch(`${FIREBASE_BASE_URL}/tasks/${key}/id.json`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(firebaseKey),
+      body: JSON.stringify(key),
     });
-
-    return firebaseKey;
+    return key;
   }
 
-  function attachFormLifecycle(addTaskContainer, prioritySelector, subtaskComposer, assignedDropdown) {
-    const titleInput = query(addTaskContainer, "#task-title");
-    const dueDateInput = query(addTaskContainer, "#task-due");
-    const categorySelect = query(addTaskContainer, "#task-category");
-    const createButton = query(addTaskContainer, "#create-task-btn");
-    const clearButton = query(addTaskContainer, "#clear-task-btn");
+  function attachLifecycle(wrap, prio, subt, assigned) {
+    const title = $(wrap, "#task-title");
+    const due = $(wrap, "#task-due");
+    const cat = $(wrap, "#task-category");
+    const btnCreate = $(wrap, "#create-task-btn");
+    const btnClear = $(wrap, "#clear-task-btn");
 
-    [titleInput, dueDateInput, categorySelect].forEach((el) => {
-      el?.addEventListener("input", () => clearFieldValidationError(el));
-      el?.addEventListener("change", () => clearFieldValidationError(el));
+    [title, due, cat].forEach((el) => {
+      el?.addEventListener("input", () => clearErr(el));
+      el?.addEventListener("change", () => clearErr(el));
     });
 
-    function validateRequiredFields() {
+    const validate = () => {
       let ok = true;
-      if (!titleInput?.value.trim()) { showFieldValidationError(titleInput, "Title is required"); ok = false; }
-      if (!dueDateInput?.value.trim()) { showFieldValidationError(dueDateInput, "Due date is required"); ok = false; }
-      if (!categorySelect?.value.trim()) { showFieldValidationError(categorySelect, "Category is required"); ok = false; }
+      if (!title?.value.trim()) {
+        showErr(title, "Title is required");
+        ok = false;
+      }
+      if (!due?.value.trim()) {
+        showErr(due, "Due date is required");
+        ok = false;
+      }
+      if (!cat?.value.trim()) {
+        showErr(cat, "Category is required");
+        ok = false;
+      }
       return ok;
-    }
+    };
 
-    createButton?.addEventListener("click", async () => {
-      if (!validateRequiredFields()) return;
-      const payload = buildTaskPayload(addTaskContainer, prioritySelector, subtaskComposer, assignedDropdown);
+    btnCreate?.addEventListener("click", async () => {
+      if (!validate()) return;
       try {
-        const key = await persistTaskToFirebase(payload);
+        const key = await persistTask(buildPayload(wrap, prio, subt, assigned));
         if (key) window.location.href = "./board.html";
-      } catch (error) {
-        console.error("Error saving task:", error);
+      } catch (e) {
+        console.error("Error saving task:", e);
       }
     });
 
-    clearButton?.addEventListener("click", () => {
-      const descriptionInput = query(addTaskContainer, "#task-desc");
-      if (titleInput) titleInput.value = "";
-      if (descriptionInput) descriptionInput.value = "";
-      if (dueDateInput) dueDateInput.value = "";
-      if (categorySelect) categorySelect.selectedIndex = 0;
-      subtaskComposer.clear();
-      assignedDropdown?.clearSelection();
-      [titleInput, dueDateInput, categorySelect, assignedDropdown?.inputElement, descriptionInput]
-        .forEach(clearFieldValidationError);
-      prioritySelector.resetToMedium();
+    btnClear?.addEventListener("click", () => {
+      const desc = $(wrap, "#task-desc");
+      if (title) title.value = "";
+      if (desc) desc.value = "";
+      if (due) due.value = "";
+      if (cat) cat.selectedIndex = 0;
+      subt.clear();
+      assigned?.clearSelection();
+      [title, due, cat, assigned?.inputElement, desc].forEach(clearErr);
+      prio.resetToMedium();
     });
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    const addTaskContainer = document.getElementById("addtask-container");
-    if (!addTaskContainer) return;
+    const root = document.getElementById("addtask-container");
+    if (!root) return;
 
-    ensureCategorySelectHasRealOptions(addTaskContainer);
+    ensureCategoryOptions(root);
+    const prio = initPriority(root);
+    const subt = initSubtaskComposer(root);
+    const assigned = initAssigned(root);
 
-    const prioritySelector = initializePrioritySelector(addTaskContainer);
-    const subtaskComposer = initializeSubtaskComposer(addTaskContainer);
-    const assignedDropdown = initializeAssignedToDropdown(addTaskContainer);
-
-    attachFormLifecycle(addTaskContainer, prioritySelector, subtaskComposer, assignedDropdown);
+    attachLifecycle(root, prio, subt, assigned);
   });
 })();

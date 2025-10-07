@@ -506,7 +506,7 @@
     }
 }
 
-@media (min-width: 925px) and (max-width: 4000x) {
+@media (min-width: 925px) and (max-width: 4000px) {
 
     /* HEADER */
     #addtask-container h2 {
@@ -608,7 +608,6 @@
     .create-formerror {
         display: flex;
         justify-content: space-between;
-        padding-top: 44px;
         min-width: 52.5em;
         max-width: 200.5em;
     }
