@@ -4,6 +4,8 @@
     <title>Join</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Fonts & Favicon -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -11,6 +13,8 @@
       rel="stylesheet"
     />
     <link rel="icon" href="../img/capa.png" type="image/png" />
+
+    <!-- Styles -->
     <link rel="stylesheet" href="../styles/standard.css" />
     <link rel="stylesheet" href="../styles/header.css" />
     <link rel="stylesheet" href="../styles/side-menu.css" />
@@ -19,10 +23,11 @@
     <link rel="stylesheet" href="../styles/summary.css" />
     <link rel="stylesheet" href="../styles/addtask-responsive.css" />
 
+    <!-- Scripts -->
     <script src="../scripts/firebase.js"></script>
     <script src="../scripts/account-name.js"></script>
     <script src="../scripts/dropdown.js"></script>
-    <script src="../scripts/addTask.js"></script>
+    <script src="../scripts/addTask.js" defer></script>
     <script src="../scripts/summary.js"></script>
   </head>
 
@@ -71,6 +76,7 @@
         </div>
       </div>
     </div>
+
     <div class="main-div">
       <div class="header">
         <div class="main-header">
@@ -84,19 +90,16 @@
                 <img src="../img/icon/help.png" alt="" class="help-icon" />
               </a>
             </div>
-            <div class="account">
-              <div>##</div>
-            </div>
+            <div class="account"><div>##</div></div>
           </div>
         </div>
       </div>
+
       <div class="dropdown-menu">
         <div class="dropdown-content">
           <div class="dropdown-content-div">
             <div class="dropdown-content-div-text">
-              <div>
-                <a href="../resources/help/help.html">Help</a>
-              </div>
+              <div><a href="../resources/help/help.html">Help</a></div>
             </div>
           </div>
           <div class="dropdown-content-div">
@@ -119,9 +122,7 @@
           </div>
           <div class="dropdown-content-div">
             <div class="dropdown-content-div-text">
-              <div>
-                <a href="../index.html">Logout</a>
-              </div>
+              <div><a href="../index.html">Logout</a></div>
             </div>
           </div>
         </div>
@@ -129,9 +130,8 @@
 
       <!-- addtask -->
       <div id="addtask-container">
-        <div>
-          <h2 style="margin: 0">Add Task</h2>
-        </div>
+        <div><h2 style="margin: 0">Add Task</h2></div>
+
         <div class="task-form-container">
           <div class="task-form-left">
             <label class="star-red">Title</label>
@@ -153,24 +153,34 @@
             <label class="star-red">Due Date</label>
             <input class="padding-bottom" type="date" id="task-due" required />
           </div>
+
           <img
             class="partition"
             src="../img/space-line.svg"
             alt="partition line"
           />
+
           <div class="task-form-right">
             <div>
               <label>Priority</label>
               <div class="priority-btn">
-                <button class="btn-urgent">
-                  <img src="../img/icon-urgent.png" alt="" /> Urgent
+                <button
+                  class="btn-urgent button-padding"
+                  style="padding-right: 20px; padding-left: 20px"
+                >
+                  <img src="../img/icon-urgent.png" alt /> Urgent
                 </button>
-                <button class="btn-medium">
-                  <img src="../img/icon/icon-medium-orange.svg" alt="" /> Medium
+                <button
+                  class="btn-medium button-padding"
+                  style="padding-right: 20px; padding-left: 20px"
+                >
+                  <img src="../img/icon/icon-medium-orange.svg" alt /> Medium
                 </button>
-                <button class="btn-low">
-                  <img src="../img/icon-low.png" alt="" />
-                  <span> Low </span>
+                <button
+                  class="btn-low button-padding"
+                  style="padding-right: 20px; padding-left: 20px"
+                >
+                  <img src="../img/icon-low.png" alt /><span> Low </span>
                 </button>
               </div>
             </div>
@@ -197,7 +207,7 @@
               <button type="button" id="add-subtask-btn">+</button>
             </div>
 
-            <!-- Fester Container: hält Platz & nimmt Subtasks auf -->
+            <!-- Scroll-Container: unsichtbar bis zum ersten Subtask -->
             <div id="subtask-shell">
               <ul id="subtask-list"></ul>
             </div>
@@ -250,30 +260,34 @@
         <div class="logo-content-container-bottom">
           <div class="menu-content-bottom">
             <div class="bottom-menu">
-              <a href="../summary.html">
-                <img src="../img/icon/summary.png" alt="summary" />Summary
-              </a>
+              <a href="../summary.html"
+                ><img src="../img/icon/summary.png" alt="summary" />Summary</a
+              >
             </div>
             <div class="selected-menu menu-content-div bottom-menu">
-              <a href="./add_task.html">
-                <img src="../img/icon/add_task.png" alt="add task" />
-                Add Task
-              </a>
+              <a href="./add_task.html"
+                ><img src="../img/icon/add_task.png" alt="add task" />Add
+                Task</a
+              >
             </div>
             <div class="menu-content-div resp-cont-div bottom-menu">
-              <a href="./board.html">
-                <img src="../img/icon/board.png" alt="board" />Board
-              </a>
+              <a href="./board.html"
+                ><img src="../img/icon/board.png" alt="board" />Board</a
+              >
             </div>
             <div class="menu-content-div bottom-menu">
-              <a href="contacts.html">
-                <img src="../img/icon/contacts.png" alt="contacts" />Contacts
-              </a>
+              <a href="contacts.html"
+                ><img
+                  src="../img/icon/contacts.png"
+                  alt="contacts"
+                />Contacts</a
+              >
             </div>
           </div>
         </div>
       </div>
     </div>
+
     <script src="../scripts/log.js" defer></script>
   </body>
 </html>

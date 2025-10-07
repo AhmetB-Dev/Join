@@ -31,6 +31,7 @@
       .trim()
       .toLowerCase();
 
+  /* ===== Validation Helpers ===== */
   const showErr = (el, msg = "This field is required") => {
     if (!el) return;
     el.classList.add("at-error");
@@ -49,6 +50,7 @@
     if (nxt && nxt.classList.contains("at-error-message")) nxt.remove();
   };
 
+  /* ===== Category ===== */
   const ensureCategoryOptions = (wrap) => {
     const sel = $(wrap, "#task-category");
     if (!sel) return;
@@ -83,6 +85,7 @@
     return "Technical task";
   };
 
+  /* ===== Assigned To (Dropdown + Preview Badges) ===== */
   function initAssigned(wrap) {
     const hidden = $(wrap, "#task-assigned");
     if (!hidden) return null;
@@ -131,7 +134,7 @@
         })),
       clearSelection: () => {
         state.selectedByName.clear();
-        renderAssigneePreview(state); // Preview sauber leeren
+        renderAssigneePreview(state);
         panel.querySelectorAll(".at-assign-item").forEach((row) => {
           row.classList.remove("at-is-selected");
           row.querySelector(".at-assign-check")?.classList.remove("at-checked");
@@ -195,7 +198,6 @@
       panel.appendChild(row);
     });
 
-    // markiere bereits ausgewählte erneut
     for (const { name } of selectedByName.values()) {
       panel.querySelectorAll(".at-assign-item").forEach((r) => {
         if (r.dataset.name === name) r.classList.add("at-is-selected");
@@ -203,7 +205,6 @@
     }
   }
 
-  // 🔧 NEU: einheitliches Rendern der Badges, inkl. sauberem Entfernen
   function renderAssigneePreview(state) {
     const { preview, selectedByName, panel } = state;
     preview.innerHTML = "";
@@ -220,19 +221,16 @@
       b.textContent = initials(p.name);
       b.title = `${p.name} – remove`;
 
-      // ⛔ ohne toggleAssignee – sonst wird wieder hinzugefügt
+      // NICHT toggleAssignee() – sonst sofort wieder hinzugefügt
       b.addEventListener("click", (e) => {
         e.stopPropagation();
-        // 1) aus Auswahl entfernen
         selectedByName.delete(p.name);
-        // 2) im Panel Checkbox/Row visuell entmarkieren
         panel.querySelectorAll(".at-assign-item").forEach((r) => {
           if (r.dataset.name === p.name) {
             r.classList.remove("at-is-selected");
             r.querySelector(".at-assign-check")?.classList.remove("at-checked");
           }
         });
-        // 3) Preview neu zeichnen
         renderAssigneePreview(state);
       });
 
@@ -279,17 +277,16 @@
       clearErr(input);
     }
 
-    // 🔄 einheitlich Preview updaten
     renderAssigneePreview(state);
   }
 
-  // ===== Subtasks: fester Container + Composer =====
+  /* ===== Subtasks ===== */
   function ensureSubtaskShell(root) {
-    let shell = $(root, "#subtask-shell");
+    let shell = root.querySelector("#subtask-shell");
     if (!shell) {
       shell = document.createElement("div");
       shell.id = "subtask-shell";
-      $(root, ".task-form-right")?.appendChild(shell);
+      root.querySelector(".task-form-right")?.appendChild(shell);
     }
     let list = shell.querySelector("#subtask-list");
     if (!list) {
@@ -300,10 +297,28 @@
     return list;
   }
 
+  function openShell(listEl) {
+    const shell = listEl?.parentElement;
+    if (shell && !shell.classList.contains("is-open")) {
+      shell.classList.add("is-open");
+    }
+  }
+  function closeShell(listEl) {
+    const shell = listEl?.parentElement;
+    if (shell && shell.classList.contains("is-open")) {
+      shell.classList.remove("is-open");
+    }
+  }
+  function checkAutoClose(listEl) {
+    if (listEl && !listEl.querySelector("li")) {
+      closeShell(listEl);
+    }
+  }
+
   function initSubtaskComposer(root) {
     const input = $(root, "#subtask-input");
     const addBtn = $(root, "#add-subtask-btn");
-    const list = ensureSubtaskShell(root);
+    const list = ensureSubtaskShell(root); // existiert, aber erstmal unsichtbar (CSS)
 
     const actBtn = (d, title) => {
       const btn = document.createElement("button");
@@ -379,12 +394,19 @@
       del.addEventListener("click", (e) => {
         e.stopPropagation();
         li.remove();
+        checkAutoClose(list); // bei Leerstand Container wieder verstecken
       });
 
       actions.append(edit, del);
       row.append(txt, actions);
       li.append(row);
       list.appendChild(li);
+
+      // Container sichtbar machen & zum neuesten Eintrag scrollen
+      openShell(list);
+      const shell = list.parentElement;
+      if (shell)
+        shell.scrollTo({ top: shell.scrollHeight, behavior: "smooth" });
     };
 
     addBtn?.addEventListener("click", () => {
@@ -412,12 +434,13 @@
           completed: false,
         })),
       clear: () => {
-        const l = ensureSubtaskShell(root);
-        if (l) l.innerHTML = "";
+        list.innerHTML = "";
+        closeShell(list); // beim Leeren wieder verstecken
       },
     };
   }
 
+  /* ===== Priority ===== */
   function initPriority(wrap) {
     const urgent = $(wrap, ".btn-urgent");
     const medium = $(wrap, ".btn-medium");
@@ -441,6 +464,7 @@
     };
   }
 
+  /* ===== Build & Persist ===== */
   const buildPayload = (wrap, prio, subt, assigned) => {
     const title = $(wrap, "#task-title")?.value.trim() || "";
     const desc =
@@ -533,6 +557,7 @@
     });
   }
 
+  /* ===== Boot ===== */
   document.addEventListener("DOMContentLoaded", () => {
     const root = document.getElementById("addtask-container");
     if (!root) return;

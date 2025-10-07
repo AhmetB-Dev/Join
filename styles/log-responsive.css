@@ -168,14 +168,14 @@
     display: flex;
     justify-content: center;
     padding: 1em 0;
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
   .header-right {
     margin-left: 0;
     display: flex;
     align-items: center;
     gap: 12px;
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
   button,
   .btn {
@@ -185,11 +185,11 @@
     background: #2a3647;
     color: #fff;
     cursor: pointer;
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
   input {
     width: 12em;
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
   input.passwort-icon {
     background: url(../img/lock.png) no-repeat;
@@ -206,7 +206,7 @@
     flex-direction: column;
     align-items: center;
     gap: 7px;
-    font-size: 2rem;
+    font-size: 1.5rem;
   }
   .login-header img {
     width: 100px;

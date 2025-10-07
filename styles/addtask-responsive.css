@@ -1,615 +1,761 @@
 @media (min-width: 0px) and (max-width: 440px) {
-    #addtask-container {
-        display: block !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch;
-        box-sizing: border-box;
-    }
+  #addtask-container {
+    display: block !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+  }
 
-    .partition {
-        display: none
-    }
+  .partition {
+    display: none;
+  }
 
-    /* HEADER */
-    #addtask-container h2 {
-        font-size: 46px;
-        display: flex;
-        position: fixed;
-        align-items: center;
-        margin: 0px;
-        background-color: #F5F7F9;
-        left: 0px;
-        right: 0px;
-        top: 66px;
-        padding: 55px 25px 2px 25px;
-    }
+  /* HEADER */
+  #addtask-container h2 {
+    font-size: 46px;
+    display: flex;
+    position: fixed;
+    align-items: center;
+    margin: 0px;
+    background-color: #f5f7f9;
+    left: 0px;
+    right: 0px;
+    top: 66px;
+    padding: 55px 25px 2px 25px;
+  }
 
-    /* MAIN */
-    .main-div {
-        display: flex;
-        flex-direction: column;
-        justify-content: unset;
-        width: 100%;
-        flex: 1;
-    }
+  /* MAIN */
+  .main-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: unset;
+    width: 100%;
+    flex: 1;
+  }
 
-    #addtask-container {
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        padding: 55px 25px 2px 25px;
-    }
+  #addtask-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 55px 25px 2px 25px;
+  }
 
-    .task-form-container {
-        gap: 4px;
-    }
+  .task-form-container {
+    gap: 4px;
+  }
 
-    .task-form-left textarea {
-        width: unset;
-        height: 98px;
-        max-width: -webkit-fill-available;
-        max-height: 80px;
-    }
+  .task-form-left textarea {
+    width: unset;
+    height: 98px;
+    max-width: -webkit-fill-available;
+    max-height: 80px;
+  }
 
-    .task-form-container {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        padding-top: 7pc;
-    }
+  .task-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 7pc;
+  }
 
-    .subtask-input-group input {
-        font-size: 16px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
+  .subtask-input-group input {
+    font-size: 16px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
 
-    .padding-bottom {
-        border: 1px solid #D1D1D1;
-        border-radius: 8px;
-        outline: none;
-        font-size: 16px;
-        padding: 8px;
-        margin-bottom: 18px;
-    }
+  .padding-bottom {
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    outline: none;
+    font-size: 16px;
+    padding: 8px;
+    margin-bottom: 18px;
+  }
 
-    .priority-btn {
-        display: flex;
-        justify-content: space-around;
-        gap: unset;
-        padding: 2px 12px 2px 12px;
-        flex-direction: row-reverse;
-        align-items: center;
-    }
+  .priority-btn {
+    display: flex;
+    justify-content: space-around;
+    gap: unset;
+    padding: 2px 12px 2px 12px;
+    flex-direction: row-reverse;
+    align-items: center;
+  }
 
+  .priority-btn button {
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    font-size: 14px;
+    padding-top: 15px;
+    gap: 8px;
+    padding-right: 15px;
+    padding-bottom: 15px;
+    padding-left: 15px;
+  }
 
-    .priority-btn button {
-        display: flex;
-        align-items: center;
-        flex-direction: row-reverse;
-        font-size: 14px;
-        padding-top: 15px;
-        gap: 8px;
-        padding-right: 15px;
-        padding-bottom: 15px;
-        padding-left: 15px;
-    }
+  /* FOOTER */
+  .create-formerror {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 5pc;
+  }
 
-    /* FOOTER */
-    .create-formerror {
-        display: flex;
-        flex-direction: column;
-        padding-bottom: 5pc;
-    }
+  .clear-creat-div {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    background-color: #f5f7f9;
+    padding: 10px 25px 0px 0px;
+    gap: 55px;
+    left: 0px;
+    bottom: 65px;
+    right: 0px;
+  }
 
-    .clear-creat-div {
-        position: fixed;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        background-color: #F5F7F9;
-        padding: 10px 25px 0px 0px;
-        gap: 55px;
-        left: 0px;
-        bottom: 65px;
-        right: 0px;
-    }
-
-    .create-formerror {
-        padding-top: unset;
-        padding-bottom: 8pc;
-    }
+  .create-formerror {
+    padding-top: unset;
+    padding-bottom: 8pc;
+  }
 }
 
 @media (min-width: 440px) and (max-width: 550px) {
-    #addtask-container {
-        display: block !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch;
-        box-sizing: border-box;
-    }
+  #addtask-container {
+    display: block !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+  }
 
-    .partition {
-        display: none
-    }
+  .partition {
+    display: none;
+  }
 
-    /* HEADER */
-    #addtask-container h2 {
-        font-size: 46px;
-        display: flex;
-        position: fixed;
-        align-items: center;
-        margin: 0px;
-        background-color: #F5F7F9;
-        left: 0px;
-        right: 0px;
-        top: 98px;
-        padding: 55px 25px 2px 25px;
-    }
+  /* HEADER */
+  #addtask-container h2 {
+    font-size: 46px;
+    display: flex;
+    position: fixed;
+    align-items: center;
+    margin: 0px;
+    background-color: #f5f7f9;
+    left: 0px;
+    right: 0px;
+    top: 98px;
+    padding: 55px 25px 2px 25px;
+  }
 
+  /* Main */
+  .main-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: unset;
+    width: 100%;
+    flex: 1;
+  }
 
-    /* Main */
-    .main-div {
-        display: flex;
-        flex-direction: column;
-        justify-content: unset;
-        width: 100%;
-        flex: 1;
-    }
+  #addtask-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 55px 25px 2px 25px;
+  }
 
-    #addtask-container {
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        padding: 55px 25px 2px 25px;
-    }
+  .padding-bottom {
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    outline: none;
+    font-size: 16px;
+    padding: 8px;
+    margin-bottom: 18px;
+  }
 
-    .padding-bottom {
-        border: 1px solid #D1D1D1;
-        border-radius: 8px;
-        outline: none;
-        font-size: 16px;
-        padding: 8px;
-        margin-bottom: 18px;
-    }
+  .task-form-container {
+    gap: 4px;
+  }
 
-    .task-form-container {
-        gap: 4px;
-    }
+  .task-form-left textarea {
+    width: unset;
+    height: 98px;
+    max-width: -webkit-fill-available;
+    max-height: 80px;
+  }
 
-    .task-form-left textarea {
-        width: unset;
-        height: 98px;
-        max-width: -webkit-fill-available;
-        max-height: 80px;
-    }
+  .task-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 7pc;
+  }
 
-    .task-form-container {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        padding-top: 7pc;
+  .priority-btn {
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    justify-content: space-evenly;
+    gap: 10px;
+    padding-top: 6px;
+  }
 
-    }
+  .priority-btn button {
+    font-size: 17px;
+    padding-top: 16px;
+    padding-right: 22px;
+    padding-bottom: 16px;
+    padding-left: 22px;
+    gap: 8px;
+  }
 
-    .priority-btn {
-        display: flex;
-        align-items: center;
-        flex-direction: row-reverse;
-        justify-content: space-evenly;
-        gap: 10px;
-        padding-top: 6px;
-    }
+  .subtask-input-group input {
+    font-size: 16px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
 
-    .priority-btn button {
-        font-size: 17px;
-        padding-top: 16px;
-        padding-right: 22px;
-        padding-bottom: 16px;
-        padding-left: 22px;
-        gap: 8px;
-    }
+  /* FOOTER */
+  .create-formerror {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 5pc;
+  }
 
-    .subtask-input-group input {
-        font-size: 16px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
+  .clear-creat-div {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    background-color: #f5f7f9;
+    padding: 20px 30px 2px 30px;
+    gap: 55px;
+    left: 0px;
+    bottom: 65px;
+    right: 0px;
+  }
 
-    /* FOOTER */
-    .create-formerror {
-        display: flex;
-        flex-direction: column;
-        padding-bottom: 5pc;
-    }
-
-    .clear-creat-div {
-        position: fixed;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        background-color: #F5F7F9;
-        padding: 20px 30px 2px 30px;
-        gap: 55px;
-        left: 0px;
-        bottom: 65px;
-        right: 0px;
-    }
-
-    .create-formerror {
-        padding-top: unset;
-        padding-bottom: 8pc;
-    }
+  .create-formerror {
+    padding-top: unset;
+    padding-bottom: 8pc;
+  }
 }
 
 @media (min-width: 550px) and (max-width: 750px) {
-    #addtask-container {
-        display: block !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch;
-        box-sizing: border-box;
-    }
+  #addtask-container {
+    display: block !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+  }
 
-    .partition {
-        display: none
-    }
+  .partition {
+    display: none;
+  }
 
-    /* HEADER */
-    #addtask-container h2 {
-        font-size: 50px;
-        display: flex;
-        position: fixed;
-        align-items: center;
-        margin: 0px;
-        background-color: #F5F7F9;
-        left: 0px;
-        right: 0px;
-        top: 98px;
-        padding: 55px 25px 2px 25px;
+  /* HEADER */
+  #addtask-container h2 {
+    font-size: 50px;
+    display: flex;
+    position: fixed;
+    align-items: center;
+    margin: 0px;
+    background-color: #f5f7f9;
+    left: 0px;
+    right: 0px;
+    top: 98px;
+    padding: 55px 25px 2px 25px;
+  }
 
-    }
+  /* Main */
+  .main-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: unset;
+    width: 100%;
+    flex: 1;
+  }
 
+  #addtask-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 55px 25px 2px 25px;
+  }
 
-    /* Main */
-    .main-div {
-        display: flex;
-        flex-direction: column;
-        justify-content: unset;
-        width: 100%;
-        flex: 1;
-    }
+  .padding-bottom {
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    outline: none;
+    font-size: 16px;
+    padding: 8px;
+    margin-bottom: 18px;
+  }
 
-    #addtask-container {
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        padding: 55px 25px 2px 25px;
-    }
+  #addtask-container label {
+    font-size: 22px;
+  }
 
-    .padding-bottom {
-        border: 1px solid #D1D1D1;
-        border-radius: 8px;
-        outline: none;
-        font-size: 16px;
-        padding: 8px;
-        margin-bottom: 18px;
-    }
+  .task-form-container {
+    gap: 4px;
+  }
 
-    #addtask-container label {
-        font-size: 22px;
-    }
+  .task-form-left textarea {
+    width: unset;
+    height: 98px;
+    max-width: unset;
+    max-height: 80px;
+  }
 
-    .task-form-container {
-        gap: 4px;
-    }
+  .task-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 7pc;
+  }
 
-    .task-form-left textarea {
-        width: unset;
-        height: 98px;
-        max-width: unset;
-        max-height: 80px;
-    }
+  .priority-btn {
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    justify-content: space-evenly;
+    gap: 10px;
+    padding-top: 6px;
+  }
 
-    .task-form-container {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        padding-top: 7pc;
+  .priority-btn button {
+    font-size: 17px;
+    padding-top: 14px;
+    padding-right: 24px;
+    padding-bottom: 14px;
+    padding-left: 24px;
+    gap: 8px;
+  }
 
-    }
+  .subtask-input-group input {
+    font-size: 16px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
 
-    .priority-btn {
-        display: flex;
-        align-items: center;
-        flex-direction: row-reverse;
-        justify-content: space-evenly;
-        gap: 10px;
-        padding-top: 6px;
-    }
+  #addtask-container select {
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    outline: none;
+    font-size: 17px;
+    flex: 1;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
 
-    .priority-btn button {
-        font-size: 17px;
-        padding-top: 14px;
-        padding-right: 24px;
-        padding-bottom: 14px;
-        padding-left: 24px;
-        gap: 8px;
-    }
+  /* FOOTER */
+  .create-formerror {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 5pc;
+  }
 
-    .subtask-input-group input {
-        font-size: 16px;
-        padding-top: 12px;
-        padding-bottom: 12px;
-    }
+  .clear-creat-div {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    background-color: #f5f7f9;
+    padding: 0px 30px 2px 30px;
+    gap: 55px;
+    left: 0px;
+    bottom: 65px;
+    right: 0px;
+  }
 
-    #addtask-container select {
-        border: 1px solid #D1D1D1;
-        border-radius: 8px;
-        outline: none;
-        font-size: 17px;
-        flex: 1;
-        padding-top: 12px;
-        padding-bottom: 12px;
-    }
-
-    /* FOOTER */
-    .create-formerror {
-        display: flex;
-        flex-direction: column;
-        padding-bottom: 5pc;
-    }
-
-    .clear-creat-div {
-        position: fixed;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        background-color: #F5F7F9;
-        padding: 0px 30px 2px 30px;
-        gap: 55px;
-        left: 0px;
-        bottom: 65px;
-        right: 0px;
-    }
-
-    .create-formerror {
-        padding-top: unset;
-        padding-bottom: 8pc;
-    }
+  .create-formerror {
+    padding-top: unset;
+    padding-bottom: 8pc;
+  }
 }
 
 @media (min-width: 750px) and (max-width: 925px) {
-    #addtask-container {
-        display: block !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch;
-        box-sizing: border-box;
-    }
+  #addtask-container {
+    display: block !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+  }
 
-    .partition {
-        display: none
-    }
+  .partition {
+    display: none;
+  }
 
-    /* HEADER */
-    #addtask-container h2 {
-        font-size: 54px;
-        display: flex;
-        position: fixed;
-        align-items: center;
-        margin: 0px;
-        background-color: #F5F7F9;
-        left: 0px;
-        right: 17px;
-        top: 98px;
-        padding: 35px 15px 2px 15px;
-    }
+  /* HEADER */
+  #addtask-container h2 {
+    font-size: 54px;
+    display: flex;
+    position: fixed;
+    align-items: center;
+    margin: 0px;
+    background-color: #f5f7f9;
+    left: 0px;
+    right: 17px;
+    top: 98px;
+    padding: 35px 15px 2px 15px;
+  }
 
+  /* Main */
+  .main-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: unset;
+    width: 100%;
+    flex: 1;
+  }
 
-    /* Main */
-    .main-div {
-        display: flex;
-        flex-direction: column;
-        justify-content: unset;
-        width: 100%;
-        flex: 1;
-    }
+  #addtask-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 35px 15px 2px 15px;
+  }
 
-    #addtask-container {
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        padding: 35px 15px 2px 15px;
-    }
+  .padding-bottom {
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    outline: none;
+    font-size: 16px;
+    padding: 8px;
+    margin-bottom: 18px;
+  }
 
-    .padding-bottom {
-        border: 1px solid #D1D1D1;
-        border-radius: 8px;
-        outline: none;
-        font-size: 16px;
-        padding: 8px;
-        margin-bottom: 18px;
-    }
+  #addtask-container label {
+    font-size: 23px;
+  }
 
-    #addtask-container label {
-        font-size: 23px;
-    }
+  .task-form-container {
+    gap: 4px;
+  }
 
-    .task-form-container {
-        gap: 4px;
-    }
+  .task-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 7pc;
+  }
 
-    .task-form-container {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        padding-top: 7pc;
+  .priority-btn {
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    justify-content: space-evenly;
+    gap: 10px;
+    padding-top: 6px;
+  }
 
-    }
+  .priority-btn button {
+    font-size: 19px;
+    padding-top: 14px;
+    padding-right: 26px;
+    padding-bottom: 14px;
+    padding-left: 26px;
+    gap: 8px;
+  }
 
-    .priority-btn {
-        display: flex;
-        align-items: center;
-        flex-direction: row-reverse;
-        justify-content: space-evenly;
-        gap: 10px;
-        padding-top: 6px;
-    }
+  .subtask-input-group input {
+    font-size: 16px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
 
-    .priority-btn button {
-        font-size: 19px;
-        padding-top: 14px;
-        padding-right: 26px;
-        padding-bottom: 14px;
-        padding-left: 26px;
-        gap: 8px;
-    }
+  #addtask-container select {
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    outline: none;
+    font-size: 17px;
+    flex: 1;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
 
-    .subtask-input-group input {
-        font-size: 16px;
-        padding-top: 12px;
-        padding-bottom: 12px;
-    }
+  /* FOOTER */
+  .create-formerror {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 5pc;
+  }
 
-    #addtask-container select {
-        border: 1px solid #D1D1D1;
-        border-radius: 8px;
-        outline: none;
-        font-size: 17px;
-        flex: 1;
-        padding-top: 12px;
-        padding-bottom: 12px;
-    }
+  .clear-creat-div {
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    background-color: #f5f7f9;
+    padding: 0px 30px 2px 30px;
+    gap: 55px;
+    left: 0px;
+    bottom: 65px;
+    right: -10px;
+  }
 
-    /* FOOTER */
-    .create-formerror {
-        display: flex;
-        flex-direction: column;
-        padding-bottom: 5pc;
-    }
-
-    .clear-creat-div {
-        position: fixed;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        background-color: #F5F7F9;
-        padding: 0px 30px 2px 30px;
-        gap: 55px;
-        left: 0px;
-        bottom: 65px;
-        right: 0px;
-    }
-
-    .create-formerror {
-        padding-top: unset;
-        padding-bottom: 10pc;
-    }
+  .create-formerror {
+    padding-top: unset;
+    padding-bottom: 10pc;
+  }
 }
 
-@media (min-width: 925px) and (max-width: 4000px) {
+@media (min-width: 925px) and (max-width: 1960px) {
+  /* HEADER */
+  #addtask-container h2 {
+    font-size: 61px;
+    margin-top: 0px;
+  }
 
-    /* HEADER */
-    #addtask-container h2 {
-        font-size: 61px;
-        margin-top: 0px;
-    }
+  .page-summary .summary-header {
+    display: flex;
+    align-items: center;
+    padding-top: 2pc;
+    gap: 15px;
+  }
 
-    .page-summary .summary-header {
-        display: flex;
-        align-items: center;
-        padding-top: 2pc;
-        gap: 15px;
-    }
+  #addtask-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 95px 50px 80px 80px;
+    max-width: 50em;
+  }
 
-    #addtask-container {
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        padding: 95px 50px 80px 80px;
-        max-width: 50em;
-    }
+  .padding-bottom {
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    outline: none;
+    font-size: 16px;
+    padding: 10px 10px 10px 10px;
+    margin-bottom: 18px;
+  }
 
-    .padding-bottom {
-        border: 1px solid #D1D1D1;
-        border-radius: 8px;
-        outline: none;
-        font-size: 16px;
-        /* flex: 1; */
-        padding: 8px 4px 8px 4px;
-        margin-bottom: 18px;
-    }
+  .task-form-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 5em;
+  }
 
-    .task-form-container {
-        display: flex;
-        justify-content: space-around;
-        gap: 6em;
-    }
+  .task-form-left textarea {
+    width: 290px;
+    height: 98px;
+    max-width: unset;
+    max-height: 80px;
+  }
 
-    .task-form-left textarea {
-        width: 290px;
-        height: 98px;
-        max-width: unset;
-        max-height: 80px;
-    }
+  #addtask-container select {
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    outline: none;
+    font-size: 17px;
+    flex: 1;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
 
-    #addtask-container select {
-        border: 1px solid #D1D1D1;
-        border-radius: 8px;
-        outline: none;
-        font-size: 17px;
-        flex: 1;
-        padding-top: 8px;
-        padding-bottom: 8px;
-    }
+  .subtask-input-group input {
+    border: 1px solid #d1d1d1;
+    border-right: none;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    outline: none;
+    font-size: 16px;
+    flex: 1;
+    padding: 10px 10px 10px 10px;
+  }
 
-    .subtask-input-group input {
-        border: 1px solid #D1D1D1;
-        border-right: none;
-        border-top-left-radius: 8px;
-        border-bottom-left-radius: 8px;
-        outline: none;
-        font-size: 17px;
-        flex: 1;
-        padding-top: 8px;
-        padding-bottom: 8px;
-    }
+  #addtask-container label {
+    font-size: 22px;
+  }
 
-    #addtask-container label {
-        font-size: 22px;
-    }
+  .priority-btn {
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 6px;
+  }
 
+  .priority-btn button {
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    font-size: 16px;
+    background-color: white;
+    border-radius: 10px;
+    padding-top: 16px;
+    padding-right: 16px;
+    padding-bottom: 16px;
+    padding-left: 16px;
+    gap: 8px;
+    border: 1px solid #d1d1d1;
+  }
 
-    .priority-btn {
-        display: flex;
-        align-items: center;
-        flex-direction: row-reverse;
-        justify-content: flex-end;
-        gap: 12px;
-        padding-top: 6px;
-    }
+  /* FOOTER */
+  .create-formerror {
+    display: flex;
+    justify-content: space-between;
+    min-width: 50.5em;
+    max-width: 200.5em;
+  }
+}
 
+@media (min-width: 1960px) and (max-width: 4000px) {
+  /* HEADER */
+  #addtask-container h2 {
+    font-size: 72px;
+    margin-top: 0px;
+  }
 
-    .priority-btn button {
-        display: flex;
-        align-items: center;
-        flex-direction: row-reverse;
-        font-size: 16px;
-        background-color: white;
-        border-radius: 10px;
-        padding-top: 16px;
-        padding-right: 16px;
-        padding-bottom: 16px;
-        padding-left: 16px;
-        gap: 8px;
-        border: 1px solid #D1D1D1;
-    }
+  .page-summary .summary-header {
+    display: flex;
+    align-items: center;
+    padding-top: 2pc;
+    gap: 15px;
+  }
+  .task-form-left textarea {
+    width: 340px;
+    height: 98px;
+    max-width: unset;
+    max-height: 80px;
+  }
+  #addtask-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 95px 50px 80px 80px;
+    max-width: 50em;
+  }
 
-    /* FOOTER */
-    .create-formerror {
-        display: flex;
-        justify-content: space-between;
-        min-width: 52.5em;
-        max-width: 200.5em;
-    }
+  .padding-bottom {
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    outline: none;
+    font-size: 24px;
+    padding: 10px 10px 10px 10px;
+    margin-bottom: 18px;
+  }
 
+  .task-form-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 5em;
+  }
+
+  .task-form-left textarea {
+    width: 290px;
+    height: 98px;
+    max-width: unset;
+    max-height: 80px;
+  }
+
+  #addtask-container select {
+    border: 1px solid #d1d1d1;
+    border-radius: 8px;
+    outline: none;
+    font-size: 24px;
+    flex: 1;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  .at-assign-input {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    outline: none;
+    font-size: 24px;
+    background: #fff;
+    padding: 10px 132px 10px 10px;
+    padding-right: 1em;
+  }
+
+  .subtask-input-group input {
+    border: 1px solid #d1d1d1;
+    border-right: none;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    outline: none;
+    font-size: 24px;
+    flex: 1;
+    padding: 10px 10px 10px 10px;
+  }
+
+  #addtask-container label {
+    font-size: 34px;
+  }
+
+  .priority-btn {
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 6px;
+  }
+
+  .priority-btn button {
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    font-size: 24px;
+
+    background-color: white;
+    border-radius: 10px;
+    padding-top: 16px;
+    padding-right: 16px;
+    padding-bottom: 16px;
+    padding-left: 16px;
+    gap: 8px;
+    border: 1px solid #d1d1d1;
+  }
+
+  /* FOOTER */
+  .create-formerror {
+    display: flex;
+    justify-content: space-between;
+    min-width: 56.5em;
+    max-width: 200.5em;
+  }
+
+  #subtask-shell {
+    margin-top: 8px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 8px;
+    font-size: 24px;
+    height: 50px;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+  }
+  .at-assign-badge {
+    width: 44px;
+    height: 43px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 24px;
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 0 0 2px #fff;
+  }
+  .at-assign-name {
+    flex: 1;
+    font-size: 24px;
+  }
+  .at-subtask-action-btn {
+    border: 1px solid #d1d5db;
+    background: #fff;
+    border-radius: 6px;
+    width: 38px;
+    height: 38px;
+    display: grid
+;
+    place-items: center;
+    cursor: pointer;
+}
 }
