@@ -1,289 +1,380 @@
 <!DOCTYPE html>
 <html lang="en" class="page-addtask">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Raleway:ital,wght@0,100..900;1,100..900&family=Rubik+Vinyl&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="../img/capa.png" type="image/png" />
+    <link rel="stylesheet" href="../styles/standard.css" />
+    <link rel="stylesheet" href="../styles/header.css" />
+    <link rel="stylesheet" href="../styles/side-menu.css" />
+    <link rel="stylesheet" href="../styles/profile-dropdown.css" />
+    <link rel="stylesheet" href="../styles/contacts.css" />
+    <link rel="stylesheet" href="../styles/contacts-responsive.css" />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Raleway:ital,wght@0,100..900;1,100..900&family=Rubik+Vinyl&display=swap"
-    rel="stylesheet" />
-  <link rel="icon" href="../img/capa.png" type="image/png" />
-  <link rel="stylesheet" href="../styles/standard.css" />
-  <link rel="stylesheet" href="../styles/header.css" />
-  <link rel="stylesheet" href="../styles/side-menu.css" />
-  <link rel="stylesheet" href="../styles/profile-dropdown.css" />
-  <link rel="stylesheet" href="../styles/contacts.css" />
-  <link rel="stylesheet" href="../styles/contacts-responsive.css" />
+    <script src="../scripts/dropdown.js"></script>
+    <script src="../scripts/firebase.js"></script>
+    <script src="../scripts/utils.js"></script>
+    <script src="../scripts/contacts.js"></script>
 
-  <script src="../scripts/dropdown.js"></script>
-  <script src="../scripts/firebase.js"></script>
-  <script src="../scripts/utils.js"></script>
-  <script src="../scripts/contacts.js"></script>
+    <title>Join</title>
+  </head>
 
-  <title>Join</title>
-
-</head>
-
-<body>
-  <div class="side-menu">
-    <div class="logo-content-container">
-
-      <div class="logo-container-side-menu-responsive">
-        <img src="../img/capa_white.png" alt="Join.Logo" class="logo" />
-      </div>
-      <div class="menu-content">
-        <div class="menu-content-div">
-          <a href="../summary.html" id="summary-menu">
-            <img src="../img/icon/summary.png" alt="summary" />Summary
-          </a>
+  <body>
+    <div class="side-menu">
+      <div class="logo-content-container">
+        <div class="logo-container-side-menu-responsive">
+          <img src="../img/capa_white.png" alt="Join.Logo" class="logo" />
         </div>
-        <div class="menu-content-div">
-          <a id="task-menu" href="./add_task.html">
-            <img src="../img/icon/add_task.png" alt="add task">
-            Add Task
-          </a>
-        </div>
-        <div class="menu-content-div resp-cont-div">
-          <a href="./board.html">
-            <img src="../img/icon/board.png" alt="board" />Board
-          </a>
-        </div>
-        <div class="selected-menu menu-content-div">
-          <a href="./contacts.html">
-            <img src="../img/icon/contacts.png" alt="contacts" />Contacts
-          </a>
-        </div>
-      </div>
-    </div>
-    <div class="policy-container">
-      <div class="policy-container-div">
-        <div>
-          <a href="../resources/private-policy/privacy-policy.html">Privacy Policy</a>
-        </div>
-        <div>
-          <a href="../resources/legal-notice/legal-notice.html">Legal Notice</a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="main-div">
-    <div class="header">
-      <div class="main-header">
-        <div class="header-logo-none-resp">
-          <img class="header-Logo" src="../img/capa.png" alt />
-        </div>
-        <div class="header-text">Kanban Project Management Tool</div>
-        <div class="header-right-side">
-          <div>
-            <a class="help-icon" href="../resources/help/help.html"><img src="../img/icon/help.png" alt="help"></a>
-          </div>
-          <div class="account">
-            <div>G</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="dropdown-menu">
-      <div class="dropdown-content">
-        <div class="dropdown-content-div">
-          <div class="dropdown-content-div-text">
-            <div>
-              <a class="held-link" href="../resources/help/help.html">Help</a>
-            </div>
-          </div>
-        </div>
-        <div class="dropdown-content-div">
-          <div class="dropdown-content-div-text">
-            <div>
-              <a href="../resources/legal-notice/legal-notice.html">Legal notice</a>
-            </div>
-          </div>
-        </div>
-        <div class="dropdown-content-div">
-          <div class="dropdown-content-div-text">
-            <div>
-              <a href="../resources/private-policy/privacy-policy.html">Privacy Policy</a>
-            </div>
-          </div>
-        </div>
-        <div class="dropdown-content-div" onclick="logout()">
-          <div class="dropdown-content-div-text">
-            <div>
-              <a href="./log.html">Logout</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--Contacts-->
-    <section class="contacts-container">
-      <aside class="contacts-list-panel">
-        <div class="add-contact-section">
-          <button class="add-contact-btn" onclick="openAddContactModal()">Add new contact <img
-              src="../img/person_add.png" alt="add contact"></button>
-        </div>
-        <div class="contacts-list" id="contactsList">
-          <!--Kontake werden hier dynamisch eingefügt-->
-        </div>
-        <div class="add-contact-section-mobile">
-          <button class="add-contact-btn-mobile" onclick="openAddContactModal()"><img src="../img/person_add.png"
-              alt="add contact"></button>
-        </div>
-      </aside>
-      <main class="contact-details-panel">
-        <div class="contacts-header">
-          <h1>Contacts</h1>
-          <hr>
-          <span class="contact-subtitle">Better with a team</span>
-        </div>
-        <div class="contact-details-content" id="contactDetailsContent"></div>
-      </main>
-    </section>
-
-    <div class="side-menu-bottom">
-      <div class="logo-content-container-bottom">
-        <div class="menu-content-bottom">
-          <div class="bottom-menu">
-            <a href="../summary.html">
+        <div class="menu-content">
+          <div class="menu-content-div">
+            <a href="../summary.html" id="summary-menu">
               <img src="../img/icon/summary.png" alt="summary" />Summary
             </a>
           </div>
-          <div class="menu-content-div bottom-menu">
-            <a href="./add_task.html">
-              <img src="../img/icon/add_task.png" alt="add task">
+          <div class="menu-content-div">
+            <a id="task-menu" href="./add_task.html">
+              <img src="../img/icon/add_task.png" alt="add task" />
               Add Task
             </a>
           </div>
-          <div class="menu-content-div resp-cont-div bottom-menu">
+          <div class="menu-content-div resp-cont-div">
             <a href="./board.html">
               <img src="../img/icon/board.png" alt="board" />Board
             </a>
           </div>
-          <div class="selected-menu menu-content-div bottom-menu">
+          <div class="selected-menu menu-content-div">
             <a href="./contacts.html">
               <img src="../img/icon/contacts.png" alt="contacts" />Contacts
             </a>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="modal" id="contactModal">
-    <div class="modal-content">
-      <div class="modal-left">
-        <div class="modal-logo">
-          <img src="../img/capa_white.png" alt="Join">
-        </div>
-        <div class="close-icon-container-mobile">
-          <img src="../img/close-white.png" alt="Close" class="close-icon-white" onclick="closeContactModal()">
-        </div>
-        <h2>Edit contact</h2>
-        <hr class="modal-hr">
-      </div>
-      <div class="modal-right">
-        <div class="close-icon-container">
-          <img src="../img/close-icon.png" alt="Close" class="close-icon" onclick="closeContactModal()">
-        </div>
-        <div class="contact-avatar-section">
-          <div class="avatar-circle" id="ModalAvatar">
-            <img class="avatar-circle-img" src="../img/Ellipse 5.png" alt="person">
-            <img class="avatar-circle-person" src="../img/person.png" alt="person">
+      <div class="policy-container">
+        <div class="policy-container-div">
+          <div>
+            <a href="../resources/private-policy/privacy-policy.html"
+              >Privacy Policy</a
+            >
           </div>
-          <div class="input-and-button">
-            <div class="input-group">
-              <div class="input-group-item"><input id="editContactName" type="text" name="name" placeholder="Name"
-                  required="" pattern="^[A-Za-zÄäÖöÜüßçéèêëáàâäíìîïóòôöúùûüÇÉÈÊËÁÀÂÄÍÌÎÏÓÒÔÖÚÙÛÜ\- ]+$"
-                  title="Nur Buchstaben, Bindestrich oder Leerzeichen erlaubt"
-                  oninput="this.value = this.value.replace(/[^A-Za-zÄäÖöÜüßçéèêëáàâäíìîïóòôöúùûüÇÉÈÊËÁÀÂÄÍÌÎÏÓÒÔÖÚÙÛÜ \-]/g, '')"><img
-                  src="../img/icon/person.png" class="input-icon"></div>
-              <div class="input-group-item">
-                <input id="editContactEmail" type="email" name="email" placeholder="Email"
-                    required=""
-                    oninput="validateEmailInput(this)">
-                <img src="../img/icon/mail.png" class="input-icon">
-              </div>
-              <div class="error-message-edit-mail" id="editEmailError"></div>
-              <div class="input-group-item"><input id="editContactPhone" type="tel" name="phone"
-                  placeholder="Telefonnummer" required="" title="Bitte nur Zahlen eingeben (mind. 6 Zeichen)"
-                  oninput="this.value = this.value.replace(/[^0-9]/g, '')"><img src="../img/icon/phone.png"
-                  class="input-icon">
-              </div>
-              <div class="error-message-phone" id="editPhoneError"></div>
-            </div>
-            <div class="button-group">
-              <button class="delete-btn" onclick="editDeleteContact()">Delete</button>
-              <div class="save-btn-container">
-                <button class="save-btn" onclick="saveContact()">Save <img src="../img/icon/check.png"
-                    alt="checked"></button>
-              </div>
-            </div>
+          <div>
+            <a href="../resources/legal-notice/legal-notice.html"
+              >Legal Notice</a
+            >
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="add-modal" id="addContactModal">
-    <div class="modal-content">
-      <div class="modal-left">
-        <div class="modal-logo">
-          <img src="../img/capa_white.png" alt="Join">
-        </div>
-        <div class="close-icon-container-mobile">
-          <img src="../img/close-white.png" alt="Close" class="close-icon-white" onclick="closeContactModal()">
-        </div>
-        <h2>Add contact</h2>
-        <span class="modal-subtitle">Tasks are better with a team!</span>
-        <hr class="modal-hr">
-      </div>
-      <div class="modal-right">
-        <div class="close-icon-container">
-          <img src="../img/close-icon.png" alt="Close" class="close-icon" onclick="closeContactModal()">
-        </div>
-        <div class="contact-avatar-section">
-          <div class="avatar-circle" id="addModalAvatar">
-            <img class="avatar-circle-img" src="../img/Ellipse 5.png" alt="person">
-            <img class="avatar-circle-person" src="../img/person.png" alt="person">
+    <div class="main-div">
+      <div class="header">
+        <div class="main-header">
+          <div class="header-logo-none-resp">
+            <img class="header-Logo" src="../img/capa.png" alt />
           </div>
-          <div class="input-and-button-add">
-            <div class="input-group-add">
-              <div class="error-message-add" id="addInputError"></div>
-              <div class="input-group-item"><input id="addInputName" type="text" name="name" placeholder="Name"
-                  required="" pattern="^[A-Za-zÄäÖöÜüßçéèêëáàâäíìîïóòôöúùûüÇÉÈÊËÁÀÂÄÍÌÎÏÓÒÔÖÚÙÛÜ\- ]+$"
-                  title="Nur Buchstaben, Bindestrich oder Leerzeichen erlaubt"
-                  oninput="this.value = this.value.replace(/[^A-Za-zÄäÖöÜüßçéèêëáàâäíìîïóòôöúùûüÇÉÈÊËÁÀÂÄÍÌÎÏÓÒÔÖÚÙÛÜ \-]/g, '')"><img
-                  src="../img/icon/person.png" class="input-icon"></div>
-              <div class="input-group-item">
-                <input id="addInputEmail" type="email" name="email" placeholder="Email"
-                    required=""
-                    oninput="validateEmailInput(this)">
-                <img src="../img/icon/mail.png" class="input-icon">
-              </div>
-              <div class="error-message" id="addEmailError"></div>
-              <div class="input-group-item"><input id="addInputPhone" type="tel" name="phone"
-                  placeholder="Telefonnummer" required="" title="Bitte nur Zahlen eingeben (mind. 6 Zeichen)"
-                  oninput="this.value = this.value.replace(/[^0-9]/g, '');"><img src="../img/icon/phone.png"
-                  class="input-icon">
-              </div>
-              <div class="error-message-phone" id="addPhoneError"></div>
+          <div class="header-text">Kanban Project Management Tool</div>
+          <div class="header-right-side">
+            <div>
+              <a class="help-icon" href="../resources/help/help.html"
+                ><img src="../img/icon/help.png" alt="help"
+              /></a>
             </div>
-            <div class="button-group-add">
-              <button class="cancel-btn" onclick="cancelAddContact()">Cancel X</button>
-              <div class="create-btn-container">
-                <button class="create-btn" onclick="createAddContact()">Create contact <img src="../img/icon/check.png"
-                    alt="checked"></button>
-              </div>
+            <div class="account">
+              <div>G</div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
+      <div class="dropdown-menu">
+        <div class="dropdown-content">
+          <div class="dropdown-content-div">
+            <div class="dropdown-content-div-text">
+              <div>
+                <a class="held-link" href="../resources/help/help.html">Help</a>
+              </div>
+            </div>
+          </div>
+          <div class="dropdown-content-div">
+            <div class="dropdown-content-div-text">
+              <div>
+                <a href="../resources/legal-notice/legal-notice.html"
+                  >Legal notice</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="dropdown-content-div">
+            <div class="dropdown-content-div-text">
+              <div>
+                <a href="../resources/private-policy/privacy-policy.html"
+                  >Privacy Policy</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="dropdown-content-div" onclick="logout()">
+            <div class="dropdown-content-div-text">
+              <div>
+                <a href="../index.html">Logout</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Contacts-->
+      <section class="contacts-container">
+        <aside class="contacts-list-panel">
+          <div class="add-contact-section">
+            <button class="add-contact-btn" onclick="openAddContactModal()">
+              Add new contact
+              <img src="../img/person_add.png" alt="add contact" />
+            </button>
+          </div>
+          <div class="contacts-list" id="contactsList">
+            <!--Kontake werden hier dynamisch eingefügt-->
+          </div>
+          <div class="add-contact-section-mobile">
+            <button
+              class="add-contact-btn-mobile"
+              onclick="openAddContactModal()"
+            >
+              <img src="../img/person_add.png" alt="add contact" />
+            </button>
+          </div>
+        </aside>
+        <main class="contact-details-panel">
+          <div class="contacts-header">
+            <h1>Contacts</h1>
+            <hr />
+            <span class="contact-subtitle">Better with a team</span>
+          </div>
+          <div class="contact-details-content" id="contactDetailsContent"></div>
+        </main>
+      </section>
 
-</body>
-<script>
-  document.addEventListener('DOMContentLoaded', loadContacts);
-</script>
-
+      <div class="side-menu-bottom">
+        <div class="logo-content-container-bottom">
+          <div class="menu-content-bottom">
+            <div class="bottom-menu">
+              <a href="../summary.html">
+                <img src="../img/icon/summary.png" alt="summary" />Summary
+              </a>
+            </div>
+            <div class="menu-content-div bottom-menu">
+              <a href="./add_task.html">
+                <img src="../img/icon/add_task.png" alt="add task" />
+                Add Task
+              </a>
+            </div>
+            <div class="menu-content-div resp-cont-div bottom-menu">
+              <a href="./board.html">
+                <img src="../img/icon/board.png" alt="board" />Board
+              </a>
+            </div>
+            <div class="selected-menu menu-content-div bottom-menu">
+              <a href="./contacts.html">
+                <img src="../img/icon/contacts.png" alt="contacts" />Contacts
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="contactModal">
+      <div class="modal-content">
+        <div class="modal-left">
+          <div class="modal-logo">
+            <img src="../img/capa_white.png" alt="Join" />
+          </div>
+          <div class="close-icon-container-mobile">
+            <img
+              src="../img/close-white.png"
+              alt="Close"
+              class="close-icon-white"
+              onclick="closeContactModal()"
+            />
+          </div>
+          <h2>Edit contact</h2>
+          <hr class="modal-hr" />
+        </div>
+        <div class="modal-right">
+          <div class="close-icon-container">
+            <img
+              src="../img/close-icon.png"
+              alt="Close"
+              class="close-icon"
+              onclick="closeContactModal()"
+            />
+          </div>
+          <div class="contact-avatar-section">
+            <div class="avatar-circle" id="ModalAvatar">
+              <img
+                class="avatar-circle-img"
+                src="../img/Ellipse 5.png"
+                alt="person"
+              />
+              <img
+                class="avatar-circle-person"
+                src="../img/person.png"
+                alt="person"
+              />
+            </div>
+            <div class="input-and-button">
+              <div class="input-group">
+                <div class="input-group-item">
+                  <input
+                    id="editContactName"
+                    type="text"
+                    name="name"
+                    placeholder="Name"
+                    required=""
+                    pattern="^[A-Za-zÄäÖöÜüßçéèêëáàâäíìîïóòôöúùûüÇÉÈÊËÁÀÂÄÍÌÎÏÓÒÔÖÚÙÛÜ\- ]+$"
+                    title="Nur Buchstaben, Bindestrich oder Leerzeichen erlaubt"
+                    oninput="this.value = this.value.replace(/[^A-Za-zÄäÖöÜüßçéèêëáàâäíìîïóòôöúùûüÇÉÈÊËÁÀÂÄÍÌÎÏÓÒÔÖÚÙÛÜ \-]/g, '')"
+                  /><img src="../img/icon/person.png" class="input-icon" />
+                </div>
+                <div class="input-group-item">
+                  <input
+                    id="editContactEmail"
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    required=""
+                    oninput="validateEmailInput(this)"
+                  />
+                  <img src="../img/icon/mail.png" class="input-icon" />
+                </div>
+                <div class="error-message-edit-mail" id="editEmailError"></div>
+                <div class="input-group-item">
+                  <input
+                    id="editContactPhone"
+                    type="tel"
+                    name="phone"
+                    placeholder="Telefonnummer"
+                    required=""
+                    title="Bitte nur Zahlen eingeben (mind. 6 Zeichen)"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                  /><img src="../img/icon/phone.png" class="input-icon" />
+                </div>
+                <div class="error-message-phone" id="editPhoneError"></div>
+              </div>
+              <div class="button-group">
+                <button class="delete-btn" onclick="editDeleteContact()">
+                  Delete
+                </button>
+                <div class="save-btn-container">
+                  <button class="save-btn" onclick="saveContact()">
+                    Save <img src="../img/icon/check.png" alt="checked" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="add-modal" id="addContactModal">
+      <div class="modal-content">
+        <div class="modal-left">
+          <div class="modal-logo">
+            <img src="../img/capa_white.png" alt="Join" />
+          </div>
+          <div class="close-icon-container-mobile">
+            <img
+              src="../img/close-white.png"
+              alt="Close"
+              class="close-icon-white"
+              onclick="closeContactModal()"
+            />
+          </div>
+          <h2>Add contact</h2>
+          <span class="modal-subtitle">Tasks are better with a team!</span>
+          <hr class="modal-hr" />
+        </div>
+        <div class="modal-right">
+          <div class="close-icon-container">
+            <img
+              src="../img/close-icon.png"
+              alt="Close"
+              class="close-icon"
+              onclick="closeContactModal()"
+            />
+          </div>
+          <div class="contact-avatar-section">
+            <div class="avatar-circle" id="addModalAvatar">
+              <img
+                class="avatar-circle-img"
+                src="../img/Ellipse 5.png"
+                alt="person"
+              />
+              <img
+                class="avatar-circle-person"
+                src="../img/person.png"
+                alt="person"
+              />
+            </div>
+            <div class="input-and-button-add">
+              <div class="input-group-add">
+                <div class="error-message-add" id="addInputError"></div>
+                <div class="input-group-item">
+                  <input
+                    id="addInputName"
+                    type="text"
+                    name="name"
+                    placeholder="Name"
+                    required=""
+                    pattern="^[A-Za-zÄäÖöÜüßçéèêëáàâäíìîïóòôöúùûüÇÉÈÊËÁÀÂÄÍÌÎÏÓÒÔÖÚÙÛÜ\- ]+$"
+                    title="Nur Buchstaben, Bindestrich oder Leerzeichen erlaubt"
+                    oninput="this.value = this.value.replace(/[^A-Za-zÄäÖöÜüßçéèêëáàâäíìîïóòôöúùûüÇÉÈÊËÁÀÂÄÍÌÎÏÓÒÔÖÚÙÛÜ \-]/g, '')"
+                  /><img src="../img/icon/person.png" class="input-icon" />
+                </div>
+                <div class="input-group-item">
+                  <input
+                    id="addInputEmail"
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    required=""
+                    oninput="validateEmailInput(this)"
+                  />
+                  <img src="../img/icon/mail.png" class="input-icon" />
+                </div>
+                <div class="error-message" id="addEmailError"></div>
+                <div class="input-group-item">
+                  <input
+                    id="addInputPhone"
+                    type="tel"
+                    name="phone"
+                    placeholder="Telefonnummer"
+                    required=""
+                    title="Bitte nur Zahlen eingeben (mind. 6 Zeichen)"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                  /><img src="../img/icon/phone.png" class="input-icon" />
+                </div>
+                <div class="error-message-phone" id="addPhoneError"></div>
+              </div>
+              <div class="button-group-add">
+                <button class="cancel-btn" onclick="cancelAddContact()">
+                  Cancel X
+                </button>
+                <div class="create-btn-container">
+                  <button class="create-btn" onclick="createAddContact()">
+                    Create contact
+                    <img src="../img/icon/check.png" alt="checked" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    document.addEventListener("DOMContentLoaded", loadContacts);
+  </script>
 </html>

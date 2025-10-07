@@ -1,450 +1,571 @@
 .task-form-container {
-    display: flex;
-    justify-content: space-around;
-    gap: 8pc;
+  display: flex;
+  justify-content: space-around;
+  gap: 8pc;
 }
 
 #addtask-container {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    scrollbar-width: none;
-    padding: 88px 265px 32px 64px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  scrollbar-width: none;
+  padding: 88px 265px 32px 64px;
 }
 
 #addtask-container select {
-    border: 1px solid #D1D1D1;
-    border-radius: 8px;
-    outline: none;
-    font-size: 16px;
-    flex: 1;
-    padding-top: 6px;
-    padding-bottom: 6px;
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
+  outline: none;
+  font-size: 16px;
+  flex: 1;
+  padding-top: 6px;
+  padding-bottom: 6px;
 }
 
 .padding-bottom {
-    border: 1px solid #D1D1D1;
-    border-radius: 8px;
-    outline: none;
-    font-size: 16px;
-    /* flex: 1; */
-    padding: 12px 4px 12px 4px;
-    margin-bottom: 18px;
+  border: 1px solid #d1d1d1;
+  border-radius: 8px;
+  outline: none;
+  font-size: 16px;
+  /* flex: 1; */
+  padding: 12px 4px 12px 4px;
+  margin-bottom: 18px;
 }
 
 .subtask-input-group {
-    display: flex;
+  display: flex;
 }
 
 .partition {
-    height: 20pc;
+  height: 20pc;
 }
 
 .subtask-input-group input {
-    border: 1px solid #D1D1D1;
-    border-right: none;
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-    outline: none;
-    font-size: 16px;
-    flex: 1;
+  border: 1px solid #d1d1d1;
+  border-right: none;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  outline: none;
+  font-size: 16px;
+  flex: 1;
 }
 
 .subtask-input-group button {
-    border: 1px solid #D1D1D1;
-    border-left: none;
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-    background-color: white;
-    font-size: 20px;
-    cursor: pointer;
-    color: #1F2A36;
+  border: 1px solid #d1d1d1;
+  border-left: none;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  background-color: white;
+  font-size: 20px;
+  cursor: pointer;
+  color: #1f2a36;
 }
 
 #addtask-container h2 {
-    font-size: 72px;
-    padding-bottom: 3rem;
+  font-size: 72px;
+  padding-bottom: 3rem;
 }
 
 #addtask-container label {
-    font-size: 20px;
+  font-size: 20px;
 }
 
 label.star-red::after {
-    content: "*";
-    color: red;
+  content: "*";
+  color: red;
 }
 
 .task-form-left {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .task-form-left textarea {
-    resize: none;
-    height: 98px;
+  resize: none;
+  height: 98px;
 }
 
 .task-form-right {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
-    content: url('../img/image.png ');
+  content: url("../img/image.png ");
 }
 
 /* Change Button */
 .priority-btn {
-    display: flex;
-    align-items: center;
-    flex-direction: row-reverse;
-    justify-content: flex-end;
-    gap: 8px;
-    padding-top: 6px;
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 6px;
 }
 
 .priority-btn button {
-    display: flex;
-    align-items: center;
-    flex-direction: row-reverse;
-    background-color: white;
-    border-radius: 10px;
-    padding-top: 16px;
-    padding-right: 10px;
-    padding-bottom: 16px;
-    padding-left: 10px;
-    gap: 8px;
-    border: 1px solid #D1D1D1;
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  background-color: white;
+  border-radius: 10px;
+  padding-top: 16px;
+  padding-right: 10px;
+  padding-bottom: 16px;
+  padding-left: 10px;
+  gap: 8px;
+  border: 1px solid #d1d1d1;
 }
 
 button:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* last section */
 .create-formerror {
-    display: flex;
-    justify-content: space-between;
-    padding-top: 8pc;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 8pc;
 }
 
 .form-error::before {
-    content: "*";
-    color: red;
+  content: "*";
+  color: red;
 }
 
 .form-error {
-    font-size: 20px
+  font-size: 20px;
 }
 
 .clear-creat-div {
-    display: flex;
-    gap: 16px;
+  display: flex;
+  gap: 16px;
 }
 
 #clear-task-btn {
-    display: flex;
-    font-size: 21px;
-    padding: 12px;
-    border-radius: 8px;
-    background-color: #F5F7F9;
+  display: flex;
+  font-size: 21px;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #f5f7f9;
 }
 
 #create-task-btn {
-    background-color: #2A3647;
-    color: white;
-    font-size: 21px;
-    padding: 12px;
-    border-radius: 8px;
+  background-color: #2a3647;
+  color: white;
+  font-size: 21px;
+  padding: 12px;
+  border-radius: 8px;
 }
 
 /* Urgent */
 .btn-urgent.active-urgent {
-    background-color: red;
-    color: white;
+  background-color: red;
+  color: white;
 }
 
 .btn-urgent.active-urgent img {
-    filter: brightness(0) invert(1);
+  filter: brightness(0) invert(1);
 }
 
 /* Medium */
 .btn-medium.active-medium {
-    background-color: orange;
-    color: white;
+  background-color: orange;
+  color: white;
 }
 
 .btn-medium.active-medium img {
-    filter: brightness(0) invert(1);
+  filter: brightness(0) invert(1);
 }
 
 /* Low */
 .btn-low.active-low {
-    background-color: greenyellow;
-    color: white;
+  background-color: greenyellow;
+  color: white;
 }
 
 .btn-low.active-low img {
-    filter: brightness(0) invert(1);
+  filter: brightness(0) invert(1);
 }
 
 .urgent-active-urgent {
-    background-image: url(../img/priority-img/ferer.png);
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
+  background-image: url(../img/priority-img/ferer.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 
 /* === AddTask (isoliert) ================================================ */
 .at-assign-field {
-    position: relative
+  position: relative;
 }
 
 .at-assign-input {
-    width: 100%;
-    padding: 10px 0px;
-    border: 1px solid #cbd5e1;
-    border-radius: 10px;
-    outline: none;
-    background: #fff
+  width: 100%;
+  padding: 10px 0px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  outline: none;
+  background: #fff;
 }
 
 .at-assign-input:focus {
-    border-color: #60a5fa;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, .15)
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
 .at-assign-dd {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: calc(100% + 6px);
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    max-height: 280px;
-    overflow: auto;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, .08);
-    z-index: 30;
-    display: none
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  max-height: 280px;
+  overflow: auto;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  z-index: 30;
+  display: none;
 }
 
 .at-assign-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 12px;
-    margin: 6px;
-    border-radius: 10px;
-    cursor: pointer;
-    background: #fff;
-    color: #111827;
-    transition: background .15s, color .15s
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  margin: 6px;
+  border-radius: 10px;
+  cursor: pointer;
+  background: #fff;
+  color: #111827;
+  transition: background 0.15s, color 0.15s;
 }
 
 .at-assign-item:hover {
-    background: #f3f4f6
+  background: #f3f4f6;
 }
 
 .at-assign-item.at-is-selected {
-    background: #111827;
-    color: #fff
+  background: #111827;
+  color: #fff;
 }
 
 .at-assign-avatar {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    color: #fff;
-    font-size: 12px;
-    flex: 0 0 28px
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #fff;
+  font-size: 12px;
+  flex: 0 0 28px;
 }
 
 /* Avatarfarben */
 .at-av-c1 {
-    background: #F59E0B
+  background: #f59e0b;
 }
 
 .at-av-c2 {
-    background: #0EA5A4
+  background: #0ea5a4;
 }
 
 .at-av-c3 {
-    background: #4CAF50
+  background: #4caf50;
 }
 
 .at-av-c4 {
-    background: #6366F1
+  background: #6366f1;
 }
 
 .at-av-c5 {
-    background: #EF4444
+  background: #ef4444;
 }
 
 .at-av-c6 {
-    background: #8B5CF6
+  background: #8b5cf6;
 }
 
 .at-av-c7 {
-    background: #EC4899
+  background: #ec4899;
 }
 
 .at-assign-name {
-    flex: 1;
-    font-size: 14px
+  flex: 1;
+  font-size: 14px;
 }
 
 .at-assign-check {
-    width: 18px;
-    height: 18px;
-    border: 2px solid #9ca3af;
-    border-radius: 4px;
-    display: inline-block;
-    position: relative;
-    flex: 0 0 18px;
-    background: #fff
+  width: 18px;
+  height: 18px;
+  border: 2px solid #9ca3af;
+  border-radius: 4px;
+  display: inline-block;
+  position: relative;
+  flex: 0 0 18px;
+  background: #fff;
 }
 
 .at-assign-item.at-is-selected .at-assign-check {
-    background: #111827;
-    border-color: #e5e7eb
+  background: #111827;
+  border-color: #e5e7eb;
 }
 
 .at-assign-check.at-checked::after {
-    content: '✓';
-    position: absolute;
-    left: 2px;
-    top: -2px;
-    font-size: 20px;
-    line-height: 1;
-    color: #fff;
+  content: "✓";
+  position: absolute;
+  left: 2px;
+  top: -2px;
+  font-size: 20px;
+  line-height: 1;
+  color: #fff;
 }
 
 /* Preview unter dem Eingabefeld */
 #at-assigned-preview {
-    margin-top: 8px;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .at-assign-strip {
-    display: flex;
-    align-items: center;
-    gap: 8px
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .at-assign-badge {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 12px;
-    color: #fff;
-    cursor: pointer;
-    user-select: none;
-    box-shadow: 0 0 0 2px #fff
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  color: #fff;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 0 0 2px #fff;
 }
 
 /* Badgefarben passend zu Avataren */
 .at-badge-c1 {
-    background: #F59E0B
+  background: #f59e0b;
 }
 
 .at-badge-c2 {
-    background: #0EA5A4
+  background: #0ea5a4;
 }
 
 .at-badge-c3 {
-    background: #4CAF50
+  background: #4caf50;
 }
 
 .at-badge-c4 {
-    background: #6366F1
+  background: #6366f1;
 }
 
 .at-badge-c5 {
-    background: #EF4444
+  background: #ef4444;
 }
 
 .at-badge-c6 {
-    background: #8B5CF6
+  background: #8b5cf6;
 }
 
 .at-badge-c7 {
-    background: #EC4899
+  background: #ec4899;
 }
 
 .at-assign-hint {
-    font-size: 12px;
-    color: #6b7280
+  font-size: 12px;
+  color: #6b7280;
 }
 
 /* klickbare Subtasks */
 .at-subtask-item {
-    cursor: pointer
+  cursor: pointer;
 }
 
 /* Add Task – Priority Buttons */
 #addtask-container .priority-btn button {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
-    border-radius: 8px;
-    border: 1px solid #D1D5DB;
-    background: #FFF;
-    color: #2A3647;
-    cursor: pointer;
-    transition: background-color .15s ease, color .15s ease, transform .1s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #2a3647;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
 }
 
 #addtask-container .priority-btn button img {
-    width: 18px;
-    height: 18px;
+  width: 18px;
+  height: 18px;
 }
 
 #addtask-container .priority-btn button[aria-pressed="true"] {
-    transform: scale(1.02);
-    color: #FFF;
-    border-color: transparent;
+  transform: scale(1.02);
+  color: #fff;
+  border-color: transparent;
 }
 
 #addtask-container .priority-btn .btn-urgent[aria-pressed="true"] {
-    background: #FF3D00;
+  background: #ff3d00;
 }
 
 #addtask-container .priority-btn .btn-medium[aria-pressed="true"] {
-    background: #FFA800;
+  background: #ffa800;
 }
 
 #addtask-container .priority-btn .btn-low[aria-pressed="true"] {
-    background: #7AE229;
+  background: #7ae229;
 }
 
 #addtask-container .priority-btn button[aria-pressed="true"] img {
-    filter: brightness(0) invert(1);
+  filter: brightness(0) invert(1);
 }
 
 /* Pflichtfeld-Fehlerzustand */
 .at-error {
-    border-color: #ef4444 !important;
-    background-color: #fff5f5;
+  border-color: #ef4444 !important;
+  background-color: #fff5f5;
 }
 
 .at-error-message {
-    font-size: 12px;
-    color: #ef4444;
-    margin-top: 4px;
+  font-size: 12px;
+  color: #ef4444;
+}
+
+/* NEU – Kompaktzähler für weitere Assignees (+N) */
+.at-assign-more {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 12px;
+  color: #111827;
+  background: #e5e7eb;
+  user-select: none;
+}
+/* Subtask-Zeile mit Hover-Actions */
+.at-subtask-item {
+  list-style: none;
+  margin: 6px 0;
+}
+
+.at-subtask-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f1f3f5;
+  border-radius: 8px;
+  padding: 8px 10px;
+  transition: background 0.15s ease;
+}
+
+.at-subtask-row:hover {
+  background: #e9ecef;
+}
+
+.at-subtask-dot {
+  flex: 0 0 auto;
+  opacity: 0.75;
+}
+
+.at-subtask-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.at-subtask-actions {
+  display: flex;
+  gap: 8px;
+  flex: 0 0 auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.at-subtask-row:hover .at-subtask-actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.at-subtask-action-btn {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.at-subtask-action-btn:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.at-subtask-action-btn svg {
+  display: block;
+  fill: #2a3647;
+}
+
+/* Inline-Edit-Feld */
+.at-subtask-edit {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 6px 8px;
+  outline: none;
+  background: #fff;
+}
+
+ul {
+  padding-left: 0;
+  margin: 0;
+}
+/* Ghost-Subtask (Platzhalter im Edit-Modus) */
+.at-subtask-item.at-subtask-ghost .at-subtask-row {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  opacity: 0.95;
+}
+
+.at-subtask-edit::placeholder {
+  color: #94a3b8;
+}
+
+/* kleine Ergänzung, damit Ghost-Actions gleich wirken */
+.at-subtask-actions {
+  display: flex;
+  gap: 8px;
+  flex: 0 0 auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.at-subtask-row:hover .at-subtask-actions,
+.at-subtask-ghost .at-subtask-actions {
+  opacity: 1;
+  pointer-events: auto;
 }
