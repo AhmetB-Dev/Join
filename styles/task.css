@@ -445,6 +445,7 @@ button:hover {
 .at-error-message {
   font-size: 12px;
   color: #ef4444;
+  margin-top: 4px;
 }
 
 /* NEU – Kompaktzähler für weitere Assignees (+N) */
@@ -568,4 +569,21 @@ ul {
 .at-subtask-ghost .at-subtask-actions {
   opacity: 1;
   pointer-events: auto;
+}
+
+/* =============================== */
+/*  NEU: Layout stabilisieren für  */
+/*  Subtasks – kein Springen mehr  */
+/* =============================== */
+
+/* Kleiner, konstanter Puffer unter der Liste (immer vorhanden) */
+#subtask-list::after {
+  content: "";
+  display: block;
+  height: 8px;           /* kleiner Gutter */
+}
+
+/* Wenn Liste leer ist, halte Platz in Höhe eines Subtask-Eintrags frei */
+#subtask-list:empty::after {
+  height: 40px;          /* an UI anpassen (32–48px) */
 }

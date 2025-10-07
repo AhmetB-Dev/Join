@@ -499,6 +499,7 @@
           })
         ),
       clear: () => {
+        const subtaskList = query(addTaskContainer, "#subtask-list");
         if (subtaskList) subtaskList.innerHTML = "";
       },
     };
