@@ -182,6 +182,7 @@
 
             <label class="star-red">Category</label>
             <select id="task-category" required>
+              <!-- Platzhalter unsichtbar/disabled, aber als Anzeige aktiv -->
               <option value="" disabled selected hidden>
                 Select task category
               </option>
@@ -196,11 +197,7 @@
               />
               <button type="button" id="add-subtask-btn">+</button>
             </div>
-
-            <!-- Fester Container hält immer Platz & nimmt alle Subtasks auf -->
-            <div id="subtask-shell">
-              <ul id="subtask-list"></ul>
-            </div>
+            <ul id="subtask-list"></ul>
           </div>
         </div>
 

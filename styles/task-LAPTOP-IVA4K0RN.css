@@ -544,7 +544,6 @@ button:hover {
 ul {
   padding-left: 0;
   margin: 0;
-  list-style: none;
 }
 /* Ghost-Subtask (Platzhalter im Edit-Modus) */
 .at-subtask-item.at-subtask-ghost .at-subtask-row {
@@ -581,10 +580,10 @@ ul {
 #subtask-list::after {
   content: "";
   display: block;
-  height: 8px; /* kleiner Gutter */
+  height: 8px;           /* kleiner Gutter */
 }
 
 /* Wenn Liste leer ist, halte Platz in Höhe eines Subtask-Eintrags frei */
 #subtask-list:empty::after {
-  height: 40px; /* an UI anpassen (32–48px) */
+  height: 40px;          /* an UI anpassen (32–48px) */
 }

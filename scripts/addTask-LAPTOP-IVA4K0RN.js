@@ -4,17 +4,25 @@
   const FIREBASE_TASKS_URL = `${FIREBASE_BASE_URL}/tasks.json`;
   const FIREBASE_CONTACTS_URL = `${FIREBASE_BASE_URL}/contacts.json`;
 
-  function query(container, selector) { return container.querySelector(selector); }
+  function query(container, selector) {
+    return container.querySelector(selector);
+  }
 
   function getInitialsFromFullName(fullName) {
-    const parts = String(fullName || "").trim().split(/\s+/);
+    const parts = String(fullName || "")
+      .trim()
+      .split(/\s+/);
     if (!parts[0]) return "??";
-    if (parts.length > 1) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    if (parts.length > 1)
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
     return parts[0].substring(0, 2).toUpperCase();
   }
 
   function computeStableColorIndex(fullName) {
-    const sum = Array.from(String(fullName || "")).reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+    const sum = Array.from(String(fullName || "")).reduce(
+      (acc, ch) => acc + ch.charCodeAt(0),
+      0
+    );
     return (sum % 7) + 1;
   }
 
@@ -24,14 +32,20 @@
       localStorage.getItem("userName") ||
       localStorage.getItem("displayName") ||
       ""
-    ).trim().toLowerCase();
+    )
+      .trim()
+      .toLowerCase();
   }
 
-  function showFieldValidationError(inputElement, message = "This field is required") {
+  function showFieldValidationError(
+    inputElement,
+    message = "This field is required"
+  ) {
     if (!inputElement) return;
     inputElement.classList.add("at-error");
     const nextSibling = inputElement.nextElementSibling;
-    const hasMessage = nextSibling && nextSibling.classList.contains("at-error-message");
+    const hasMessage =
+      nextSibling && nextSibling.classList.contains("at-error-message");
     if (!hasMessage) {
       const hint = document.createElement("div");
       hint.className = "at-error-message";
@@ -44,7 +58,8 @@
     if (!inputElement) return;
     inputElement.classList.remove("at-error");
     const nextSibling = inputElement.nextElementSibling;
-    const isError = nextSibling && nextSibling.classList.contains("at-error-message");
+    const isError =
+      nextSibling && nextSibling.classList.contains("at-error-message");
     if (isError) nextSibling.remove();
   }
 
@@ -52,14 +67,19 @@
     const categorySelect = query(addTaskContainer, "#task-category");
     if (!categorySelect) return;
 
+    // Platzhalter absichern
     if (categorySelect.options.length > 0) {
       const first = categorySelect.options[0];
       if ((first.value || "").trim() === "") {
-        first.disabled = true; first.hidden = true; first.selected = true;
+        first.disabled = true;
+        first.hidden = true;
+        first.selected = true;
       }
     }
 
-    const optionValues = Array.from(categorySelect.options).map((o) => (o.value || o.text).toLowerCase());
+    const optionValues = Array.from(categorySelect.options).map((o) =>
+      (o.value || o.text).toLowerCase()
+    );
     const hasTechnical = optionValues.some((v) => v.includes("technical"));
     const hasUserStory = optionValues.some((v) => v.includes("user"));
     const onlyPlaceholder =
@@ -73,7 +93,9 @@
   }
 
   function normalizeCategoryForBoard(rawValueOrText) {
-    const value = String(rawValueOrText || "").trim().toLowerCase();
+    const value = String(rawValueOrText || "")
+      .trim()
+      .toLowerCase();
     if (value.includes("technical")) return "Technical task";
     if (value.includes("user")) return "User Story";
     return "Technical task";
@@ -114,7 +136,10 @@
 
     attachAssignedDropdownEvents(state);
     return {
-      getSelectedUsers: () => Array.from(state.selectedByName.values()).map((u) => ({ name: u.name })),
+      getSelectedUsers: () =>
+        Array.from(state.selectedByName.values()).map((u) => ({
+          name: u.name,
+        })),
       clearSelection: () => clearAssignedSelectionAndUi(state),
       inputElement: inputField,
     };
@@ -145,17 +170,31 @@
       const payload = await response.json();
       contacts =
         payload && typeof payload === "object"
-          ? Object.values(payload).map((c) => c?.name).filter(Boolean)
+          ? Object.values(payload)
+              .map((c) => c?.name)
+              .filter(Boolean)
           : [];
     } catch {}
 
     if (contacts.length === 0) {
-      contacts = ["Sofia Müller","Anton Mayer","Anja Schulz","Benedikt Ziegler","David Eisenberg"];
+      contacts = [
+        "Sofia Müller",
+        "Anton Mayer",
+        "Anja Schulz",
+        "Benedikt Ziegler",
+        "David Eisenberg",
+      ];
     }
 
     contacts.forEach((name) => {
-      const row = createContactsDropdownRow(name, currentUserLower, selectedByName);
-      row.addEventListener("click", () => toggleAssigneeSelection(dropdownState, name));
+      const row = createContactsDropdownRow(
+        name,
+        currentUserLower,
+        selectedByName
+      );
+      row.addEventListener("click", () =>
+        toggleAssigneeSelection(dropdownState, name)
+      );
       dropdownPanel.appendChild(row);
     });
 
@@ -173,11 +212,14 @@
     row.className = "at-assign-item";
     row.dataset.name = name;
 
-    avatar.className = `at-assign-avatar at-av-c${computeStableColorIndex(name)}`;
+    avatar.className = `at-assign-avatar at-av-c${computeStableColorIndex(
+      name
+    )}`;
     avatar.textContent = getInitialsFromFullName(name);
 
     label.className = "at-assign-name";
-    label.textContent = name.trim().toLowerCase() === currentUserLower ? `${name} (You)` : name;
+    label.textContent =
+      name.trim().toLowerCase() === currentUserLower ? `${name} (You)` : name;
 
     check.className = "at-assign-check";
 
@@ -191,51 +233,146 @@
   }
 
   function toggleAssigneeSelection(dropdownState, name) {
-    const { selectedByName, dropdownPanel, inputField, previewStrip } = dropdownState;
+    const { selectedByName, dropdownPanel, inputField, previewStrip } =
+      dropdownState;
 
     if (selectedByName.has(name)) {
       selectedByName.delete(name);
       reflectRowSelection(dropdownPanel, name, false);
     } else {
-      selectedByName.set(name, { name, colorIndex: computeStableColorIndex(name) });
+      selectedByName.set(name, {
+        name,
+        colorIndex: computeStableColorIndex(name),
+      });
       reflectRowSelection(dropdownPanel, name, true);
       clearFieldValidationError(inputField);
     }
 
-    renderAssigneeBadges(previewStrip, dropdownPanel, selectedByName, inputField);
+    renderAssigneeBadges(
+      previewStrip,
+      dropdownPanel,
+      selectedByName,
+      inputField
+    );
   }
 
   function reflectRowSelection(dropdownPanel, name, isSelected) {
     dropdownPanel.querySelectorAll(".at-assign-item").forEach((row) => {
       if (row.dataset.name === name) {
         row.classList.toggle("at-is-selected", isSelected);
-        row.querySelector(".at-assign-check")?.classList.toggle("at-checked", isSelected);
+        row
+          .querySelector(".at-assign-check")
+          ?.classList.toggle("at-checked", isSelected);
       }
     });
   }
 
-  // ======= Subtasks =======
-  function ensureSubtaskShell(addTaskContainer) {
-    let shell = query(addTaskContainer, "#subtask-shell");
-    if (!shell) {
-      shell = document.createElement("div");
-      shell.id = "subtask-shell";
-      const rightCol = query(addTaskContainer, ".task-form-right");
-      rightCol?.appendChild(shell);
+  // --- Assigned Preview: max 3 Badges + "+N" ---
+  function renderAssigneeBadges(
+    previewStrip,
+    dropdownPanel,
+    selectedByName,
+    inputField
+  ) {
+    previewStrip.innerHTML = "";
+    const selected = Array.from(selectedByName.values());
+    const total = selected.length;
+    if (total === 0) return;
+
+    const badgesRow = document.createElement("div");
+    badgesRow.className = "at-assign-strip";
+
+    const visible = selected.slice(0, 3);
+    visible.forEach((person) => {
+      const badge = document.createElement("div");
+      badge.className = `at-assign-badge at-badge-c${person.colorIndex}`;
+      badge.textContent = getInitialsFromFullName(person.name);
+      badge.title = `${person.name} – remove`;
+      badge.addEventListener("click", () => {
+        selectedByName.delete(person.name);
+        reflectRowSelection(dropdownPanel, person.name, false);
+        renderAssigneeBadges(
+          previewStrip,
+          dropdownPanel,
+          selectedByName,
+          inputField
+        );
+        clearFieldValidationError(inputField);
+      });
+      badgesRow.appendChild(badge);
+    });
+
+    if (total > 3) {
+      const more = total - 3;
+      const counter = document.createElement("div");
+      counter.className = "at-assign-more";
+      counter.textContent = `+${more}`;
+      const hiddenNames = selected
+        .slice(3)
+        .map((p) => p.name)
+        .join(", ");
+      counter.title = hiddenNames;
+      badgesRow.appendChild(counter);
     }
-    let list = shell.querySelector("#subtask-list");
-    if (!list) {
-      list = document.createElement("ul");
-      list.id = "subtask-list";
-      shell.appendChild(list);
-    }
-    return list;
+
+    const hint = document.createElement("span");
+    hint.className = "at-assign-hint";
+    hint.textContent = "Click to remove";
+
+    previewStrip.append(badgesRow, hint);
   }
 
+  function clearAssignedSelectionAndUi(dropdownState) {
+    const { selectedByName, dropdownPanel, previewStrip } = dropdownState;
+    selectedByName.clear();
+    previewStrip.innerHTML = "";
+    dropdownPanel.querySelectorAll(".at-assign-item").forEach((row) => {
+      row.classList.remove("at-is-selected");
+      row.querySelector(".at-assign-check")?.classList.remove("at-checked");
+    });
+  }
+
+  function initializePrioritySelector(addTaskContainer) {
+    const urgentButton = query(addTaskContainer, ".btn-urgent");
+    const mediumButton = query(addTaskContainer, ".btn-medium");
+    const lowButton = query(addTaskContainer, ".btn-low");
+
+    let currentPriorityName = "medium";
+
+    function updatePriorityButtons(nextPriorityName) {
+      currentPriorityName = nextPriorityName;
+      [urgentButton, mediumButton, lowButton].forEach((btn) =>
+        btn?.setAttribute("aria-pressed", "false")
+      );
+      const map = {
+        urgent: urgentButton,
+        medium: mediumButton,
+        low: lowButton,
+      };
+      map[nextPriorityName]?.setAttribute("aria-pressed", "true");
+    }
+
+    urgentButton?.addEventListener("click", () =>
+      updatePriorityButtons("urgent")
+    );
+    mediumButton?.addEventListener("click", () =>
+      updatePriorityButtons("medium")
+    );
+    lowButton?.addEventListener("click", () => updatePriorityButtons("low"));
+    updatePriorityButtons("medium");
+
+    return {
+      getCurrentName: () => currentPriorityName,
+      getIconPath: () => `../img/priority-img/${currentPriorityName}.png`,
+      resetToMedium: () => updatePriorityButtons("medium"),
+    };
+  }
+
+  // --- Subtasks mit Hover-Actions (Edit/Delete) ---
   function initializeSubtaskComposer(addTaskContainer) {
     const subtaskInput = query(addTaskContainer, "#subtask-input");
     const addSubtaskButton = query(addTaskContainer, "#add-subtask-btn");
-    const subtaskList = ensureSubtaskShell(addTaskContainer); // <<< immer vorhanden
+    const subtaskList = query(addTaskContainer, "#subtask-list");
 
     function createActionButton(svgPathD, title) {
       const btn = document.createElement("button");
@@ -249,7 +386,9 @@
       return btn;
     }
 
+    // >>> FIX: immer das aktuelle .at-subtask-text ermitteln; zweites Edit funktioniert
     function enterEditMode(listItem) {
+      // Wenn bereits im Edit-Modus: Fokus auf vorhandenes Feld
       const already = listItem.querySelector(".at-subtask-edit");
       if (already) {
         already.focus();
@@ -257,6 +396,7 @@
         already.setSelectionRange(len, len);
         return;
       }
+
       const textSpan = listItem.querySelector(".at-subtask-text");
       if (!textSpan) return;
 
@@ -294,6 +434,10 @@
       const row = document.createElement("div");
       row.className = "at-subtask-row";
 
+      const dot = document.createElement("span");
+      dot.className = "at-subtask-dot";
+      dot.textContent = "•";
+
       const textSpan = document.createElement("span");
       textSpan.className = "at-subtask-text";
       textSpan.textContent = text;
@@ -302,19 +446,27 @@
       actions.className = "at-subtask-actions";
 
       const editBtn = createActionButton(
+        // Pencil
         "M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25Zm15.71-9.04c.39-.39.39-1.03 0-1.41l-2.5-2.5a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.99-1.67Z",
         "Edit"
       );
       const delBtn = createActionButton(
+        // Trash
         "M6 7h12v2H6V7Zm2 3h8l-1 9H9L8 10Zm3-7h2v2h-2V3Z",
         "Delete"
       );
 
-      editBtn.addEventListener("click", (e) => { e.stopPropagation(); enterEditMode(li); });
-      delBtn.addEventListener("click", (e) => { e.stopPropagation(); li.remove(); });
+      editBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        enterEditMode(li); // <<< wichtig: nicht textSpan closen, immer frisch ermitteln
+      });
+      delBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        li.remove();
+      });
 
       actions.append(editBtn, delBtn);
-      row.append(textSpan, actions);
+      row.append(dot, textSpan, actions);
       li.append(row);
       subtaskList?.appendChild(li);
     }
@@ -340,26 +492,37 @@
 
     return {
       collect: () =>
-        Array.from(addTaskContainer.querySelectorAll("#subtask-list li")).map((li) => ({
-          text: li.dataset.text || li.textContent.trim(),
-          completed: false,
-        })),
+        Array.from(addTaskContainer.querySelectorAll("#subtask-list li")).map(
+          (li) => ({
+            text: li.dataset.text || li.textContent.trim(),
+            completed: false,
+          })
+        ),
       clear: () => {
-        const list = ensureSubtaskShell(addTaskContainer);
-        if (list) list.innerHTML = "";
+        const subtaskList = query(addTaskContainer, "#subtask-list");
+        if (subtaskList) subtaskList.innerHTML = "";
       },
     };
   }
 
-  function buildTaskPayload(addTaskContainer, prioritySelector, subtaskComposer, assignedDropdown) {
-    const titleValue = query(addTaskContainer, "#task-title")?.value.trim() || "";
+  function buildTaskPayload(
+    addTaskContainer,
+    prioritySelector,
+    subtaskComposer,
+    assignedDropdown
+  ) {
+    const titleValue =
+      query(addTaskContainer, "#task-title")?.value.trim() || "";
     const descriptionValue =
-      query(addTaskContainer, "#task-desc")?.value.trim() || "No description provided";
-    const dueDateValue = query(addTaskContainer, "#task-due")?.value.trim() || "";
+      query(addTaskContainer, "#task-desc")?.value.trim() ||
+      "No description provided";
+    const dueDateValue =
+      query(addTaskContainer, "#task-due")?.value.trim() || "";
 
     const categorySelect = query(addTaskContainer, "#task-category");
     const rawCategory = categorySelect
-      ? categorySelect.value || categorySelect.options[categorySelect.selectedIndex]?.text
+      ? categorySelect.value ||
+        categorySelect.options[categorySelect.selectedIndex]?.text
       : "";
 
     const normalizedCategory = normalizeCategoryForBoard(rawCategory);
@@ -384,6 +547,7 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(taskPayload),
     });
+
     const created = await createResponse.json();
     const firebaseKey = created && created.name;
     if (!firebaseKey) return null;
@@ -397,7 +561,12 @@
     return firebaseKey;
   }
 
-  function attachFormLifecycle(addTaskContainer, prioritySelector, subtaskComposer, assignedDropdown) {
+  function attachFormLifecycle(
+    addTaskContainer,
+    prioritySelector,
+    subtaskComposer,
+    assignedDropdown
+  ) {
     const titleInput = query(addTaskContainer, "#task-title");
     const dueDateInput = query(addTaskContainer, "#task-due");
     const categorySelect = query(addTaskContainer, "#task-category");
@@ -411,15 +580,29 @@
 
     function validateRequiredFields() {
       let ok = true;
-      if (!titleInput?.value.trim()) { showFieldValidationError(titleInput, "Title is required"); ok = false; }
-      if (!dueDateInput?.value.trim()) { showFieldValidationError(dueDateInput, "Due date is required"); ok = false; }
-      if (!categorySelect?.value.trim()) { showFieldValidationError(categorySelect, "Category is required"); ok = false; }
+      if (!titleInput?.value.trim()) {
+        showFieldValidationError(titleInput, "Title is required");
+        ok = false;
+      }
+      if (!dueDateInput?.value.trim()) {
+        showFieldValidationError(dueDateInput, "Due date is required");
+        ok = false;
+      }
+      if (!categorySelect?.value.trim()) {
+        showFieldValidationError(categorySelect, "Category is required");
+        ok = false;
+      }
       return ok;
     }
 
     createButton?.addEventListener("click", async () => {
       if (!validateRequiredFields()) return;
-      const payload = buildTaskPayload(addTaskContainer, prioritySelector, subtaskComposer, assignedDropdown);
+      const payload = buildTaskPayload(
+        addTaskContainer,
+        prioritySelector,
+        subtaskComposer,
+        assignedDropdown
+      );
       try {
         const key = await persistTaskToFirebase(payload);
         if (key) window.location.href = "./board.html";
@@ -436,8 +619,13 @@
       if (categorySelect) categorySelect.selectedIndex = 0;
       subtaskComposer.clear();
       assignedDropdown?.clearSelection();
-      [titleInput, dueDateInput, categorySelect, assignedDropdown?.inputElement, descriptionInput]
-        .forEach(clearFieldValidationError);
+      [
+        titleInput,
+        dueDateInput,
+        categorySelect,
+        assignedDropdown?.inputElement,
+        descriptionInput,
+      ].forEach(clearFieldValidationError);
       prioritySelector.resetToMedium();
     });
   }
@@ -452,6 +640,11 @@
     const subtaskComposer = initializeSubtaskComposer(addTaskContainer);
     const assignedDropdown = initializeAssignedToDropdown(addTaskContainer);
 
-    attachFormLifecycle(addTaskContainer, prioritySelector, subtaskComposer, assignedDropdown);
+    attachFormLifecycle(
+      addTaskContainer,
+      prioritySelector,
+      subtaskComposer,
+      assignedDropdown
+    );
   });
 })();
