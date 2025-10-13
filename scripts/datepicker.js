@@ -1,3 +1,7 @@
+/**
+ * Default configuration for flatpickr date pickers.
+ * @returns {import('flatpickr/dist/types/options').Options}
+ */
 function getDefaultDatePickerConfig() {
   return {
     dateFormat: "d/m/Y",
@@ -12,6 +16,11 @@ function getDefaultDatePickerConfig() {
   };
 }
 
+/**
+ * Prevent selection of past dates; reset to today.
+ * @param {Date[]} selectedDates
+ * @param {any} instance
+ */
 function handlePastDate(selectedDates, instance) {
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
@@ -21,6 +30,10 @@ function handlePastDate(selectedDates, instance) {
   }
 }
 
+/**
+ * Toggle a date picker on an input by id.
+ * @param {string} inputId
+ */
 function openDatePicker(inputId) {
   const dateInput = document.getElementById(inputId);
   if (!dateInput) return;
@@ -33,6 +46,10 @@ function openDatePicker(inputId) {
   }
 }
 
+/**
+ * Open date picker for Add Task flow and focus the input.
+ * @param {string} inputId
+ */
 function openDatePickerAddTask(inputId) {
   const dateInput = document.getElementById(inputId);
   if (!dateInput) return;
@@ -41,15 +58,18 @@ function openDatePickerAddTask(inputId) {
   dateInput.focus();
 }
 
+/**
+ * Toggle priority buttons (urgent/medium/low) in Add Task form.
+ * @param {"urgent"|"medium"|"low"} priority
+ */
 function setPriority(priority) {
-  let allButtons = document.querySelectorAll('.priority-button-urgent, .priority-button-medium, .priority-button-low');
-  let selectedButton = document.querySelector(`.priority-button-${priority}[onclick="setPriority('${priority}')"]`);
-  if (selectedButton.classList.contains('active')) {
-    selectedButton.classList.remove('active');
-  } else {
-    allButtons.forEach(button => button.classList.remove('active'));
-    selectedButton.classList.add('active');
-  }
+  const allButtons = document.querySelectorAll('.priority-button-urgent, .priority-button-medium, .priority-button-low');
+  const selectedButton = document.querySelector(`.priority-button-${priority}`);
+  if (!selectedButton) return;
+  allButtons.forEach(btn => btn.classList.remove('active'));
+  selectedButton.classList.add('active');
+  selectedButton.dataset.priority = priority;
+  if (typeof validateForm === 'function') validateForm();
 }
 
 

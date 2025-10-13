@@ -1,33 +1,48 @@
 window.currentTask = null;
-
 window.currentTaskId = null;
 
+/**
+ * Detect if current device supports touch.
+ * @returns {boolean}
+ */
 function isTouchDevice() {
   return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 }
 
+/**
+ * Normalize users array and compute total count including placeholder.
+ * @param {Array<{name:string,initials?:string,color?:string}>} users
+ * @returns {{realUsers:Array<object>, totalCount:number}}
+ */
 function getRealUserArrayAndCount(users) {
   if (!isValidUserArray(users)) {
     return { realUsers: [], totalCount: 0 };
   }
-  
   const { updatedUsers, placeholderCount } = extractPlaceholder(users);
-  
   return {
     realUsers: updatedUsers,
     totalCount: updatedUsers.length + placeholderCount
   };
 }
 
+/**
+ * Validate if the input is an array for users list.
+ * @param {any} users
+ * @returns {boolean}
+ */
 function isValidUserArray(users) {
   return Array.isArray(users);
 }
 
+/**
+ * Extract trailing "+N" placeholder from users and return count and trimmed list.
+ * @param {Array<any>} users
+ * @returns {{updatedUsers:Array<any>, placeholderCount:number}}
+ */
 function extractPlaceholder(users) {
   let placeholderCount = 0;
   let updatedUsers = users;
   const lastUser = users[users.length - 1];
-  
   if (lastUser && typeof lastUser.name === 'string' && lastUser.name.trim().startsWith('+')) {
     const parsedCount = parseInt(lastUser.name.trim().replace('+', ''));
     if (!isNaN(parsedCount)) {
@@ -35,43 +50,38 @@ function extractPlaceholder(users) {
       updatedUsers = users.slice(0, users.length - 1);
     }
   }
-  
   return { updatedUsers, placeholderCount };
 }
 
-// Funktion zum Entfernen von Duplikaten basierend auf User-Namen
+
 function removeDuplicateUsers(users) {
   if (!Array.isArray(users)) return [];
-  
   const seen = new Set();
   return users.filter(user => {
-    // Verwende Name als eindeutigen Identifikator (falls vorhanden)
     const identifier = user.name || JSON.stringify(user);
-    
     if (seen.has(identifier)) {
-      return false; // Duplikat gefunden, nicht hinzufügen
+      return false;
     }
-    
     seen.add(identifier);
-    return true; // Ersten Eintrag behalten
+    return true;
   });
 }
 
 function renderUserBadges(users, maxToShow = 3) {
+  if (!users || !Array.isArray(users) || users.length === 0) {
+    return '';
+  }
   const { realUsers, totalCount } = getRealUserArrayAndCount(users);
-  
-  // Duplikate entfernen basierend auf User-Namen
-  const uniqueUsers = removeDuplicateUsers(realUsers);
-  
+  const uniqueUsers = removeDuplicateUsers(realUsers); 
+  if (uniqueUsers.length === 0) {
+    return '';
+  }
   let badges = '';
   uniqueUsers.slice(0, maxToShow).forEach(u => {
     const initials = u.initials || '?';
-    // Verwende die richtige Farbe oder 'default' als Fallback
     const colorClass = u.color || 'default';
     badges += `<div class="profile-badge-floating-${colorClass}">${initials}</div>`;
   });
-  
-  // Korrigiere die Anzahl für das +X Badge basierend auf einzigartigen Usern
   const uniqueCount = uniqueUsers.length;
   if (uniqueCount > maxToShow) {
     badges += `<div class="profile-badge-floating-gray">+${uniqueCount - maxToShow}</div>`;
@@ -79,24 +89,25 @@ function renderUserBadges(users, maxToShow = 3) {
   return badges;
 }
 
-// Funktion zum Entfernen von Duplikaten basierend auf User-Namen
 function removeDuplicateUsers(users) {
   if (!Array.isArray(users)) return [];
-  
   const seen = new Set();
   return users.filter(user => {
-    // Verwende Name als eindeutigen Identifikator (falls vorhanden)
     const identifier = user.name || JSON.stringify(user);
-    
     if (seen.has(identifier)) {
-      return false; // Duplikat gefunden, nicht hinzufügen
-    }
-    
+      return false;
+    } 
     seen.add(identifier);
-    return true; // Ersten Eintrag behalten
+    return true;
   });
 }
 
+/**
+ * Patch subtask status for currentTask and update progress in Firebase.
+ * @param {string} taskId
+ * @param {number} subtaskIndex
+ * @param {boolean} newStatus
+ */
 function updateSubtaskStatus(taskId, subtaskIndex, newStatus) {
   if (!window.currentTask || window.currentTaskId !== taskId) return;
   window.currentTask.subtasks[subtaskIndex].completed = newStatus;
@@ -110,8 +121,35 @@ function updateSubtaskStatus(taskId, subtaskIndex, newStatus) {
     body: JSON.stringify({ subtasks: window.currentTask.subtasks, progress: newProgress })
   }).then(r => {
     if (!r.ok) throw new Error("Error updating subtask status.");
-    location.reload();
+    updateTaskCardInBackground(taskId);
   }).catch(() => {});
+}
+
+/**
+ * Fetch latest task data and re-render its card in place.
+ * @param {string} taskId
+ * @returns {Promise<void>}
+ */
+async function updateTaskCardInBackground(taskId) {
+  try {
+    const response = await fetch(`https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks/${taskId}.json`);
+    const updatedTask = await response.json();
+    if (updatedTask) {
+      enrichTasksWithUserData([updatedTask]);
+      const existingCard = document.getElementById(taskId);
+      if (existingCard) {
+        const newCard = createTaskElement({ ...updatedTask, firebaseKey: taskId });
+        attachTaskListeners(updatedTask, newCard);
+        existingCard.parentNode.replaceChild(newCard, existingCard);
+        if (typeof window.reinitializeDragAndDrop === 'function') {
+          window.reinitializeDragAndDrop();
+        }
+        checkColumns();
+      }
+    }
+  } catch (error) {
+    console.error('Error updating task card:', error);
+  }
 }
 
 function getPriorityLabel(iconPath) {
@@ -132,6 +170,11 @@ function extractPriority(iconPath) {
 }
 window.extractPriority = extractPriority;
 
+/**
+ * Update modal header category styling and text.
+ * @param {{category:string}} task
+ * @param {HTMLElement} modal
+ */
 function setCategoryHeader(task, modal) {
   const cat = modal.querySelector('.main-section-task-overlay > div:first-child');
   const isTechnical = task.category.toLowerCase().includes('technical');
@@ -150,7 +193,6 @@ function setModalFields(task) {
 function setAssignedUsers(task) {
   const assign = document.getElementById('modalAssignedTo');
   if (task.users && Array.isArray(task.users)) {
-    // Duplikate entfernen auch in der Modal-Ansicht
     const uniqueUsers = removeDuplicateUsers(task.users);
     assign.innerHTML = uniqueUsers.map(u =>
       `<div class="flexrow profile-names">
@@ -163,6 +205,11 @@ function setAssignedUsers(task) {
   }
 }
 
+/**
+ * Fill modal header and main fields for a task.
+ * @param {any} task
+ * @param {HTMLElement} modal
+ */
 function renderModalHeader(task, modal) {
   setCategoryHeader(task, modal);
   setModalFields(task);
@@ -175,12 +222,20 @@ function clearSubtasksContainer() {
   return ms;
 }
 
+function normalizeSubtaskText(st) {
+  if (typeof st === 'string') return st;
+  const raw = (st && typeof st.text !== 'undefined') ? st.text : st;
+  return typeof raw === 'string' ? raw : String(raw ?? '');
+}
+
 function createSubtaskElement(st, index) {
+  const text = normalizeSubtaskText(st);
+  const completed = !!(st && st.completed);
   const div = document.createElement("div");
   div.classList.add("subtask-container-div-item");
   div.innerHTML = `<div class="flexrow">
-                     <input type="checkbox" class="subtask-checkbox" data-index="${index}" ${st.completed ? "checked" : ""}>
-                     <span>${st.text}</span>
+                     <input type="checkbox" class="subtask-checkbox" data-index="${index}" ${completed ? "checked" : ""}>
+                     <span>${text}</span>
                    </div>`;
   return div;
 }
@@ -193,6 +248,10 @@ function addSubtaskListeners(container) {
   });
 }
 
+/**
+ * Render subtasks list inside the task modal.
+ * @param {{subtasks?:Array<{text:string,completed:boolean}>}} task
+ */
 function renderSubtasks(task) {
   const ms = clearSubtasksContainer();
   if (task.subtasks && Array.isArray(task.subtasks)) {
@@ -203,6 +262,10 @@ function renderSubtasks(task) {
   }
 }
 
+/**
+ * Open the floating task overlay for the given task object.
+ * @param {{firebaseKey?:string,id?:string}} task
+ */
 function openTaskModal(task) {
   window.currentTask = task;
   window.currentTaskId = task.firebaseKey || task.id;
@@ -213,6 +276,12 @@ function openTaskModal(task) {
   modal.style.display = 'flex';
 }
 
+/**
+ * Persist a column change for a task and move its DOM card.
+ * @param {string} taskId
+ * @param {string} newColumn
+ * @returns {Promise<void>}
+ */
 async function updateTaskColumnInFirebase(taskId, newColumn) {
   try {
     const url = `https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks/${taskId}.json`;
@@ -221,18 +290,21 @@ async function updateTaskColumnInFirebase(taskId, newColumn) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ column: newColumn })
     });
-    if (!r.ok) throw new Error(`Error updating task column: ${r.statusText}`);
-    
+    if (!r.ok) throw new Error(`Error updating task column: ${r.statusText}`);   
     updateTaskDOMPosition(taskId, newColumn);
   } catch (e) {
     console.error('Error updating task column:', e);
   }
 }
 
+/**
+ * Move a task card element to a new column in the DOM.
+ * @param {string} taskId
+ * @param {string} newColumn
+ */
 function updateTaskDOMPosition(taskId, newColumn) {
   const taskElement = document.getElementById(taskId);
-  const targetColumn = document.getElementById(newColumn);
-  
+  const targetColumn = document.getElementById(newColumn); 
   if (taskElement && targetColumn) {
     if (taskElement.parentNode && taskElement.parentNode !== targetColumn) {
       taskElement.parentNode.removeChild(taskElement);
@@ -254,7 +326,6 @@ function checkColumns() {
 }
 
 function enableDragAndDrop() {
-  // Nur für Desktop-Geräte aktivieren
   if (!isTouchDevice()) {
     document.querySelectorAll('.draggable-cards').forEach(card => {
       card.addEventListener('dragstart', () => card.classList.add('dragging'));
@@ -270,6 +341,11 @@ function enableDragAndDrop() {
   }
 }
 
+/**
+ * Calculate progress metrics for a task's subtasks.
+ * @param {{subtasks?:Array<{completed:boolean}>}} task
+ * @returns {{total:number,completed:number,progress:number}}
+ */
 function calculateProgress(task) {
   const total = task.subtasks ? task.subtasks.length : 0;
   const completed = task.subtasks ? task.subtasks.filter(st => st.completed).length : 0;
@@ -277,6 +353,11 @@ function calculateProgress(task) {
   return { total, completed, progress };
 }
 
+/**
+ * Map a task priority to an icon path with fallback.
+ * @param {any} task
+ * @returns {string}
+ */
 function getPriorityImage(task) {
   const mapping = {
     urgent: "../img/icon-urgent.png",
@@ -305,9 +386,11 @@ function createBody(task) {
 }
 
 function createProgressSection(total, completed, progress) {
-  const progressStyle = total > 0 ? "" : "display: none;";
+  if (total === 0 || completed === 0) {
+    return "";
+  }
   return `
-    <div class="task-progress" style="${progressStyle}">
+    <div class="task-progress">
       <div class="progress-main-container">
         <div class="progress-container">
           <div class="progress-bar" style="width: ${progress}%;"></div>
@@ -333,12 +416,16 @@ function createFooter(task) {
     </div>`;
 }
 
+/**
+ * Create a draggable card element for a task.
+ * @param {{firebaseKey?:string,id?:string,title:string,description:string,priority?:string,users?:Array}} task
+ * @returns {HTMLElement}
+ */
 function createTaskElement(task) {
   const { total, completed, progress } = calculateProgress(task);
   const el = document.createElement("div");
   el.classList.add("draggable-cards");
   el.id = task.firebaseKey || task.id;
-  // Draggable nur für Desktop-Geräte aktivieren
   el.setAttribute("draggable", isTouchDevice() ? "false" : "true");
   el.dataset.title = task.title.toLowerCase();
   el.dataset.description = task.description.toLowerCase();
@@ -351,9 +438,13 @@ function createTaskElement(task) {
   return el;
 }
 
+/**
+ * Bind click and drag-end events to a task element.
+ * @param {any} task
+ * @param {HTMLElement} taskEl
+ */
 function attachTaskListeners(task, taskEl) {
   taskEl.addEventListener("click", () => openTaskModal(task));
-  // Dragend-Event nur für Desktop-Geräte
   if (!isTouchDevice()) {
     taskEl.addEventListener("dragend", async function () {
       const newCol = taskEl.closest(".task-board-container")?.id;

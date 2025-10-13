@@ -4,7 +4,7 @@
     align-items: center;
     flex-direction: row;
     width: 95%;
-    max-width: 1208px;
+    max-width: 1250px;
 
 }
 
@@ -55,8 +55,8 @@
 }
 
 .add-task-button img {
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
 }
 
 .input-box-responsive {
@@ -217,7 +217,7 @@
         overflow-x: auto;
         scrollbar-width: thin;
         scrollbar-color: #888 transparent;
-        touch-action: pan-x;
+        touch-action: auto;
         flex-direction: row;
     }
 
@@ -361,6 +361,9 @@
 }
 
 @media (max-width: 768px) {
+    .done-bottom {
+        margin-bottom: 80px;
+    }
     .mobile-logo {
         display: block;
     }
@@ -436,15 +439,14 @@
     }
 
     .add-task-button img {
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
     }
 
     .board-bar {
         align-items: flex-start;
         padding: 8px;
         gap: 8px;
-        overflow-x: auto;
         scrollbar-width: none;
 
     }
@@ -597,10 +599,6 @@
 
     }
 
-    .task-board-container {
-        width: 84%;
-    }
-
     .tasks-headline {
         width: 90%;
     }
@@ -628,7 +626,6 @@
     }
 
     .board-bar {
-        width: 104%;
         justify-content: flex-start;
         align-items: center;
         padding: 8px;
@@ -812,8 +809,9 @@
 }
 
 .move-to-dropdown .dropdown-header {
-    font-weight: 300;
+    font-weight: 400;
     padding: 5px;
+    text-decoration: underline;
 }
 
 .move-to-dropdown .dropdown-option {

@@ -1,21 +1,17 @@
-document.addEventListener("DOMContentLoaded", initTaskForm);
-
-function initTaskForm() {
-  bindCreateButton();
-  bindInputValidation();
-  observeAssignedProfiles();
-  bindPrioritySelection();
-  bindCategorySelection();
-  bindSubtaskManagement();
-  validateForm();
-}
-
+/**
+ * Bind the create button click handler with a fresh listener instance.
+ * @returns {void}
+ */
 function bindCreateButton() {
   const btn = getUniqueCreateButton();
   if (!btn) return;
   btn.addEventListener("click", createTaskHandler);
 }
 
+/**
+ * Replace existing create button with a cloned node to prevent duplicate listeners.
+ * @returns {HTMLButtonElement|null}
+ */
 function getUniqueCreateButton() {
   const oldBtn = document.querySelector(".create-btn");
   if (!oldBtn) return null;
@@ -24,6 +20,11 @@ function getUniqueCreateButton() {
   return newBtn;
 }
 
+/**
+ * Handle the create button click: validate, disable, persist and re-enable.
+ * @param {MouseEvent} e
+ * @returns {Promise<void>}
+ */
 async function createTaskHandler(e) {
   const btn = e.currentTarget;
   if (!validateForm()) return;
@@ -37,6 +38,10 @@ async function createTaskHandler(e) {
   }
 }
 
+/**
+ * Bind input/change listeners to relevant form fields for validation.
+ * @returns {void}
+ */
 function bindInputValidation() {
   const selectors = [
     ".input",
@@ -49,6 +54,11 @@ function bindInputValidation() {
   selectors.forEach(addValidationListener);
 }
 
+/**
+ * Add a validation listener to a specific element by selector.
+ * @param {string} selector
+ * @returns {void}
+ */
 function addValidationListener(selector) {
   const element = document.querySelector(selector);
   if (element) {
@@ -57,6 +67,10 @@ function addValidationListener(selector) {
   }
 }
 
+/**
+ * Observe changes to assigned profiles to trigger validation.
+ * @returns {void}
+ */
 function observeAssignedProfiles() {
   const container = document.querySelector(".assigned-to-profiles-container");
   if (container) {
@@ -65,46 +79,51 @@ function observeAssignedProfiles() {
   }
 }
 
+/**
+ * Bind priority selection click events and keep validation updated.
+ * @returns {void}
+ */
 function bindPrioritySelection() {
-  const options = document.querySelectorAll(".priority-container div");
+  const options = document.querySelectorAll("#taskModal .priority-container div");
   options.forEach(option => {
     option.addEventListener("click", () => {
       removeActiveClass(options);
       option.classList.add("active");
+      option.dataset.priority = getPriorityValueFromOption(option);
       validateForm();
     });
   });
 }
 
+/**
+ * Remove the active class from all provided priority options.
+ * @param {NodeListOf<Element>|Element[]} options
+ * @returns {void}
+ */
 function removeActiveClass(options) {
   options.forEach(o => o.classList.remove("active"));
 }
 
-function bindCategorySelection() {
-  const categoryItems = document.querySelectorAll('.category-item');
-  categoryItems.forEach(item => {
-    item.addEventListener('click', () => handleCategorySelection(categoryItems, item));
-  });
+/**
+ * Set default priority to medium if available.
+ * @returns {void}
+ */
+function setDefaultPriorityMedium() {
+  const options = document.querySelectorAll('#taskModal .priority-container div');
+  if (!options || options.length === 0) return;
+  removeActiveClass(options);
+  const medium = document.querySelector('#taskModal .priority-container [data-priority="medium"]')
+    || document.querySelector('#taskModal .priority-button-medium');
+  if (medium) {
+    medium.classList.add('active');
+    medium.dataset.priority = 'medium';
+  }
 }
 
-function handleCategorySelection(items, item) {
-  items.forEach(i => i.classList.remove('selected'));
-  item.classList.add('selected');
-  updateCategoryText(item);
-  updateCategorySelect(item);
-  validateForm();
-}
-
-function updateCategoryText(item) {
-  const categoryDisplay = document.querySelector('.category-selected');
-  if (categoryDisplay) categoryDisplay.textContent = item.textContent;
-}
-
-function updateCategorySelect(item) {
-  const select = document.querySelector(".select-task");
-  if (select) select.value = item.getAttribute("data-value");
-}
-
+/**
+ * Bind subtask add and delete interactions.
+ * @returns {void}
+ */
 function bindSubtaskManagement() {
   const subtaskInput = document.querySelector(".subtask");
   const addSubtaskBtn = document.getElementById("addSubtask");
@@ -114,17 +133,28 @@ function bindSubtaskManagement() {
   subtasksContainer.addEventListener("click", handleSubtaskDeletion);
 }
 
+/**
+ * Handle adding a new subtask from input to the container.
+ * @param {HTMLInputElement} subtaskInput
+ * @param {HTMLElement} container
+ * @returns {void}
+ */
 function handleAddSubtask(subtaskInput, container) {
   const text = subtaskInput.value.trim();
   if (text !== "") {
-    const newItem = createSubtaskItem(text);
+    const newItem = createAddTaskSubtaskItem(text);
     container.appendChild(newItem);
     subtaskInput.value = "";
     validateForm();
   }
 }
 
-function createSubtaskItem(text) {
+/**
+ * Create a subtask list item element for the Add Task modal.
+ * @param {string} text
+ * @returns {HTMLDivElement}
+ */
+function createAddTaskSubtaskItem(text) {
   const newItem = document.createElement("div");
   newItem.classList.add("subtask-item", "added-subtasks");
   newItem.innerHTML = `
@@ -134,6 +164,11 @@ function createSubtaskItem(text) {
   return newItem;
 }
 
+/**
+ * Handle click events within the subtask container for deletion.
+ * @param {MouseEvent} e
+ * @returns {void}
+ */
 function handleSubtaskDeletion(e) {
   if (e.target.classList.contains("trash-icon")) {
     e.target.parentElement.remove();
@@ -141,32 +176,46 @@ function handleSubtaskDeletion(e) {
   }
 }
 
+/**
+ * Initialize modal form bindings and defaults.
+ * @returns {void}
+ */
 function initTaskForm() {
   bindCreateButton();
   bindInputValidation();
   observeAssignedProfiles();
   bindPrioritySelection();
-  bindCategorySelection();
   bindCategoryDropdown();
   bindSubtaskManagement();
+  setDefaultPriorityMedium();
   validateForm();
   setupDropdownInputHandler();
 }
 
+/**
+ * Setup the assignee dropdown input to toggle the dropdown when clicked.
+ * @returns {void}
+ */
 function setupDropdownInputHandler() {
   const dropdownInput = document.querySelector('.dropdown-search');
   if (dropdownInput) {
-    dropdownInput.addEventListener('click', toggleDropdown);
-    dropdownInput.addEventListener('focus', toggleDropdown);
+    const oldInput = dropdownInput;
+    const newInput = oldInput.cloneNode(true);
+    oldInput.parentNode.replaceChild(newInput, oldInput);
+    newInput.addEventListener('click', toggleDropdown);
   }
 }
 
+/**
+ * Toggle the assignee dropdown visibility and icons.
+ * Loads contacts when opening.
+ * @returns {void}
+ */
 function toggleDropdown() {
   const dropdownList = document.querySelector('.dropdown-list');
   const searchIcon = document.querySelector('.search-icon');
   const searchIconActive = document.querySelector('.search-icon-active');
   if (!dropdownList || !searchIcon || !searchIconActive) {
-    console.error('Dropdown-Elemente nicht gefunden!');
     return;
   }
   if (dropdownList.style.display === 'block') {
@@ -181,166 +230,151 @@ function toggleDropdown() {
   }
 }
 
-async function addTaskToFirebase() {
-  const firebaseURL = "https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks.json";
-  const taskData = getTaskData();
-  try {
-    const response = await fetch(firebaseURL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(taskData)
-    });
-    const resData = await response.json();
-    const firebaseId = resData.name;
-    if (!firebaseId) return;
-    await updateFirebaseTaskId(firebaseURL, firebaseId);
-    clearForm();
-    closeModal();
-    location.reload();
-  } catch (error) {
-    console.error("Error while saving task to Firebase", error);
-  }
-}
-
-async function loadContactsForAssignment() {
-  try {
-    const response = await fetch('https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/contacts.json');
-    const contacts = await response.json();
-    populateContactDropdown(contacts);
-  } catch (error) {
-    console.error("Error loading contacts:", error);
-  }
-}
-
-function populateContactDropdown(contacts) {
-  const dropdownList = document.querySelector('.dropdown-list');
-  dropdownList.innerHTML = '';
-
-  if (!contacts) return;
-
-  Object.entries(contacts).forEach(([id, contact]) => {
-    const item = document.createElement('div');
-    item.className = 'dropdown-item';
-    const initials = getInitials(contact.name);
-    const avatarClass = getAvatarClass(contact.name);
-
-    item.innerHTML = `
-          <div class="contact-info">
-              <div class="avatar-contact-circle ${avatarClass}">${initials}</div>
-              <span class="contact-name">${contact.name}</span>
-          </div>
-          <input class="custom-checkbox " type="checkbox" data-contact-id="${id}" data-contact-name="${contact.name}" data-contact-initials="${initials}">
-      `;
-
-    const checkbox = item.querySelector('input[type="checkbox"]');
-    checkbox.addEventListener('change', function () {
-      if (this.checked) {
-        addContactToAssigned(contact.name, initials, avatarClass);
-      } else {
-        removeContactFromAssigned(contact.name);
-      }
-      updateDropdownStates();
-    });
-
-    dropdownList.appendChild(item);
-  });
-}
-
-function addContactToAssigned(contactName, initials, avatarClass) {
-  const container = document.querySelector('.assigned-to-profiles-container');
-  const existing = container.querySelector(`[data-contact-name="${contactName}"]`);
-  if (existing) return;
-  const profile = document.createElement('div');
-  profile.className = 'assigned-profile';
-  profile.setAttribute('data-contact-name', contactName);
-  profile.innerHTML = `
-      <div class="avatar-contact-circle ${avatarClass}">${initials}</div>
-  `;
-  profile.addEventListener('click', function () {
-    this.remove();
-    updateDropdownStates();
-    validateForm();
-  });
-  container.appendChild(profile);
-  validateForm();
-}
-
-function updateDropdownStates() {
-  const assignedProfiles = document.querySelectorAll('.assigned-to-profiles-container [data-contact-name]');
-  const assignedNames = Array.from(assignedProfiles).map(profile => profile.getAttribute('data-contact-name'));
-  const dropdownItems = document.querySelectorAll('.dropdown-item');
-  dropdownItems.forEach(item => {
-    const checkbox = item.querySelector('input[type="checkbox"]');
-    const contactName = checkbox.getAttribute('data-contact-name');
-    if (assignedNames.includes(contactName)) {
-      checkbox.checked = true;
-      item.style.opacity = '0.5';
-      item.style.pointerEvents = 'none';
-    } else {
-      checkbox.checked = false;
-      item.style.opacity = '1';
-      item.style.pointerEvents = 'auto';
-    }
-  });
-}
-
-function removeContactFromAssigned(contactName) {
-  const profiles = document.querySelectorAll('.assigned-to-profiles-container div');
-  profiles.forEach(profile => {
-    if (profile.textContent.trim() === contactName) {
-      profile.remove();
-    }
-  });
-  validateForm();
-}
-
+/**
+ * Bind category dropdown interactions (toggle, select, outside click).
+ * @returns {void}
+ */
 function bindCategoryDropdown() {
+  const elements = getCategoryElements();
+  if (!elements) return;
+
+  setupCategoryDropdownToggle(elements);
+  setupCategoryItemSelection(elements);
+  setupCategoryOutsideClick(elements);
+}
+
+/**
+ * Collect and validate required DOM elements for the category dropdown.
+ * @returns {{categoryDropdown:HTMLElement,categorySelected:HTMLElement,categoryOptions:HTMLElement,categoryItems:NodeListOf<Element>}|null}
+ */
+function getCategoryElements() {
   const categoryDropdown = document.querySelector('.category-dropdown');
   const categorySelected = document.querySelector('.category-selected');
   const categoryOptions = document.querySelector('.category-options');
   const categoryItems = document.querySelectorAll('.category-item');
 
-  if (!categoryDropdown || !categorySelected || !categoryOptions) return;
+  if (!categoryDropdown || !categorySelected || !categoryOptions) return null;
+  
+  return { categoryDropdown, categorySelected, categoryOptions, categoryItems };
+}
 
-  categoryDropdown.addEventListener('click', function (e) {
+/**
+ * Setup toggle behavior for clicking the category dropdown.
+ * @param {{categoryOptions:HTMLElement,categoryDropdown:HTMLElement}} elements
+ * @returns {void}
+ */
+function setupCategoryDropdownToggle(elements) {
+  elements.categoryDropdown.addEventListener('click', function (e) {
     e.stopPropagation();
-
-    if (categoryOptions.style.display === 'block') {
-      categoryOptions.style.display = 'none';
-    } else {
-      categoryOptions.style.display = 'block';
-    }
-  });
-
-  categoryItems.forEach(item => {
-    item.addEventListener('click', function (e) {
-      e.stopPropagation();
-
-      categoryItems.forEach(i => i.classList.remove('selected'));
-      this.classList.add('selected');
-      categorySelected.textContent = this.textContent;
-
-      const select = document.querySelector('.select-task');
-      if (select) {
-        select.value = this.getAttribute('data-value');
-      }
-      categoryOptions.style.display = 'none';
-      validateForm();
-    });
-  });
-
-  document.addEventListener('click', function () {
-    categoryOptions.style.display = 'none';
+    toggleCategoryOptions(elements.categoryOptions);
   });
 }
 
+/**
+ * Toggle the category options list visibility.
+ * @param {HTMLElement} categoryOptions
+ * @returns {void}
+ */
+function toggleCategoryOptions(categoryOptions) {
+  if (categoryOptions.style.display === 'block') {
+    categoryOptions.style.display = 'none';
+  } else {
+    categoryOptions.style.display = 'block';
+  }
+}
+
+/**
+ * Bind click handlers for each category item.
+ * @param {{categoryItems:NodeListOf<Element>}} elements
+ * @returns {void}
+ */
+function setupCategoryItemSelection(elements) {
+  elements.categoryItems.forEach(item => {
+    item.addEventListener('click', function (e) {
+      e.stopPropagation();
+      handleCategorySelection(elements, this);
+    });
+  });
+}
+
+/**
+ * Handle selecting a category item and update view/state.
+ * @param {{categoryItems:NodeListOf<Element>,categorySelected:HTMLElement,categoryOptions:HTMLElement}} elements
+ * @param {Element} selectedItem
+ * @returns {void}
+ */
+function handleCategorySelection(elements, selectedItem) {
+  selectCategoryItem(elements.categoryItems, selectedItem);
+  updateCategoryDisplay(elements.categorySelected, selectedItem);
+  updateCategorySelect(selectedItem);
+  closeCategoryOptions(elements.categoryOptions);
+  validateForm();
+}
+
+/**
+ * Apply selected class to chosen category item.
+ * @param {NodeListOf<Element>} categoryItems
+ * @param {Element} selectedItem
+ * @returns {void}
+ */
+function selectCategoryItem(categoryItems, selectedItem) {
+  categoryItems.forEach(item => item.classList.remove('selected'));
+  selectedItem.classList.add('selected');
+}
+
+/**
+ * Update selected category label text.
+ * @param {HTMLElement} categorySelected
+ * @param {Element} selectedItem
+ * @returns {void}
+ */
+function updateCategoryDisplay(categorySelected, selectedItem) {
+  categorySelected.textContent = selectedItem.textContent;
+}
+
+/**
+ * Reflect the chosen category in the hidden select element.
+ * @param {Element} selectedItem
+ * @returns {void}
+ */
+function updateCategorySelect(selectedItem) {
+  const select = document.querySelector('.select-task');
+  if (select) {
+    select.value = selectedItem.getAttribute('data-value');
+  }
+}
+
+/**
+ * Hide the category options list.
+ * @param {HTMLElement} categoryOptions
+ * @returns {void}
+ */
+function closeCategoryOptions(categoryOptions) {
+  categoryOptions.style.display = 'none';
+}
+
+/**
+ * Close category options when clicking outside the dropdown.
+ * @param {{categoryOptions:HTMLElement}} elements
+ * @returns {void}
+ */
+function setupCategoryOutsideClick(elements) {
+  document.addEventListener('click', function () {
+    closeCategoryOptions(elements.categoryOptions);
+  });
+}
+
+/**
+ * Collect current task form values into a data object.
+ * @returns {{column:string,description:string,dueDate:string,id:string|null,priority:string,progress:number,title:string,users:Array<{name:string}>,subtasks:Array<{completed:boolean,text:string}>,category:string}}
+ */
 function getTaskData() {
   return {
     column: "toDoColumn",
     description: getInputValue(".description", "No description provided"),
     dueDate: getInputValue(".date-input"),
     id: null,
-    priority: `../img/priority-img/${getSelectedPriority()}.png`,
+    priority: `../img/priority-img/${getAddModalSelectedPriority()}.png`,
     progress: 0,
     title: getInputValue(".input"),
     users: getSelectedUsers(),
@@ -349,40 +383,67 @@ function getTaskData() {
   };
 }
 
-async function updateFirebaseTaskId(url, firebaseId) {
-  const updateURL = url.replace(".json", `/${firebaseId}/id.json`);
-  await fetch(updateURL, {
-    method: "PUT",
-    body: JSON.stringify(firebaseId)
-  });
-}
-
+/**
+ * Get the value of an input by selector, with optional fallback.
+ * @param {string} selector
+ * @param {string} [fallback]
+ * @returns {string}
+ */
 function getInputValue(selector, fallback = "") {
   return document.querySelector(selector)?.value.trim() || fallback;
 }
 
-function getSelectedPriority() {
-  return document.querySelector(".priority-container .active")?.dataset.priority || "low";
+/**
+ * Get the currently selected priority in Add Task modal or fallback to "low".
+ * @returns {string}
+ */
+function getAddModalSelectedPriority() {
+  const active = document.querySelector("#taskModal .priority-container .active");
+  if (!active) return "low";
+  return getPriorityValueFromOption(active);
 }
 
+/**
+ * Determine priority value from element dataset or class names.
+ * @param {Element} el
+ * @returns {"urgent"|"medium"|"low"}
+ */
+function getPriorityValueFromOption(el) {
+  const val = el.dataset?.priority;
+  if (val === 'urgent' || val === 'medium' || val === 'low') return val;
+  if (el.classList.contains('priority-button-urgent')) return 'urgent';
+  if (el.classList.contains('priority-button-medium')) return 'medium';
+  if (el.classList.contains('priority-button-low')) return 'low';
+  return 'low';
+}
+
+/**
+ * Collect unique selected users from assigned profile badges.
+ * @returns {Array<{name:string}>}
+ */
 function getSelectedUsers() {
-  const users = [...document.querySelectorAll(".assigned-to-profiles-container div")]
-    .map(user => ({ name: user.innerText.trim() }));
-
-  // Duplikate entfernen basierend auf Namen
-  const uniqueUsers = [];
+  const profiles = document.querySelectorAll('.assigned-to-profiles-container [data-contact-name]');
+  const users = Array.from(profiles)
+    .map(el => {
+      const name = el.getAttribute('data-contact-name')?.trim() || '';
+      return name ? { name } : null;
+    })
+    .filter(Boolean);
   const seen = new Set();
-
-  for (const user of users) {
-    if (!seen.has(user.name) && user.name) {
-      seen.add(user.name);
-      uniqueUsers.push(user);
+  const unique = [];
+  for (const u of users) {
+    if (!seen.has(u.name)) {
+      seen.add(u.name);
+      unique.push(u);
     }
   }
-
-  return uniqueUsers.length > 0 ? uniqueUsers : [{ name: "Unassigned" }];
+  return unique;
 }
 
+/**
+ * Collect current subtasks from the DOM.
+ * @returns {Array<{completed:boolean,text:string}>}
+ */
 function getSubtasks() {
   return [...document.querySelectorAll(".subtasks-scroll-container .subtask-item span")].map(span => ({
     completed: false,
@@ -390,11 +451,19 @@ function getSubtasks() {
   }));
 }
 
+/**
+ * Get the selected category value or a default.
+ * @returns {string}
+ */
 function getSelectedCategory() {
   const activeItem = document.querySelector(".category-item.selected");
   return activeItem ? activeItem.dataset.value : "Technical task";
 }
 
+/**
+ * Clear the task creation form inputs and dynamic lists.
+ * @returns {void}
+ */
 function clearForm() {
   [".input", ".description", ".date-input", ".select-task", ".subtask"].forEach(sel => {
     const el = document.querySelector(sel);
@@ -405,11 +474,19 @@ function clearForm() {
   if (subtasksContainer) subtasksContainer.innerHTML = "";
 }
 
+/**
+ * Close the task modal if it is open.
+ * @returns {void}
+ */
 function closeModal() {
   const modal = document.getElementById("taskModal");
   if (modal) modal.style.display = "none";
 }
 
+/**
+ * Check if required form fields are filled.
+ * @returns {boolean}
+ */
 function isTaskFormValid() {
   const title = getInputValue(".input");
   const dueDate = getInputValue(".date-input");
@@ -417,6 +494,11 @@ function isTaskFormValid() {
   return title && dueDate && category;
 }
 
+/**
+ * Enable/disable the create button and adjust style based on validity.
+ * @param {boolean} isValid
+ * @returns {void}
+ */
 function updateCreateButtonState(isValid) {
   const createBtn = document.querySelector(".create-btn");
   if (!createBtn) return;
@@ -431,6 +513,10 @@ function updateCreateButtonState(isValid) {
   }
 }
 
+/**
+ * Validate the form and update the create button state.
+ * @returns {boolean} Whether the form is valid.
+ */
 function validateForm() {
   const isValid = isTaskFormValid();
   updateCreateButtonState(isValid);

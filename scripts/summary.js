@@ -1,187 +1,251 @@
 (() => {
-  'use strict';
-
-  const BASE_URL = (window.FIREBASE_URL && String(window.FIREBASE_URL)) || 'https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/';
-  const TASKS_NODE = 'tasks';
+  "use strict";
+  /** @type {const} */
+  const BASE_URL =
+    (window.FIREBASE_URL && String(window.FIREBASE_URL)) ||
+    "https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/";
+  /** @type {const} */
+  const TASKS_NODE = "tasks";
+  /** @type {const} */
   const POLL_MS = 1500;
-  const DATE_LOCALE = 'en-US';
-  const LABELS = { 'to do': 'todo', 'to-do': 'todo', 'done': 'done', 'tasks in board': 'total', 'tasks in progress': 'inProgress', 'awaiting feedback': 'awaitFeedback' };
+  /** @type {const} */
+  const DATE_LOCALE = "en-US";
+  /** @type {const} */
+  const LABELS_MAP = {
+    "to do": "todo",
+    "to-do": "todo",
+    done: "done",
+    "tasks in board": "total",
+    "tasks in progress": "inProgress",
+    "awaiting feedback": "awaitFeedback",
+  };
 
-  function firebaseGetPath(path) {
-    const helper = typeof window.firebaseGet === 'function';
-    if (helper) return window.firebaseGet(path);
-    return fetch(`${BASE_URL}${path}.json`).then(r => r.json()).catch(() => null);
-  }
+  /** Liest Daten von Firebase oder via fetch. */
+  /** @param {string} path @returns {Promise<any>} */
+  const firebaseGetPath = (path) =>
+    typeof window.firebaseGet === "function"
+      ? window.firebaseGet(path)
+      : fetch(`${BASE_URL}${path}.json`)
+          .then((r) => r.json())
+          .catch(() => null);
 
-  function parseAndNormalizeTasks(data) {
-    const isObj = v => v && typeof v === 'object' && !Array.isArray(v);
-    const rows = isObj(data) ? Object.values(data) : (Array.isArray(data) ? data : []);
-    const normCol = v => {
-      if (v === 'toDoColumn' || v === 'inProgress' || v === 'awaitFeedback' || v === 'done') return v;
-      const s = String(v || '').toLowerCase().replace(/\s|_/g, '');
-      if (s.includes('todo')) return 'toDoColumn';
-      if (s.includes('inprogress') || s === 'progress') return 'inProgress';
-      if (s.includes('await') || s.includes('feedback') || s.includes('review')) return 'awaitFeedback';
-      if (s.includes('done') || s.includes('complete') || s.includes('finished')) return 'done';
-      return '';
-    };
-    const normPrio = v => {
-      const s = String(v || '').toLowerCase();
-      if (s.includes('urgent') || s === 'high') return 'urgent';
-      if (s.includes('low')) return 'low';
-      return (s.includes('medium') || s === 'mid' || s === 'normal') ? 'medium' : 'medium';
-    };
-    const parseDate = v => {
-      if (!v) return null;
-      const s = String(v).trim();
+  /** Normalisiert Spaltennamen. */
+  /** @param {string} rawColumn @returns {"toDoColumn"|"inProgress"|"awaitFeedback"|"done"|""} */
+  const normalizeColumn = (rawColumn) => {
+    const lowered = String(rawColumn || "")
+      .toLowerCase()
+      .replace(/\s|_/g, "");
+    if (lowered.includes("todo")) return "toDoColumn";
+    if (lowered.includes("inprogress") || lowered === "progress") return "inProgress";
+    if (lowered.includes("await") || lowered.includes("feedback") || lowered.includes("review"))
+      return "awaitFeedback";
+    if (lowered.includes("done") || lowered.includes("complete") || lowered.includes("finished"))
+      return "done";
+    return "";
+  };
 
-      let m = s.match(/^(\d{4})-(\d{2})-(\d{2})$/); if (m) return new Date(+m[1], +m[2]-1, +m[3]);
-      m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/); if (m) return new Date(+m[3], +m[2]-1, +m[1]);
-      m = s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/); if (m) return new Date(+m[3], +m[2]-1, +m[1]);
-      
-      const d = new Date(s); return isNaN(d) ? null : d;
-    };
+  /** Normalisiert Priorität. */
+  /** @param {string} rawPriority @returns {"urgent"|"medium"|"low"} */
+  const normalizePriority = (rawPriority) => {
+    const lowered = String(rawPriority || "").toLowerCase();
+    if (lowered.includes("urgent") || lowered === "high") return "urgent";
+    if (lowered.includes("low")) return "low";
+    return "medium";
+  };
+
+  /** Parst Datumstext zu Date. */
+  /** @param {string|Date|null} inputDate @returns {Date|null} */
+  const parseDate = (inputDate) => {
+    if (!inputDate) return null;
+    const text = String(inputDate).trim();
+    let m = text.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (m) return new Date(+m[1], +m[2] - 1, +m[3]);
+    m = text.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+    if (m) return new Date(+m[3], +m[2] - 1, +m[1]);
+    m = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (m) return new Date(+m[3], +m[2] - 1, +m[1]);
+    const d = new Date(text);
+    return isNaN(d) ? null : d;
+  };
+
+  /** Transformiert Rohdaten in kompakte Tasks. */
+  /** @param {any} rawData @returns {{id:string,column:string,priority:string,dueDate:Date|null}[]} */
+  const parseAndNormalizeTasks = (rawData) => {
+    const isObj = (x) => x && typeof x === "object" && !Array.isArray(x);
+    const rows = isObj(rawData) ? Object.values(rawData) : Array.isArray(rawData) ? rawData : [];
     return rows.filter(isObj).map((row, i) => ({
       id: row.firebaseKey || row.id || String(i),
-      column: normCol(row.column ?? row.status ?? row.state ?? row.list ?? ''),
-      priority: normPrio(row.priority ?? row.prio ?? ''),
-      dueDate: parseDate(row.dueDate ?? row.deadline ?? row.date ?? '')
+      column: normalizeColumn(row.column ?? row.status ?? row.state ?? row.list ?? ""),
+      priority: normalizePriority(row.priority ?? row.prio ?? ""),
+      dueDate: parseDate(row.dueDate ?? row.deadline ?? row.date ?? ""),
     }));
-  }
+  };
 
-  function computeCounters(tasks) {
-    const out = { total: 0, todo: 0, inProgress: 0, awaitFeedback: 0, done: 0, urgent: 0 };
-    for (const task of tasks) {
-      out.total++;
-      if (task.column === 'toDoColumn') out.todo++;
-      else if (task.column === 'inProgress') out.inProgress++;
-      else if (task.column === 'awaitFeedback') out.awaitFeedback++;
-      else if (task.column === 'done') out.done++;
-      if (task.priority === 'urgent') out.urgent++;
+  /** Zählt Kennzahlen fürs Dashboard. */
+  /** @param {ReturnType<parseAndNormalizeTasks>} tasks @returns {{total:number,todo:number,inProgress:number,awaitFeedback:number,done:number,urgent:number}} */
+  const computeCounters = (tasks) => {
+    const counters = { total: 0, todo: 0, inProgress: 0, awaitFeedback: 0, done: 0, urgent: 0 };
+    for (const t of tasks) {
+      counters.total++;
+      if (t.column === "toDoColumn") counters.todo++;
+      else if (t.column === "inProgress") counters.inProgress++;
+      else if (t.column === "awaitFeedback") counters.awaitFeedback++;
+      else if (t.column === "done") counters.done++;
+      if (t.priority === "urgent") counters.urgent++;
     }
-    return out;
-  }
+    return counters;
+  };
 
-  function formatNextDeadline(tasks) {
+  /** Nächste künftige Fälligkeit. */
+  /** @param {ReturnType<parseAndNormalizeTasks>} tasks @returns {string} */
+  const nextDeadline = (tasks) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const dates = tasks.map(t => t.dueDate).filter(d => d && d >= today).sort((a, b) => a - b);
-    const val = dates[0] || null;
-    return val ? val.toLocaleDateString(DATE_LOCALE, { year: 'numeric', month: 'long', day: 'numeric' }) : '—';
-  }
+    const future = tasks
+      .map((t) => t.dueDate)
+      .filter((d) => d && d >= today)
+      .sort((a, b) => a - b);
+    const first = future[0] || null;
+    return first
+      ? first.toLocaleDateString(DATE_LOCALE, { year: "numeric", month: "long", day: "numeric" })
+      : "—";
+  };
 
-  function renderCounters(counters, tasks) {
-    const normalize = s => String(s || '').replace(/<br\s*\/?>/gi, ' ').toLowerCase().replace(/[^\w ]+/g, ' ').replace(/\s+/g, ' ').trim();
-    document.querySelectorAll('.js-count-container').forEach(box => {
-      const labelNode = box.querySelector('.counter-text-design');
-      const valueNode = box.querySelector('.value');
-      if (!labelNode || !valueNode) return;
-      const key = LABELS[normalize(labelNode.innerHTML || labelNode.textContent)];
-      if (key) valueNode.textContent = counters[key];
+  /** Normalisiert Labeltext fürs DOM-Mapping. */
+  /** @param {string} rawLabelHtml @returns {string} */
+  const norm = (rawLabelHtml) =>
+    String(rawLabelHtml || "")
+      .replace(/<br\s*\/?>(?=)/gi, " ")
+      .toLowerCase()
+      .replace(/[^\w ]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+  /** Schreibt Zähler/Deadline ins DOM. */
+  /** @param {ReturnType<computeCounters>} counters @param {ReturnType<parseAndNormalizeTasks>} tasks */
+  const renderCounters = (counters, tasks) => {
+    document.querySelectorAll(".js-count-container").forEach((box) => {
+      const label = box.querySelector(".counter-text-design"),
+        value = box.querySelector(".value");
+      if (!label || !value) return;
+      const key = LABELS_MAP[norm(label.innerHTML || label.textContent)];
+      if (key) value.textContent = counters[key];
     });
-    const urgentNode = document.querySelector('.js-urgent-container .value');
-    if (urgentNode) urgentNode.textContent = counters.urgent;
-    const deadlineNode = document.querySelector('.js-deadline-date');
-    if (deadlineNode) deadlineNode.textContent = formatNextDeadline(tasks);
-  }
+    const urgent = document.querySelector(".js-urgent-container .value");
+    if (urgent) urgent.textContent = counters.urgent;
+    const deadline = document.querySelector(".js-deadline-date");
+    if (deadline) deadline.textContent = nextDeadline(tasks);
+  };
 
-  function renderGreeting() {
-    const greetingNode = document.querySelector('.js-greeting');
-    const nameNode = document.querySelector('.js-user-name');
-    const badgeNode = document.querySelector('.header-right-side .account div');
-    const name = (localStorage.getItem('name') || '').trim();
-    const isGuest = (localStorage.getItem('isGuest') || 'false') === 'true';
-    if (greetingNode) greetingNode.textContent = 'Good morning!';
-    if (nameNode) {
-      if (!isGuest && name) { nameNode.textContent = name; nameNode.style.display = ''; }
-      else { nameNode.textContent = ''; nameNode.style.display = 'none'; }
+  /** Rendert Begrüßung & Badge. */
+  /** @returns {void} */
+  const renderGreeting = () => {
+    const greet = document.querySelector(".js-greeting"),
+      user = document.querySelector(".js-user-name"),
+      badge = document.querySelector(".header-right-side .account div");
+    const name = (localStorage.getItem("name") || "").trim();
+    const isGuest = (localStorage.getItem("isGuest") || "false") === "true";
+    if (greet) greet.textContent = "Good morning!";
+    if (user) {
+      if (!isGuest && name) {
+        user.textContent = name;
+        user.style.display = "";
+      } else {
+        user.textContent = "";
+        user.style.display = "none";
+      }
     }
-    if (badgeNode) {
-      const parts = name.split(/\s+/), a = (parts[0] || '')[0] || '', b = (parts[parts.length - 1] || '')[0] || '';
-      badgeNode.textContent = (!isGuest && name) ? (a + b).toUpperCase() : 'G';
+    if (badge) {
+      const pieces = name.split(/\s+/);
+      const a = (pieces[0] || "")[0] || "",
+        b = (pieces[pieces.length - 1] || "")[0] || "";
+      badge.textContent = !isGuest && name ? (a + b).toUpperCase() : "G";
     }
-  }
+  };
 
-  async function fetchAndRender() {
-    try {
-      const data = await firebaseGetPath(TASKS_NODE);
-      const tasks = parseAndNormalizeTasks(data);
-      const counters = computeCounters(tasks);
-      renderCounters(counters, tasks);
-      renderGreeting();
-    } catch { }
-  }
+  /** Prüft Mobile-Breite. */
+  /** @returns {boolean} */
+  const isMobile = () => window.innerWidth <= 925;
 
-  function startSummaryLoop() {
-    document.addEventListener('visibilitychange', () => { if (!document.hidden) fetchAndRender(); });
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => { fetchAndRender(); setInterval(fetchAndRender, POLL_MS); });
-    } else {
-      fetchAndRender();
-      setInterval(fetchAndRender, POLL_MS);
-    }
-  }
-
-  startSummaryLoop();
-})();
-
-(() => {
-  const MAX_WIDTH = 925;
-  const SHOW_MS = 900;
-  const SPLASH_ID = 'greetSplash';
-  const TRIGGER_KEY = 'summary.triggerSplash';
-
-  function shouldShowSplash() {
-    return window.innerWidth <= MAX_WIDTH;
-  }
-
-  function buildSplash() {
-    let splash = document.getElementById(SPLASH_ID);
+  /** Baut den Begrüßungs‑Splash. */
+  /** @returns {HTMLElement} */
+  const buildSplash = () => {
+    let splash = document.getElementById("greetSplash");
     if (!splash) {
-      splash = document.createElement('div');
-      splash.id = SPLASH_ID;
-      splash.className = 'greet-splash';
-      splash.innerHTML = `<div class="greet-box"><p class="greet-line">Good morning!</p><h2 class="greet-name"></h2></div>`;
+      splash = document.createElement("div");
+      splash.id = "greetSplash";
+      splash.className = "greet-splash";
+      splash.innerHTML = `<div class=\"greet-box\"><p class=\"greet-line\">Good morning!</p><h2 class=\"greet-name\"></h2></div>`;
       document.body.appendChild(splash);
     }
-    const name = (localStorage.getItem('name') || '').trim();
-    const isGuest = (localStorage.getItem('isGuest') || 'false') === 'true';
-    splash.querySelector('.greet-name').textContent = (!isGuest && name) ? name : '';
+    const name = (localStorage.getItem("name") || "").trim();
+    const guest = (localStorage.getItem("isGuest") || "false") === "true";
+    splash.querySelector(".greet-name").textContent = !guest && name ? name : "";
     return splash;
-  }
+  };
 
-  function showAndFadeSplash() {
-    if (!shouldShowSplash()) return;
+  /** Zeigt & blendet den Splash aus. */
+  /** @returns {void} */
+  const showAndFadeSplash = () => {
+    if (!isMobile()) return;
     const splash = buildSplash();
-    splash.classList.remove('fade-out');
+    splash.classList.remove("fade-out");
     setTimeout(() => {
-      splash.classList.add('fade-out');
-      splash.addEventListener('transitionend', () => splash.remove(), { once: true });
+      splash.classList.add("fade-out");
+      splash.addEventListener("transitionend", () => splash.remove(), { once: true });
       setTimeout(() => splash.remove(), 600);
-    }, SHOW_MS);
-  }
+    }, 900);
+  };
 
-  function consumeTrigger() {
-    const hasSession = sessionStorage.getItem(TRIGGER_KEY);
-    const hasLocal = localStorage.getItem(TRIGGER_KEY);
-    const active = (hasSession || hasLocal) && shouldShowSplash();
-    if (active) {
-      sessionStorage.removeItem(TRIGGER_KEY);
-      localStorage.removeItem(TRIGGER_KEY);
+  /** Liest & löscht Trigger, dann zeigt Splash. */
+  /** @returns {void} */
+  const consumeTrigger = () => {
+    const key = "summary.triggerSplash";
+    const a = sessionStorage.getItem(key),
+      b = localStorage.getItem(key);
+    if ((a || b) && isMobile()) {
+      sessionStorage.removeItem(key);
+      localStorage.removeItem(key);
       showAndFadeSplash();
     }
-  }
+  };
 
-  function initSplash() {
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', consumeTrigger);
-    } else {
-      consumeTrigger();
-    }
-    window.addEventListener('storage', e => {
-      if (e.key === TRIGGER_KEY && (e.newValue === '1' || e.newValue === 'true')) consumeTrigger();
+  /** Initialisiert Splash‑Logik (DOMContentLoaded + storage). */
+  /** @returns {void} */
+  const initSplash = () => {
+    const onReady = () => consumeTrigger();
+    document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", onReady) : onReady();
+    window.addEventListener("storage", (e) => {
+      if (e.key === "summary.triggerSplash" && (e.newValue === "1" || e.newValue === "true"))
+        consumeTrigger();
     });
-  }
+  };
 
+  /** Holt Tasks, berechnet Kennzahlen und rendert. */
+  /** @returns {Promise<void>} */
+  const fetchAndRender = async () => {
+    try {
+      const raw = await firebaseGetPath(TASKS_NODE);
+      const tasks = parseAndNormalizeTasks(raw);
+      renderCounters(computeCounters(tasks), tasks);
+      renderGreeting();
+    } catch {}
+  };
+
+  /** Startet Polling & refresht bei Tab‑Rückkehr. */
+  /** @returns {void} */
+  const startSummaryLoop = () => {
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) fetchAndRender();
+    });
+    const boot = () => {
+      fetchAndRender();
+      setInterval(fetchAndRender, POLL_MS);
+    };
+    document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", boot) : boot();
+  };
+
+  // Boot
+  startSummaryLoop();
   initSplash();
 })();

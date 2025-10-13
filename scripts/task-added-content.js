@@ -1,5 +1,8 @@
 let placeholder = document.createElement("div");
 
+/**
+ * Show or hide the empty-state image in `#toDoColumn`.
+ */
 function checkToDoColumn() {
   const toDo = document.getElementById("toDoColumn");
   const img = toDo.querySelector("img");
@@ -12,6 +15,9 @@ function checkColumns() {
   checkToDoColumn();
 }
 
+/**
+ * Enable drag and drop for tasks and columns.
+ */
 function enableDragAndDrop() {
   addTaskEventListeners();
   addColumnEventListeners();
@@ -47,6 +53,10 @@ function addColumnEventListeners() {
   });
 }
 
+/**
+ * Handle dragover on column and place visual placeholder.
+ * @param {DragEvent} e
+ */
 function handleDragOver(e) {
   e.preventDefault();
   const col = e.currentTarget;
@@ -58,6 +68,10 @@ function handleDragOver(e) {
   }
 }
 
+/**
+ * Handle drop into a column and insert dragged element.
+ * @param {DragEvent} e
+ */
 function handleDrop(e) {
   e.preventDefault();
   const col = e.currentTarget;
@@ -68,6 +82,12 @@ function handleDrop(e) {
   }
 }
 
+/**
+ * Find the task element after which the placeholder should be inserted.
+ * @param {HTMLElement} container
+ * @param {number} y Mouse Y position
+ * @returns {HTMLElement|undefined}
+ */
 function getDragAfterElement(container, y) {
   const items = [...container.querySelectorAll(".draggable-cards:not(.dragging)")];
   return items.reduce((closest, child) => {

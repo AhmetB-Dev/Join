@@ -74,35 +74,277 @@ function handleTaskDragEnd() {
   checkColumns();
 }
 
+/**
+ * Insert task at placeholder position if present, otherwise append to container.
+ * @param {HTMLElement} container
+ * @param {HTMLElement} task
+ */
+function insertTaskAtPlaceholderOrEnd(container, task) {
+  let insertPosition = null;
+  if (container.contains(dragPlaceholder)) {
+    insertPosition = dragPlaceholder.nextSibling;
+  }
+  removePlaceholder();
+  if (insertPosition) {
+    container.insertBefore(task, insertPosition);
+  } else {
+    container.appendChild(task);
+  }
+}
+
+/**
+ * Initialize drag events on tasks collection.
+ * @param {NodeListOf<HTMLElement>} tasks
+ * @param {NodeListOf<HTMLElement>} columns
+ */
+function initializeTasks(tasks, columns) {
+  tasks.forEach(task => {
+    // Skip if already initialized
+    if (task.dataset.dragInitialized === 'true') return;
+    
+    prepareTaskForDrag(task);
+    setupTaskDragEvents(task, Array.from(columns));
+    
+    task.dataset.dragInitialized = 'true';
+  });
+}
+
+/**
+ * Prepare a task element for drag behavior depending on device.
+ * @param {HTMLElement} task
+ * @returns {void}
+ */
+function prepareTaskForDrag(task) {
+  if (isTouchDevice()) {
+    task.setAttribute('draggable', 'false');
+  }
+  if (!isTouchDevice()) {
+    attachDesktopDragEvents(task);
+  }
+}
+
+/**
+ * Attach both touch and (if applicable) desktop events for a task.
+ * @param {HTMLElement} task
+ * @param {Array<HTMLElement>} columns
+ * @returns {void}
+ */
+function setupTaskDragEvents(task, columns) {
+  attachTouchDragEvents(task, columns);
+}
+
+/**
+ * Initialize column events for desktop DnD.
+ * @param {NodeListOf<HTMLElement>} columns
+ */
+function initializeColumns(columns) {
+  columns.forEach(column => {
+    if (!isTouchDevice()) {
+      attachColumnDragOverEvent(column);
+      attachColumnDropEvent(column);
+    }
+  });
+}
+
 function attachDesktopDragEvents(task) {
   task.addEventListener("dragstart", handleTaskDragStart);
   task.addEventListener("dragend", handleTaskDragEnd);
 }
 
-function updateDragPlaceholderForColumns(touch, columns) {
-  columns.forEach(column => {
-    if (isTouchInsideElement(touch, column)) {
-      const afterEl = getDragAfterElement(column, touch.clientY);
-      updateColumnWithPlaceholder(column, afterEl);
+/**
+ * Attach touch events for drag and drop on mobile/tablet.
+ * @param {HTMLElement} task
+ * @param {Array<HTMLElement>} columns
+ */
+function attachTouchDragEvents(task, columns) {
+  const state = {
+    touchStartY: 0,
+    touchStartX: 0,
+    isDragging: false,
+    currentColumn: null,
+    clone: null,
+    dragTimeout: null,
+    task,
+    columns
+  };
+
+  task.addEventListener('touchstart', (e) => onTouchStart(e, state), { passive: true });
+  task.addEventListener('touchmove', (e) => onTouchMove(e, state));
+  task.addEventListener('touchend', (e) => onTouchEnd(e, state), { passive: true });
+  task.addEventListener('touchcancel', () => onTouchCancel(state), { passive: true });
+}
+
+/**
+ * Handle touchstart event to schedule drag and prepare UI.
+ * @param {TouchEvent} e
+ * @param {any} state
+ */
+function onTouchStart(e, state) {
+  const touch = e.touches[0];
+  state.touchStartY = touch.clientY;
+  state.touchStartX = touch.clientX;
+  state.isDragging = false;
+  state.dragTimeout = setTimeout(() => beginTouchDrag(state, touch.clientX, touch.clientY), 200);
+}
+
+/**
+ * Start the visual drag for touch interactions.
+ * @param {any} state
+ * @param {number} clientX
+ * @param {number} clientY
+ */
+function beginTouchDrag(state, clientX, clientY) {
+  state.isDragging = true;
+  selectedTask = state.task;
+  state.task.classList.add('dragging');
+  state.task.style.opacity = '0.5';
+  lockScrollForDrag();
+  state.clone = createTaskClone(state.task);
+  document.body.appendChild(state.clone);
+  updateClonePosition(state, clientX, clientY);
+}
+
+/**
+ * Handle touchmove to update clone and placeholder location.
+ * @param {TouchEvent} e
+ * @param {any} state
+ */
+function onTouchMove(e, state) {
+  if (!state.isDragging || !state.clone) return;
+  const touch = e.touches[0];
+  updateClonePosition(state, touch.clientX, touch.clientY);
+  const elemBelow = document.elementFromPoint(touch.clientX, touch.clientY);
+  const columnBelow = elemBelow?.closest('.task-board-container');
+  if (columnBelow && columnBelow !== state.currentColumn) {
+    state.currentColumn = columnBelow;
+    if (!columnBelow.contains(dragPlaceholder)) {
+      const afterEl = getDragAfterElement(columnBelow, touch.clientY);
+      if (!afterEl) columnBelow.appendChild(dragPlaceholder);
+      else columnBelow.insertBefore(dragPlaceholder, afterEl);
     }
-  });
+  }
 }
 
-function isTouchInsideElement(touch, element) {
-  const rect = element.getBoundingClientRect();
-  return (
-    touch.clientX >= rect.left &&
-    touch.clientX <= rect.right &&
-    touch.clientY >= rect.top &&
-    touch.clientY <= rect.bottom
-  );
+/**
+ * Handle touchend to drop card and cleanup.
+ * @param {TouchEvent} e
+ * @param {any} state
+ */
+function onTouchEnd(e, state) {
+  clearTimeout(state.dragTimeout);
+  unlockScrollFromDrag();
+  if (!state.isDragging) return;
+  state.isDragging = false;
+  state.task.classList.remove('dragging');
+  state.task.style.opacity = '1';
+  if (state.clone) {
+    state.clone.remove();
+    state.clone = null;
+  }
+  if (state.currentColumn && selectedTask) {
+    insertTaskAtPlaceholderOrEnd(state.currentColumn, selectedTask);
+    updateTaskColumnInFirebase(selectedTask.id, state.currentColumn.id);
+  }
+  selectedTask = null;
+  state.currentColumn = null;
+  removePlaceholder();
+  checkColumns();
 }
 
-function updateColumnWithPlaceholder(column, afterEl) {
+/**
+ * Handle touchcancel to revert UI and state.
+ * @param {any} state
+ */
+function onTouchCancel(state) {
+  clearTimeout(state.dragTimeout);
+  unlockScrollFromDrag();
+  if (state.clone) {
+    state.clone.remove();
+    state.clone = null;
+  }
+  if (selectedTask) {
+    selectedTask.classList.remove('dragging');
+    selectedTask.style.opacity = '1';
+  }
+  state.isDragging = false;
+  selectedTask = null;
+  state.currentColumn = null;
+  removePlaceholder();
+}
+
+/**
+ * Create a visual clone of the dragged task.
+ * @param {HTMLElement} task
+ * @returns {HTMLElement}
+ */
+function createTaskClone(task) {
+  const clone = task.cloneNode(true);
+  clone.style.position = 'fixed';
+  clone.style.pointerEvents = 'none';
+  clone.style.opacity = '0.8';
+  clone.style.zIndex = '10000';
+  clone.style.width = task.offsetWidth + 'px';
+  clone.style.transform = 'rotate(2deg)';
+  return clone;
+}
+
+/**
+ * Update the position of the visual clone during touch drag.
+ * @param {any} state
+ * @param {number} x
+ * @param {number} y
+ */
+function updateClonePosition(state, x, y) {
+  if (state.clone) {
+    state.clone.style.left = (x - state.clone.offsetWidth / 2) + 'px';
+    state.clone.style.top = (y - 40) + 'px';
+  }
+}
+
+/**
+ * Lock body scroll for drag gesture and store scroll position.
+ * @returns {void}
+ */
+function lockScrollForDrag() {
+  const scrollY = window.scrollY;
+  document.body.dataset.scrollY = String(scrollY);
+  document.body.classList.add('no-scroll-drag');
+  document.body.style.top = `-${scrollY}px`;
+}
+
+/**
+ * Restore body scroll after drag gesture.
+ * @returns {void}
+ */
+function unlockScrollFromDrag() {
+  const scrollY = document.body.dataset.scrollY;
+  document.body.classList.remove('no-scroll-drag');
+  document.body.style.top = '';
+  if (scrollY) {
+    window.scrollTo(0, parseInt(scrollY));
+    delete document.body.dataset.scrollY;
+  }
+}
+
+/**
+ * Attach dragover handler to show placeholder at correct position within a column.
+ * @param {HTMLElement} column
+ */
+function attachColumnDragOverEvent(column) {
+  column.addEventListener("dragover", e => handleColumnDragOver(e, column));
+}
+
+/**
+ * Handle dragover for a column to place the placeholder at correct position.
+ * @param {DragEvent} e
+ * @param {HTMLElement} column
+ * @returns {void}
+ */
+function handleColumnDragOver(e, column) {
+  e.preventDefault();
+  const afterEl = getDragAfterElement(column, e.clientY);
   if (!afterEl) {
-    if (!column.contains(dragPlaceholder)) {
-      column.appendChild(dragPlaceholder);
-    }
+    if (!column.contains(dragPlaceholder)) column.appendChild(dragPlaceholder);
   } else {
     if (afterEl.parentElement === column) {
       column.insertBefore(dragPlaceholder, afterEl);
@@ -112,184 +354,11 @@ function updateColumnWithPlaceholder(column, afterEl) {
   }
 }
 
-function startTouchDragging(task, touch) {
-  selectedTask = task;
-  task.classList.add("dragging");
-  task.style.transform = "rotate(5deg) scale(1.05)";
-  task.style.position = "fixed";
-  task.style.zIndex = "1000";
-  const rect = task.getBoundingClientRect();
-  task.dataset.offsetX = (touch.clientX - rect.left).toString();
-  task.dataset.offsetY = (touch.clientY - rect.top).toString();
-}
-
-function updateTaskPosition(task, touch) {
-  const offsetX = parseFloat(task.dataset.offsetX) || 0;
-  const offsetY = parseFloat(task.dataset.offsetY) || 0;
-  task.style.left = `${touch.clientX - offsetX}px`;
-  task.style.top = `${touch.clientY - offsetY}px`;
-}
-
-function resetTask(task) {
-  task.classList.remove("dragging");
-  task.style.transform = "rotate(0deg) scale(1)";
-  task.style.position = task.style.zIndex = "";
-}
-
-function getDropTargetFromTouch(touch) {
-  let dropTarget = document.elementFromPoint(touch.clientX, touch.clientY);
-  while (dropTarget && !dropTarget.classList.contains("task-board-container")) {
-    dropTarget = dropTarget.parentElement;
-  }
-  return dropTarget;
-}
-
-function handleTouchStart(e) {
-  const task = e.currentTarget;
-  const state = task._touchDragState;
-  const touch = e.touches[0];
-  state.initialTouchX = touch.clientX;
-  state.initialTouchY = touch.clientY;
-  state.hasMoved = false;
-  state.longPressTimeout = setTimeout(() => {
-    if (!state.isTouchDragging) {
-      state.isTouchDragging = true;
-      startTouchDragging(task, touch);
-    }
-  }, 500);
-}
-
-function handleTouchMove(e) {
-  const task = e.currentTarget;
-  const state = task._touchDragState;
-  const touch = e.touches[0];
-  if (!state.isTouchDragging) {
-    const dx = Math.abs(touch.clientX - state.initialTouchX);
-    const dy = Math.abs(touch.clientY - state.initialTouchY);
-    if (dx > state.moveThreshold || dy > state.moveThreshold) {
-      state.hasMoved = true;
-      clearTimeout(state.longPressTimeout);
-      state.longPressTimeout = null;
-      return;
-    }
-  }
-  if (!state.isTouchDragging) return;
-  e.preventDefault();
-  e.stopPropagation();
-  updateTaskPosition(task, touch);
-  updateDragPlaceholderForColumns(touch, state.columns);
-}
-
-function handleTouchEnd(e) {
-  const task = e.currentTarget, state = task._touchDragState; 
-  clearTimeout(state.longPressTimeout);
-  state.longPressTimeout = null;
-  
-  if (state.isTouchDragging && selectedTask === task) {
-    const touch = e.changedTouches[0], dropTarget = getDropTargetFromTouch(touch);
-    
-    if (dropTarget) {
-      let insertPosition = null;
-      if (dropTarget.contains(dragPlaceholder)) {
-        insertPosition = dragPlaceholder.nextSibling;
-      }
-      removePlaceholder();
-      if (insertPosition) {
-        dropTarget.insertBefore(task, insertPosition);
-      } else {
-        dropTarget.appendChild(task);
-      }
-      
-      updateTaskColumnInFirebase(task.id, dropTarget.id);
-    } else {
-      task.style.position = "";
-      removePlaceholder();
-    }
-    
-    resetTask(task);
-    selectedTask = null; 
-    state.isTouchDragging = false; 
-    checkColumns();
-  }
-  
-  // Verhindere Click-Event wenn ein Drag stattgefunden hat
-  if (state.hasMoved || state.isTouchDragging) {
-    e.preventDefault();
-    e.stopPropagation();
-  }
-  
-  // Reset state
-  state.hasMoved = false;
-}
-
-function handleTouchCancel(e) {
-  const task = e.currentTarget, state = task._touchDragState;
-  clearTimeout(state.longPressTimeout);
-  state.longPressTimeout = null;
-  const wasDragging = state.isTouchDragging;
-  state.isTouchDragging = false;
-  state.hasMoved = false;
-  if (wasDragging) {
-    removePlaceholder();
-    resetTask(task);
-    selectedTask = null;
-  }
-}
-
-function attachTouchDragEvents(task, columns) {
-  task._touchDragState = {
-    longPressTimeout: null,
-    isTouchDragging: false,
-    initialTouchX: 0,
-    initialTouchY: 0,
-    moveThreshold: 10,
-    hasMoved: false,
-    columns: columns
-  };
-  task.addEventListener("touchstart", handleTouchStart, { passive: true });
-  task.addEventListener("touchmove", handleTouchMove, { passive: false });
-  task.addEventListener("touchend", handleTouchEnd, { passive: false });
-  task.addEventListener("touchcancel", handleTouchCancel, { passive: true });
-  
-  // Verhindere Click-Event wenn ein Drag stattgefunden hat
-  task.addEventListener("click", function(e) {
-    if (task._touchDragState && (task._touchDragState.hasMoved || task._touchDragState.isTouchDragging)) {
-      e.preventDefault();
-      e.stopPropagation();
-      return false;
-    }
-  });
-}
-
-function attachColumnDragOverEvent(column) {
-  column.addEventListener("dragover", e => {
-    e.preventDefault();
-    const afterEl = getDragAfterElement(column, e.clientY);
-    if (!afterEl) {
-      if (!column.contains(dragPlaceholder)) column.appendChild(dragPlaceholder);
-    } else {
-      afterEl.parentElement === column
-        ? column.insertBefore(dragPlaceholder, afterEl)
-        : column.appendChild(dragPlaceholder);
-    }
-  });
-}
-
 function attachColumnDropEvent(column) {
   column.addEventListener("drop", e => {
     e.preventDefault();
     if (selectedTask) {
-      let insertPosition = null;
-      if (column.contains(dragPlaceholder)) {
-        insertPosition = dragPlaceholder.nextSibling;
-      }
-      removePlaceholder();
-      if (insertPosition) {
-        column.insertBefore(selectedTask, insertPosition);
-      } else {
-        column.appendChild(selectedTask);
-      }      
-      selectedTask.classList.remove("dragging");
+      insertTaskAtPlaceholderOrEnd(column, selectedTask);
       selectedTask.style.transform = "rotate(0deg) scale(1)";
       updateTaskColumnInFirebase(selectedTask.id, column.id);
     } else {
@@ -299,43 +368,26 @@ function attachColumnDropEvent(column) {
   });
 }
 
-function initializeTasks(tasks, columns) {
-  tasks.forEach(task => {
-    // Draggable-Attribut für Touch-Geräte deaktivieren
-    if (isTouchDevice()) {
-      task.setAttribute('draggable', 'false');
-    }
-    
-    // Nur Desktop-Drag-Events für Desktop-Geräte
-    if (!isTouchDevice()) {
-      attachDesktopDragEvents(task);
-    }
-    // Touch-Events für alle Geräte (funktioniert auch auf Desktop)
-    attachTouchDragEvents(task, Array.from(columns));
-  });
-}
-
-function initializeColumns(columns) {
-  columns.forEach(column => {
-    // Nur Desktop-Drag-Events für Desktop-Geräte
-    if (!isTouchDevice()) {
-      attachColumnDragOverEvent(column);
-      attachColumnDropEvent(column);
-    }
-  });
-}
-
-function initializeDragAndDrop() {
+/**
+ * Re-initialize drag and drop for all current tasks.
+ * Call this after dynamically adding new tasks.
+ */
+function reinitializeDragAndDrop() {
   const tasks = document.querySelectorAll(".draggable-cards");
   const columns = document.querySelectorAll(".task-board-container");
   initializeTasks(tasks, columns);
   initializeColumns(columns);
 }
 
+// Make function globally accessible
+window.reinitializeDragAndDrop = reinitializeDragAndDrop;
+
 document.addEventListener("DOMContentLoaded", () => {
   ensureEmptyStateImages();
-  initializeDragAndDrop();
-  
+  const tasks = document.querySelectorAll(".draggable-cards");
+  const columns = document.querySelectorAll(".task-board-container");
+  initializeTasks(tasks, columns);
+  initializeColumns(columns);
   document.addEventListener('mouseup', cleanupPlaceholders);
   document.addEventListener('touchend', cleanupPlaceholders);
   document.addEventListener('dragend', cleanupPlaceholders);

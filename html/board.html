@@ -1,867 +1,582 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Raleway:ital,wght@0,100..900;1,100..900&family=Rubik+Vinyl&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="icon" href="../img/capa.png" type="image/png" />
-    <link rel="stylesheet" href="../styles/header.css" />
-    <link rel="stylesheet" href="../styles/side-menu.css" />
-    <link rel="stylesheet" href="../styles/standard.css" />
-    <link rel="stylesheet" href="../styles/profile-dropdown.css" />
-    <link rel="stylesheet" href="../styles/board.css" />
-    <link rel="stylesheet" href="../styles/board-responsive.css" />
-    <link rel="stylesheet" href="../styles/addTaskModal.css" />
-    <link rel="stylesheet" href="../styles/addTaskModalResp.css" />
-    <link rel="stylesheet" href="../styles/floating-task.css" />
-    <link rel="stylesheet" href="../styles/newmodal.css" />
-    <link rel="stylesheet" href="../styles/contacts.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
-    />
-    <script src="../scripts/account-name.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/de.js"></script>
-    <script src="../scripts/datepicker.js"></script>
-    <script src="../scripts/addTaskModalBoard.js"></script>
-    <script src="../scripts/newModalContr.js"></script>
-    <script src="../scripts/dropdown.js"></script>
-    <script src="../scripts/taskDataTemplate.js"></script>
-    <script src="../scripts/taskData.js"></script>
-    <script src="../scripts/newModal.js"></script>
-    <script src="../scripts/taskDataModal.js"></script>
-    <script src="../scripts/taskDataUtils.js"></script>
-    <script src="../scripts/edit.js"></script>
-    <script src="../scripts/utils.js"></script>
 
-    <title>Join</title>
-  </head>
-  <body>
-    <div class="side-menu">
-      <div class="logo-content-container">
-        <div class="logo">
-          <img src="../img/capa_white.png" alt="Join.Logo" class="logo" />
-        </div>
-        <div class="menu-content">
-          <div class="menu-content-div">
-            <a href="../summary.html"
-              ><img src="../img/icon/summary.png" alt="summary" />Summary</a
-            >
-          </div>
-          <div class="menu-content-div">
-            <a href="./add_task.html"
-              ><img src="../img/icon/add_task.png" alt="add_task" /> Add Task</a
-            >
-          </div>
-          <div class="selected-menu">
-            <a href="./board.html"
-              ><img src="../img/icon/board.png" alt="board" />Board</a
-            >
-          </div>
-          <div class="menu-content-div">
-            <a href="./contacts.html"
-              ><img src="../img/icon/contacts.png" alt="contacts" />Contacts</a
-            >
-          </div>
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Raleway:ital,wght@0,100..900;1,100..900&family=Rubik+Vinyl&display=swap"
+    rel="stylesheet" />
+  <link rel="icon" href="../img/capa.png" type="image/png" />
+  <link rel="stylesheet" href="../styles/header.css" />
+  <link rel="stylesheet" href="../styles/side-menu.css" />
+  <link rel="stylesheet" href="../styles/standard.css" />
+  <link rel="stylesheet" href="../styles/profile-dropdown.css" />
+  <link rel="stylesheet" href="../styles/board.css" />
+  <link rel="stylesheet" href="../styles/board-responsive.css" />
+  <link rel="stylesheet" href="../styles/addTaskModal.css" />
+  <link rel="stylesheet" href="../styles/addTaskModalResp.css" />
+  <link rel="stylesheet" href="../styles/floating-task.css" />
+  <link rel="stylesheet" href="../styles/newmodal.css" />
+  <link rel="stylesheet" href="../styles/contacts.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  <script src="../scripts/account-name.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/de.js"></script>
+  <script src="../scripts/datepicker.js"></script>
+  <script src="../scripts/addTaskModalBoard.contacts.js"></script>
+  <script src="../scripts/addTaskModalBoard.firebase.js"></script>
+  <script src="../scripts/addTaskModalBoard.js"></script>
+  <script src="../scripts/newModalContr.js"></script>
+  <script src="../scripts/dropdown.js"></script>
+  <script src="../scripts/taskDataTemplate.js"></script>
+  <script src="../scripts/taskData.js"></script>
+  <script src="../scripts/newModal.dropdown.js"></script>
+  <script src="../scripts/newModal.subtasks.js"></script>
+  <script src="../scripts/newModal.js"></script>
+  <script src="../scripts/taskDataModal.js"></script>
+  <script src="../scripts/taskDataUtils.contacts.js"></script>
+  <script src="../scripts/taskDataUtils.js"></script>
+  <script src="../scripts/edit.js"></script>
+  <script src="../scripts/utils.js"></script>
+
+  <title>Join</title>
+</head>
+
+<body onload="init()">
+  <div class="side-menu">
+    <div class="logo-content-container">
+      <div class="logo">
+        <img src="../img/capa_white.png" alt="Join.Logo" class="logo" />
       </div>
-      <div class="policy-container">
-        <div class="policy-container-div">
-          <div>
-            <a href="../resources/private-policy/privacy-policy.html"
-              >Privacy Policy</a
-            >
-          </div>
-          <div>
-            <a href="../resources/legal-notice/legal-notice.html"
-              >Legal Notice</a
-            >
-          </div>
+      <div class="menu-content">
+        <div class="menu-content-div">
+          <a href="../summary.html"><img src="../img/icon/summary.png" alt="summary" />Summary</a>
+        </div>
+        <div class="menu-content-div">
+          <a href="./add_task.html"><img src="../img/icon/add_task.png" alt="add_task" /> Add Task</a>
+        </div>
+        <div class="selected-menu">
+          <a href="./board.html"><img src="../img/icon/board.png" alt="board" />Board</a>
+        </div>
+        <div class="menu-content-div">
+          <a href="./contacts.html"><img src="../img/icon/contacts.png" alt="contacts" />Contacts</a>
         </div>
       </div>
     </div>
-    <div class="main-div">
-      <div class="header">
-        <div class="main-header">
-          <div class="mobile-logo">
-            <img src="../img/capa.png" alt="Logo" />
-          </div>
-          <div class="header-text">Kanban Project Management Tool</div>
-          <div class="header-right-side">
-            <div>
-              <a class="help-icon" href="../resources/help/help.html"
-                ><img src="../img/icon/help.png" alt="help"
-              /></a>
-            </div>
-            <div class="account">
-              <div>G</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="dropdown-menu">
-        <div class="dropdown-content">
-          <div class="dropdown-content-div">
-            <div class="dropdown-content-div-text">
-              <div>
-                <a class="held-link" href="../resources/help/help.html">Help</a>
-              </div>
-            </div>
-          </div>
-          <div class="dropdown-content-div">
-            <div class="dropdown-content-div-text">
-              <div>
-                <a href="../resources/legal-notice/legal-notice.html"
-                  >Legal notice</a
-                >
-              </div>
-            </div>
-          </div>
-          <div class="dropdown-content-div">
-            <div class="dropdown-content-div-text">
-              <div>
-                <a href="../resources/private-policy/privacy-policy.html"
-                  >Privacy Policy</a
-                >
-              </div>
-            </div>
-          </div>
-          <div class="dropdown-content-div" onclick="logout()">
-            <div class="dropdown-content-div-text">
-              <div>
-                <a href="../index.html">Logout</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="board-main">
-        <div class="board-header">
-          <h1>Board</h1>
-          <div class="board-header-right">
-            <div class="input-box-desktop">
-              <div class="input-box">
-                <input id="searchInput" type="text" placeholder="Find Task" />
-                <div class="input-box-right">
-                  <div class="seperator"></div>
-                  <div class="input-search-icon">
-                    <img src="../img/search-icon.png" alt="Search lens" />
-                  </div>
-                </div>
-              </div>
-
-              <span
-                id="errorTaskFound"
-                class="no-tasks-found-message"
-                style="display: none"
-                >Keine Ergebnisse gefunden</span
-              >
-            </div>
-
-            <button class="add-task-button" id="addTaskButton">
-              <span class="add-task-btn-text">Add task</span>
-              <img src="../img/plus add task mobile.png" alt="+" />
-            </button>
-          </div>
-        </div>
-        <div class="input-box-responsive">
-          <div class="input-box">
-            <input
-              onkeyup="searchTasksMobile()"
-              id="searchInputMobile"
-              type="text"
-              placeholder="Find Task"
-            />
-            <div class="input-box-right">
-              <div class="seperator"></div>
-              <div class="input-search-icon">
-                <img src="../img/search-icon.png" alt="Search lens" />
-              </div>
-            </div>
-          </div>
-          <span
-            id="errorTaskFoundMobile"
-            class="no-tasks-found-message"
-            style="display: none"
-            >Keine Ergebnisse gefunden</span
-          >
-        </div>
-      </div>
-      <div class="wrapper">
-        <div class="board-bar">
-          <div class="board-bar-item">
-            <div class="tasks-headline">
-              <h2>To do</h2>
-              <button class="icon-button" id="addTaskButtonTodo">
-                <img src="../img/plus-button-icon.png" alt="Add Task" />
-              </button>
-            </div>
-            <div class="task-board-container" id="toDoColumn">
-              <img
-                src="../img/no-tasks-to-do.png"
-                alt="no tasks to do"
-                class="empty-state-img"
-              />
-            </div>
-          </div>
-          <div class="board-bar-item">
-            <div class="tasks-headline">
-              <h2>In progress</h2>
-              <button class="icon-button" id="addTaskButtonInProgress">
-                <img src="../img/plus-button-icon.png" alt="Add Task" />
-              </button>
-            </div>
-            <div class="task-board-container" id="inProgress">
-              <img
-                src="../img/no-tasks-to-do.png"
-                alt="no tasks to do"
-                class="empty-state-img"
-              />
-            </div>
-          </div>
-          <div class="board-bar-item">
-            <div class="tasks-headline">
-              <h2>Await feedback</h2>
-              <button class="icon-button" id="addTaskButtonAwaitFeedback">
-                <img src="../img/plus-button-icon.png" alt="Await Feedback" />
-              </button>
-            </div>
-            <div class="task-board-container" id="awaitFeedback">
-              <img
-                src="../img/no-tasks-to-do.png"
-                alt="no tasks to do"
-                class="empty-state-img"
-              />
-            </div>
-          </div>
-          <div class="board-bar-item">
-            <div class="tasks-headline">
-              <h2>Done</h2>
-            </div>
-            <div class="task-board-container" id="done">
-              <img
-                src="../img/no-tasks-to-do.png"
-                alt="no tasks to do"
-                class="empty-state-img"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="side-menu-bottom">
-        <div class="logo-content-container-bottom">
-          <div class="menu-content-bottom">
-            <div class="bottom-menu">
-              <a href="../summary.html">
-                <img src="../img/icon/summary.png" alt="summary" />Summary
-              </a>
-            </div>
-            <div class="menu-content-div bottom-menu">
-              <a href="./add_task.html">
-                <img src="../img/icon/add_task.png" alt="add_task" />Add Task
-              </a>
-            </div>
-            <div
-              class="selected-menu menu-content-div resp-cont-div bottom-menu"
-            >
-              <a href="./board.html">
-                <img src="../img/icon/board.png" alt="board" />Board
-              </a>
-            </div>
-            <div class="menu-content-div bottom-menu">
-              <a href="./contacts.html">
-                <img src="../img/icon/contacts.png" alt="contacts" />Contacts
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="modal-background" id="taskModal" style="display: none">
-      <div class="main-section">
-        <div class="close-modal-div-x">
-          <img
-            src="../img/close-icon.png"
-            alt=""
-            onclick="closeModalAndReload()"
-          />
-        </div>
-        <div class="headline-div"><h1>Add Task</h1></div>
-        <div class="main-form-div">
-          <div class="form-div">
-            <form class="form-left">
-              <div class="flrow">
-                <span>Title<required-field>*</required-field></span>
-                <input type="text" class="input" placeholder="Enter a title" />
-              </div>
-              <div class="flrow description-resp">
-                <span>Description</span>
-                <textarea
-                  placeholder="Enter a Description"
-                  class="description"
-                ></textarea>
-              </div>
-              <div class="flrow">
-                <span>Assigned to</span>
-                <select class="select-contact" style="display: none">
-                  <option value="" disabled selected>
-                    Select contacts to assign
-                  </option>
-                </select>
-                <div class="custom-dropdown">
-                  <div class="dropdown-search-container">
-                    <input
-                      type="text"
-                      class="dropdown-search"
-                      placeholder="Select to assign"
-                    />
-                    <img
-                      src="../img/arrow_drop_down.png"
-                      alt="Search Icon"
-                      class="search-icon"
-                      onclick="toggleDropdown()"
-                    />
-                    <img
-                      src="../img/arrow_drop_down_aktive.png"
-                      alt="Search Icon"
-                      class="search-icon-active"
-                      onclick="toggleDropdown()"
-                    />
-                  </div>
-                  <div class="dropdown-list"></div>
-                  <div class="assigned-to-profiles-container"></div>
-                </div>
-              </div>
-            </form>
-            <hr />
-            <form class="form-right">
-              <div class="flrow">
-                <span>Due date<required-field>*</required-field></span>
-                <div class="date-input-container">
-                  <input
-                    type="text"
-                    id="date-input"
-                    class="date-input"
-                    placeholder="dd/mm/yyyy"
-                  />
-                  <img
-                    src="../img/icon/event.png"
-                    alt="Calendar Icon"
-                    class="calendar-icon"
-                    onclick="openDatePicker('date-input')"
-                  />
-                </div>
-              </div>
-              <div class="flrow">
-                <span>Prio</span>
-                <div class="priority-container">
-                  <div
-                    class="priority-button-urgent"
-                    onclick="setPriority('urgent')"
-                  >
-                    Urgent
-                    <img
-                      src="../img/icon-urgent.png"
-                      alt="urgent-icon"
-                      class="urgent-icon-active"
-                    />
-                  </div>
-                  <div
-                    class="priority-button-medium"
-                    onclick="setPriority('medium')"
-                  >
-                    Medium
-                    <img
-                      src="../img/icon-medium.png"
-                      alt=""
-                      class="medium-vector"
-                    />
-                  </div>
-                  <div class="priority-button-low" onclick="setPriority('low')">
-                    Low <img src="../img/icon-low.png" alt="" />
-                  </div>
-                </div>
-              </div>
-              <div class="flrow">
-                <span>Category<required-field>*</required-field></span>
-                <select class="select-task" style="display: none">
-                  <option value="" disabled selected>
-                    Select task category
-                  </option>
-                  <option value="Technical task">Technical Task</option>
-                  <option value="User Story">User Story</option>
-                </select>
-                <div class="category-dropdown" tabindex="0">
-                  <div class="category-selected">Select task category</div>
-                  <img
-                    src="../img/arrow_drop_down.png"
-                    alt="Dropdown Icon"
-                    class="dropdown-icon"
-                  />
-                  <div class="category-options">
-                    <div class="category-item" data-value="Technical task">
-                      Technical Task
-                    </div>
-                    <div class="category-item" data-value="User Story">
-                      User Story
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="subtask-container">
-                <span>Subtasks</span>
-                <div class="subtask-wrapper">
-                  <input
-                    class="subtask"
-                    type="text"
-                    placeholder="Add new subtask"
-                  />
-                  <div class="subtask-icons-div" style="display: none">
-                    <img
-                      src="../img/subtask-delete.png"
-                      alt="Delete Subtask"
-                      class="subtask-icon trash-icon"
-                    />
-                    <hr class="subtask-hr" />
-                    <img
-                      src="../img/subtask-check.png"
-                      alt="Check Subtask"
-                      class="subtask-icon check-icon"
-                    />
-                  </div>
-                  <img
-                    src="../img/icon/add.png"
-                    alt="Add Subtask"
-                    class="subtask-icon add-icon"
-                    id="addSubtask"
-                  />
-                </div>
-                <div class="subtasks-scroll-container"></div>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div class="footer">
-          <div class="footer-cover-div">
-            <div class="footer-mid-div">
-              <div>
-                <div class="dn-925px">
-                  <span
-                    ><required-field>*</required-field>This field is
-                    required</span
-                  >
-                </div>
-              </div>
-              <div class="footer-btn">
-                <div
-                  class="clear-btn clear-btn-board-add-task"
-                  onclick="toggleModal()"
-                >
-                  Clear x
-                </div>
-                <div class="create-btn">
-                  Create <img src="../img/icon/check.png" alt="" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="modal-background-task-overlay"
-      id="toggleModalFloating"
-      style="display: none"
-    >
-      <div class="main-section-task-overlay">
-        <div class="card-label-user-story-modal w445">
-          <h4>User Story</h4>
-          <img
-            src="../img/close-icon.png"
-            alt="Close Button"
-            onclick="closeModalAndReload()"
-          />
-        </div>
-        <div class="task-modal-headline w445">
-          <h1 id="modalTitle" class="resp-title"></h1>
-        </div>
-        <div class="w445">
-          <span id="modalDescription"></span>
-        </div>
-        <div class="w445 dd-modal">
-          <span>due date: </span>
-          <date id="modalDueDate"></date>
-        </div>
-        <div class="flexrow w445 priority-text-modal">
-          <span>Priority:</span>
-          <div class="flexrow medium">
-            <span id="modalPriorityText" class="priority-text-modal"></span>
-            <img
-              id="modalPriorityIcon"
-              src="../img/medium-icon-orange.png"
-              alt="medium-icon"
-            />
-          </div>
-        </div>
-        <div class="assigned-to-div w445">
-          <span style="color: #2a3647">Assigned To :</span>
-          <div class="assigned-to-container" id="modalAssignedTo"></div>
+    <div class="policy-container">
+      <div class="policy-container-div">
+        <div>
+          <a href="../resources/private-policy/privacy-policy.html">Privacy Policy</a>
         </div>
         <div>
-          <div class="subtask-container task-input task-input-resp">
-            <span>Subtasks</span>
-            <div class="subtask-container-div" id="modalSubtasks"></div>
+          <a href="../resources/legal-notice/legal-notice.html">Legal Notice</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="main-div">
+    <div class="header">
+      <div class="main-header">
+        <div class="mobile-logo">
+          <img src="../img/capa.png" alt="Logo" />
+        </div>
+        <div class="header-text">Kanban Project Management Tool</div>
+        <div class="header-right-side">
+          <div>
+            <a class="help-icon" href="../resources/help/help.html"><img src="../img/icon/help.png" alt="help" /></a>
           </div>
-          <div class="delete-edit-container w445">
-            <img
-              src="../img/delete-contacts.png"
-              alt="delete contacts"
-              onclick="deleteTaskFromFirebase()"
-            />
-            <img
-              src="../img/edit-contacts.png"
-              alt="edit contacts"
-              onclick="editTaskFromOverlay(event)"
-            />
+          <div class="account">
+            <div>G</div>
           </div>
         </div>
       </div>
     </div>
-    <div
-      class="edit-modal-overlay"
-      id="editTaskModal"
-      onclick="closeEditModal()"
-      style="display: none"
-    >
-      <div
-        class="edit-modal-container edit-modal-container-resp"
-        onclick="event.stopPropagation()"
-      >
-        <div class="edit-modal-header">
-          <h2 class="edit-modal-title">Edit Task</h2>
-          <img
-            src="../img/close-icon.png"
-            alt="Close"
-            class="edit-close-icon"
-            onclick="closeEditModal(event)"
-          />
+    <div class="dropdown-menu">
+      <div class="dropdown-content">
+        <div class="dropdown-content-div">
+          <a class="held-link" href="../resources/help/help.html">Help</a>
         </div>
-        <div class="edit-modal-body">
-          <form class="edit-task-form">
-            <div class="form-group">
-              <label for="editTaskTitle">Title</label>
-              <input
-                type="text"
-                id="editTaskTitle"
-                class="form-input edit-title"
-                placeholder="Enter task title"
-              />
-            </div>
-            <div class="form-group">
-              <label for="editTaskDescription">Description</label>
-              <textarea
-                id="editTaskDescription"
-                class="form-textarea edit-description"
-                placeholder="Enter task description"
-              ></textarea>
-            </div>
-            <div class="form-group">
-              <label for="editDueDate">Due Date</label>
-              <div class="date-picker-container-edit">
-                <input
-                  type="text"
-                  id="editDueDate"
-                  class="form-input date-input-edit"
-                  placeholder="dd/mm/yyyy"
-                />
-                <img
-                  src="../img/icon/event.png"
-                  alt="Calendar"
-                  class="date-picker-icon"
-                  onclick="openDatePicker('editDueDate')"
-                />
-              </div>
-            </div>
-            <div class="form-group">
-              <label>Priority</label>
-              <div class="priority-select-group">
-                <button
-                  type="button"
-                  class="priority-btn edit-priority-urgent"
-                  data-priority="urgent"
-                  onclick="setEditPriority('urgent')"
-                >
-                  Urgent
-                  <img
-                    src="../img/icon-urgent.png"
-                    alt="Urgent"
-                    class="priority-icon"
-                  />
-                </button>
-                <button
-                  type="button"
-                  class="priority-btn edit-priority-medium"
-                  data-priority="medium"
-                  onclick="setEditPriority('medium')"
-                >
-                  Medium
-                  <img
-                    src="../img/medium-icon-orange.png"
-                    alt="Medium"
-                    class="priority-icon"
-                  />
-                </button>
-                <button
-                  type="button"
-                  class="priority-btn edit-priority-low"
-                  data-priority="low"
-                  onclick="setEditPriority('low')"
-                >
-                  Low
-                  <img
-                    src="../img/icon-low.png"
-                    alt="Low"
-                    class="priority-icon"
-                  />
-                </button>
-              </div>
-            </div>
-            <div class="form-group">
-              <label>Assigned To</label>
-              <div class="custom-assignee-dropdown" id="assigneeDropdown">
-                <div
-                  class="assignee-dropdown-selected"
-                  id="assigneeDropdownSelected"
-                >
-                  Select to assign
-                </div>
-                <div
-                  class="assignee-dropdown-list hidden"
-                  id="assigneeDropdownList"
-                ></div>
-              </div>
-              <div class="assignee-badges" id="assigneeBadges"></div>
-            </div>
-            <div class="form-group">
-              <label for="editTaskCategory">Category</label>
-              <select
-                class="form-select edit-category-select"
-                id="editTaskCategory"
-              >
-                <option value="" disabled selected>Select category</option>
-                <option value="technical">Technical Task</option>
-                <option value="userstory">User Story</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Subtasks</label>
-              <div class="subtask-input-group">
-                <input
-                  type="text"
-                  class="form-input subtask-input"
-                  placeholder="Add new subtask"
-                />
-                <div class="subtask-controls">
-                  <img
-                    src="../img/subtask-delete.png"
-                    alt="Clear"
-                    class="subtask-clear-edit"
-                  />
-                  <img
-                    src="../img/subtask-check.png"
-                    alt="Add Subtask"
-                    class="subtask-edit-check"
-                  />
+        <div class="dropdown-content-div">
+          <a class="resources-link" href="../resources/legal-notice/legal-notice.html">Legal notice</a>
+        </div>
+        <div class="dropdown-content-div">
+          <a class="resources-link" href="../resources/private-policy/privacy-policy.html">Privacy Policy</a>
+        </div>
+        <div class="dropdown-content-div" onclick="logout()">
+          <a class="resources-link" href="../index.html">Logout</a>
+        </div>
+      </div>
+    </div>
+    <div class="board-main">
+      <div class="board-header">
+        <h1>Board</h1>
+        <div class="board-header-right">
+          <div class="input-box-desktop">
+            <div class="input-box">
+              <input id="searchInput" type="text" placeholder="Find Task" />
+              <div class="input-box-right">
+                <div class="seperator"></div>
+                <div class="input-search-icon">
+                  <img src="../img/search-icon.png" alt="Search lens" />
                 </div>
               </div>
-              <div class="subtasks-list-container" id="editSubtasksList"></div>
             </div>
-          </form>
-        </div>
-        <div class="edit-modal-footer">
-          <button type="button" class="btn btn-confirm" id="confirmEditBtn">
-            OK
-            <img src="../img/icon/check.png" alt="Confirm" class="btn-icon" />
+
+            <span id="errorTaskFound" class="no-tasks-found-message" style="display: none">Keine Ergebnisse
+              gefunden</span>
+          </div>
+
+          <button class="add-task-button" id="addTaskButton">
+            <span class="add-task-btn-text">Add task</span>
+            <img src="../img/add.png" alt="+" />
           </button>
         </div>
       </div>
+      <div class="input-box-responsive">
+        <div class="input-box">
+          <input onkeyup="searchTasksMobile()" id="searchInputMobile" type="text" placeholder="Find Task" />
+          <div class="input-box-right">
+            <div class="seperator"></div>
+            <div class="input-search-icon">
+              <img src="../img/search-icon.png" alt="Search lens" />
+            </div>
+          </div>
+        </div>
+        <span id="errorTaskFoundMobile" class="no-tasks-found-message" style="display: none">Keine Ergebnisse
+          gefunden</span>
+      </div>
     </div>
-
-    <div id="loadingSpinner" style="display: none">
-      <div class="spinner"></div>
+    <div class="wrapper">
+      <div class="board-bar">
+        <div class="board-bar-item">
+          <div class="tasks-headline">
+            <h2>To do</h2>
+            <button class="icon-button" id="addTaskButtonTodo">
+              <img src="../img/plus-button-icon.png" alt="Add Task" />
+            </button>
+          </div>
+          <div class="task-board-container" id="toDoColumn">
+            <img src="../img/no-tasks-to-do.png" alt="no tasks to do" class="empty-state-img" />
+          </div>
+        </div>
+        <div class="board-bar-item">
+          <div class="tasks-headline">
+            <h2>In progress</h2>
+            <button class="icon-button" id="addTaskButtonInProgress">
+              <img src="../img/plus-button-icon.png" alt="Add Task" />
+            </button>
+          </div>
+          <div class="task-board-container" id="inProgress">
+            <img src="../img/no-tasks-to-do.png" alt="no tasks to do" class="empty-state-img" />
+          </div>
+        </div>
+        <div class="board-bar-item">
+          <div class="tasks-headline">
+            <h2>Await feedback</h2>
+            <button class="icon-button" id="addTaskButtonAwaitFeedback">
+              <img src="../img/plus-button-icon.png" alt="Await Feedback" />
+            </button>
+          </div>
+          <div class="task-board-container" id="awaitFeedback">
+            <img src="../img/no-tasks-to-do.png" alt="no tasks to do" class="empty-state-img" />
+          </div>
+        </div>
+        <div class="board-bar-item">
+          <div class="tasks-headline">
+            <h2>Done</h2>
+          </div>
+          <div class="task-board-container done-bottom" id="done">
+            <img src="../img/no-tasks-to-do.png" alt="no tasks to do" class="empty-state-img" />
+          </div>
+        </div>
+      </div>
     </div>
-    <script src="../scripts/board.js"></script>
-    <script src="../scripts/floatingBoard.js"></script>
-    <script src="../scripts/task-overlay.js"></script>
-    <script src="../scripts/draganddrop.js"></script>
+    <div class="side-menu-bottom">
+      <div class="logo-content-container-bottom">
+        <div class="menu-content-bottom">
+          <div class="bottom-menu">
+            <a href="../summary.html">
+              <img src="../img/icon/summary.png" alt="summary" />Summary
+            </a>
+          </div>
+          <div class="menu-content-div bottom-menu">
+            <a href="./add_task.html">
+              <img src="../img/icon/add_task.png" alt="add_task" />Add Task
+            </a>
+          </div>
+          <div class="selected-menu menu-content-div resp-cont-div bottom-menu">
+            <a href="./board.html">
+              <img src="../img/icon/board.png" alt="board" />Board
+            </a>
+          </div>
+          <div class="menu-content-div bottom-menu">
+            <a href="./contacts.html">
+              <img src="../img/icon/contacts.png" alt="contacts" />Contacts
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-background" id="taskModal" style="display: none">
+    <div class="main-section">
+      <div class="close-modal-div-x">
+        <img src="../img/close-icon.png" alt="" onclick="closeModal()" />
+      </div>
+      <div class="headline-div">
+        <h1>Add Task</h1>
+      </div>
+      <div class="main-form-div">
+        <div class="form-div">
+          <form class="form-left">
+            <div class="flrow">
+              <span>Title<required-field>*</required-field></span>
+              <input type="text" class="input" placeholder="Enter a title" />
+            </div>
+            <div class="flrow description-resp">
+              <span>Description</span>
+              <textarea placeholder="Enter a Description" class="description"></textarea>
+            </div>
+            <div class="flrow">
+              <span>Assigned to</span>
+              <select class="select-contact" style="display: none">
+                <option value="" disabled selected>
+                  Select contacts to assign
+                </option>
+              </select>
+              <div class="custom-dropdown">
+                <div class="dropdown-search-container">
+                  <input type="text" class="dropdown-search" placeholder="Select to assign" />
+                  <img src="../img/arrow_drop_down.png" alt="Search Icon" class="search-icon"
+                    onclick="toggleDropdown()" />
+                  <img src="../img/arrow_drop_down_aktive.png" alt="Search Icon" class="search-icon-active"
+                    onclick="toggleDropdown()" />
+                </div>
+                <div class="dropdown-list"></div>
+                <div class="assigned-to-profiles-container"></div>
+              </div>
+            </div>
+          </form>
+          <hr />
+          <form class="form-right">
+            <div class="flrow">
+              <span>Due date<required-field>*</required-field></span>
+              <div class="date-input-container">
+                <input type="text" id="date-input" class="date-input" placeholder="dd/mm/yyyy" />
+                <img src="../img/icon/event.png" alt="Calendar Icon" class="calendar-icon"
+                  onclick="openDatePicker('date-input')" />
+              </div>
+            </div>
+            <div class="flrow">
+              <span>Prio</span>
+              <div class="priority-container">
+                <div class="priority-button-urgent" onclick="setPriority('urgent')">
+                  Urgent
+                  <img src="../img/icon-urgent.png" alt="urgent-icon" class="urgent-icon-active" />
+                </div>
+                <div class="priority-button-medium" onclick="setPriority('medium')">
+                  Medium
+                  <img src="../img/icon-medium.png" alt="" class="medium-vector" />
+                </div>
+                <div class="priority-button-low" onclick="setPriority('low')">
+                  Low <img src="../img/icon-low.png" alt="" />
+                </div>
+              </div>
+            </div>
+            <div class="flrow">
+              <span>Category<required-field>*</required-field></span>
+              <select class="select-task" style="display: none">
+                <option value="" disabled selected>
+                  Select task category
+                </option>
+                <option value="Technical task">Technical Task</option>
+                <option value="User Story">User Story</option>
+              </select>
+              <div class="category-dropdown" tabindex="0">
+                <div class="category-selected">Select task category</div>
+                <img src="../img/arrow_drop_down.png" alt="Dropdown Icon" class="dropdown-icon" />
+                <div class="category-options">
+                  <div class="category-item" data-value="Technical task">
+                    Technical Task
+                  </div>
+                  <div class="category-item" data-value="User Story">
+                    User Story
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="subtask-container">
+              <span>Subtasks</span>
+              <div class="subtask-wrapper">
+                <input class="subtask" type="text" placeholder="Add new subtask" />
+                <div class="subtask-icons-div" style="display: none">
+                  <img src="../img/subtask-delete.png" alt="Delete Subtask" class="subtask-icon trash-icon" />
+                  <hr class="subtask-hr" />
+                  <img src="../img/subtask-check.png" alt="Check Subtask" class="subtask-icon check-icon" />
+                </div>
+                <img src="../img/icon/add.png" alt="Add Subtask" class="subtask-icon add-icon" id="addSubtask" />
+              </div>
+              <div class="subtasks-scroll-container"></div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="footer">
+        <div class="footer-cover-div">
+          <div class="footer-mid-div">
+            <div>
+              <div class="dn-925px">
+                <span><required-field>*</required-field>This field is
+                  required</span>
+              </div>
+            </div>
+            <div class="footer-btn">
+              <div class="clear-btn clear-btn-board-add-task" onclick="toggleModal()">
+                Clear x
+              </div>
+              <div class="create-btn">
+                Create <img src="../img/icon/check.png" alt="" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-background-task-overlay" id="toggleModalFloating" style="display: none">
+    <div class="main-section-task-overlay">
+      <div class="card-label-user-story-modal w445">
+        <h4>User Story</h4>
+        <img src="../img/close-icon.png" alt="Close Button" onclick="closeTaskOverlay()" />
+      </div>
+      <div class="task-modal-headline w445">
+        <h1 id="modalTitle" class="resp-title"></h1>
+      </div>
+      <div class="w445">
+        <span id="modalDescription"></span>
+      </div>
+      <div class="w445 dd-modal">
+        <span>due date: </span>
+        <date id="modalDueDate"></date>
+      </div>
+      <div class="flexrow w445 priority-text-modal">
+        <span>Priority:</span>
+        <div class="flexrow medium">
+          <span id="modalPriorityText" class="priority-text-modal"></span>
+          <img id="modalPriorityIcon" src="../img/medium-icon-orange.png" alt="medium-icon" />
+        </div>
+      </div>
+      <div class="assigned-to-div w445">
+        <span style="color: #2a3647">Assigned To :</span>
+        <div class="assigned-to-container" id="modalAssignedTo"></div>
+      </div>
+      <div>
+        <div class="subtask-container task-input task-input-resp">
+          <span>Subtasks</span>
+          <div class="subtask-container-div" id="modalSubtasks"></div>
+        </div>
+        <div class="delete-edit-container w445">
+          <img src="../img/delete-contacts.png" alt="delete contacts" onclick="deleteTaskFromFirebase()" />
+          <img src="../img/edit-contacts.png" alt="edit contacts" onclick="editTaskFromOverlay(event)" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="edit-modal-overlay" id="editTaskModal" onclick="closeEditModal()" style="display: none">
+    <div class="edit-modal-container edit-modal-container-resp" onclick="event.stopPropagation()">
+      <div class="edit-modal-header">
+        <h2 class="edit-modal-title">Edit Task</h2>
+        <img src="../img/close-icon.png" alt="Close" class="edit-close-icon" onclick="closeEditModal(event)" />
+      </div>
+      <div class="edit-modal-body">
+        <form class="edit-task-form">
+          <div class="form-group">
+            <label for="editTaskTitle">Title</label>
+            <input type="text" id="editTaskTitle" class="form-input edit-title" placeholder="Enter task title" />
+          </div>
+          <div class="form-group">
+            <label for="editTaskDescription">Description</label>
+            <textarea id="editTaskDescription" class="form-textarea edit-description"
+              placeholder="Enter task description"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="editDueDate">Due Date</label>
+            <div class="date-picker-container-edit">
+              <input type="text" id="editDueDate" class="form-input date-input-edit" placeholder="dd/mm/yyyy" />
+              <img src="../img/icon/event.png" alt="Calendar" class="date-picker-icon"
+                onclick="openDatePicker('editDueDate')" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Priority</label>
+            <div class="priority-select-group">
+              <button type="button" class="priority-btn edit-priority-urgent" data-priority="urgent"
+                onclick="setEditPriority('urgent')">
+                Urgent
+                <img src="../img/icon-urgent.png" alt="Urgent" class="priority-icon" />
+              </button>
+              <button type="button" class="priority-btn edit-priority-medium" data-priority="medium"
+                onclick="setEditPriority('medium')">
+                Medium
+                <img src="../img/medium-icon-orange.png" alt="Medium" class="priority-icon" />
+              </button>
+              <button type="button" class="priority-btn edit-priority-low" data-priority="low"
+                onclick="setEditPriority('low')">
+                Low
+                <img src="../img/icon-low.png" alt="Low" class="priority-icon" />
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Assigned To</label>
+            <div class="custom-assignee-dropdown" id="assigneeDropdown">
+              <div class="assignee-dropdown-selected" id="assigneeDropdownSelected">
+                Select to assign
+              </div>
+              <div class="assignee-dropdown-list hidden" id="assigneeDropdownList"></div>
+            </div>
+            <div class="assignee-badges" id="assigneeBadges"></div>
+          </div>
+          <div class="form-group">
+            <label for="editTaskCategory">Category</label>
+            <select class="form-select edit-category-select" id="editTaskCategory">
+              <option value="" disabled selected>Select category</option>
+              <option value="technical">Technical Task</option>
+              <option value="userstory">User Story</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Subtasks</label>
+            <div class="subtask-input-group">
+              <input type="text" class="form-input subtask-input" placeholder="Add new subtask" />
+              <div class="subtask-controls">
+                <img src="../img/subtask-delete.png" alt="Clear" class="subtask-clear-edit" />
+                <img src="../img/subtask-check.png" alt="Add Subtask" class="subtask-edit-check" />
+              </div>
+            </div>
+            <div class="subtasks-list-container" id="editSubtasksList"></div>
+          </div>
+        </form>
+      </div>
+      <div class="edit-modal-footer">
+        <button type="button" class="btn btn-confirm" id="confirmEditBtn">
+          OK
+          <img src="../img/icon/check.png" alt="Confirm" class="btn-icon" />
+        </button>
+      </div>
+    </div>
+  </div>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const dropdownSelected = document.getElementById(
-          "assigneeDropdownSelected"
-        );
-        const dropdownList = document.getElementById("assigneeDropdownList");
-        dropdownSelected.addEventListener("click", (event) => {
-          event.stopPropagation();
-          console.log("assigneeDropdownSelected clicked");
-          dropdownList.classList.toggle("hidden");
-        });
+  <div id="loadingSpinner" style="display: none">
+    <div class="spinner"></div>
+  </div>
+  <script src="../scripts/board.js"></script>
+  <script src="../scripts/floatingBoard.js"></script>
+  <script src="../scripts/task-overlay.js"></script>
+  <script src="../scripts/draganddrop.js"></script>
+
+
+  <script>
+
+    function setupClearButtons() {
+      document.querySelectorAll(".clear-btn").forEach((item) => {
+        item.addEventListener("click", () => location.reload());
       });
-    </script>
+    }
 
-    <script>
-      /**
-       * Sets up click event listeners for all clear buttons to reload the page.
-       */
-      function setupClearButtons() {
-        document.querySelectorAll(".clear-btn").forEach((item) => {
-          item.addEventListener("click", () => location.reload());
+
+    function setupAccountDropdown() {
+      document
+        .querySelector(".account")
+        .addEventListener("click", (event) => {
+          event.stopPropagation();
+          document.querySelector(".dropdown-menu").classList.toggle("show");
         });
-      }
+    }
 
-      /**
-       * Adds a click event listener to the account button to toggle the dropdown menu.
-       */
-      function setupAccountDropdown() {
+
+    function setupOutsideDropdownClick() {
+      document.addEventListener("click", (event) => {
+        const dropdown = document.querySelector(".dropdown-menu");
+        if (
+          !dropdown.contains(event.target) &&
+          dropdown.classList.contains("show")
+        ) {
+          dropdown.classList.remove("show");
+        }
+      });
+    }
+
+
+    function handleSubtaskFocusBlur(subtaskInput, addIcon, iconsDiv) {
+      subtaskInput.addEventListener("focus", () => {
+        addIcon.style.display = "none";
+        iconsDiv.style.display = "flex";
+      });
+      subtaskInput.addEventListener("blur", function () {
+        if (!this.value) {
+          addIcon.style.display = "block";
+          iconsDiv.style.display = "none";
+        }
+      });
+    }
+
+
+    function setupSubtaskIcons(
+      subtaskInput,
+      addIcon,
+      iconsDiv,
+      deleteIcon,
+      checkIcon
+    ) {
+      deleteIcon.addEventListener("click", () => {
+        handleDeleteSubtask(subtaskInput, addIcon, iconsDiv);
+      });
+      checkIcon.addEventListener("click", () => {
+        handleCheckSubtask(subtaskInput, addIcon, iconsDiv);
+      });
+    }
+
+    function handleDeleteSubtask(subtaskInput, addIcon, iconsDiv) {
+      subtaskInput.value = "";
+      addIcon.style.display = "block";
+      iconsDiv.style.display = "none";
+      subtaskInput.focus();
+    }
+
+
+    function handleCheckSubtask(subtaskInput, addIcon, iconsDiv) {
+      const subtaskText = subtaskInput.value.trim();
+      if (subtaskText) {
+        const newSubtask = createSubtaskItem(subtaskText);
         document
-          .querySelector(".account")
-          .addEventListener("click", (event) => {
-            event.stopPropagation();
-            document.querySelector(".dropdown-menu").classList.toggle("show");
-          });
-      }
-
-      /**
-       * Removes the dropdown menu if a click occurs outside of it.
-       */
-      function setupOutsideDropdownClick() {
-        document.addEventListener("click", (event) => {
-          const dropdown = document.querySelector(".dropdown-menu");
-          if (
-            !dropdown.contains(event.target) &&
-            dropdown.classList.contains("show")
-          ) {
-            dropdown.classList.remove("show");
-          }
-        });
-      }
-
-      /**
-       * Handles focus and blur events for the subtask input field.
-       * @param {HTMLElement} subtaskInput - The subtask input element.
-       * @param {HTMLElement} addIcon - The element representing the add icon.
-       * @param {HTMLElement} iconsDiv - The container for subtask icons.
-       */
-      function handleSubtaskFocusBlur(subtaskInput, addIcon, iconsDiv) {
-        subtaskInput.addEventListener("focus", () => {
-          addIcon.style.display = "none";
-          iconsDiv.style.display = "flex";
-        });
-        subtaskInput.addEventListener("blur", function () {
-          if (!this.value) {
-            addIcon.style.display = "block";
-            iconsDiv.style.display = "none";
-          }
-        });
-      }
-
-      /**
-       * Fügt den Click-Listener für die Lösch- und Check-Icons hinzu.
-       * @param {HTMLElement} subtaskInput - Das Subtask-Eingabefeld.
-       * @param {HTMLElement} addIcon - Das Element für das Add-Icon.
-       * @param {HTMLElement} iconsDiv - Der Container für die Subtask-Icons.
-       * @param {HTMLElement} deleteIcon - Das Lösch-Icon.
-       * @param {HTMLElement} checkIcon - Das Check-Icon.
-       */
-      function setupSubtaskIcons(
-        subtaskInput,
-        addIcon,
-        iconsDiv,
-        deleteIcon,
-        checkIcon
-      ) {
-        deleteIcon.addEventListener("click", () => {
-          handleDeleteSubtask(subtaskInput, addIcon, iconsDiv);
-        });
-        checkIcon.addEventListener("click", () => {
-          handleCheckSubtask(subtaskInput, addIcon, iconsDiv);
-        });
-      }
-
-      /**
-       * Behandelt den Klick auf das Lösch-Icon.
-       * Setzt den Eingabewert zurück, blendet das Add-Icon ein
-       * und versteckt den Icons-Container.
-       *
-       * @param {HTMLElement} subtaskInput - Das Subtask-Eingabefeld.
-       * @param {HTMLElement} addIcon - Das Element für das Add-Icon.
-       * @param {HTMLElement} iconsDiv - Der Container für die Subtask-Icons.
-       */
-      function handleDeleteSubtask(subtaskInput, addIcon, iconsDiv) {
+          .querySelector(".subtasks-scroll-container")
+          .appendChild(newSubtask);
         subtaskInput.value = "";
         addIcon.style.display = "block";
         iconsDiv.style.display = "none";
-        subtaskInput.focus();
+        validateForm();
       }
+    }
 
-      /**
-       * Behandelt den Klick auf das Check-Icon.
-       * Liest den Text aus, erstellt ein neues Subtask-Item,
-       * fügt es hinzu und setzt anschließend den Eingabewert zurück.
-       *
-       * @param {HTMLElement} subtaskInput - Das Subtask-Eingabefeld.
-       * @param {HTMLElement} addIcon - Das Element für das Add-Icon.
-       * @param {HTMLElement} iconsDiv - Der Container für die Subtask-Icons.
-       */
-      function handleCheckSubtask(subtaskInput, addIcon, iconsDiv) {
-        const subtaskText = subtaskInput.value.trim();
-        if (subtaskText) {
-          const newSubtask = createSubtaskItem(subtaskText);
-          document
-            .querySelector(".subtasks-scroll-container")
-            .appendChild(newSubtask);
-          subtaskInput.value = "";
-          addIcon.style.display = "block";
-          iconsDiv.style.display = "none";
-          validateForm();
-        }
-      }
+    function createSubtaskItem(text) {
+      const newSubtask = createSubtaskContainer();
+      newSubtask.innerHTML = generateSubtaskInnerHTML(text);
+      attachTrashEvent(newSubtask);
+      return newSubtask;
+    }
 
-      /**
-       * Erstellt ein neues Subtask-Element und richtet die Lösch-Logik ein.
-       * @param {string} text - Der Subtask-Text.
-       * @returns {HTMLElement} Das neue Subtask-Element.
-       */
-      function createSubtaskItem(text) {
-        const newSubtask = createSubtaskContainer();
-        newSubtask.innerHTML = generateSubtaskInnerHTML(text);
-        attachTrashEvent(newSubtask);
-        return newSubtask;
-      }
+    function createSubtaskContainer() {
+      const element = document.createElement("div");
+      element.classList.add("subtask-item", "added-subtasks");
+      return element;
+    }
 
-      /**
-       * Erzeugt den Container für das Subtask-Element.
-       * @returns {HTMLElement} Das Container-Element.
-       */
-      function createSubtaskContainer() {
-        const element = document.createElement("div");
-        element.classList.add("subtask-item", "added-subtasks");
-        return element;
-      }
-
-      /**
-       * Generiert den HTML-Inhalt für das Subtask-Element.
-       * @param {string} text - Der Subtask-Text.
-       * @returns {string} Der HTML-String.
-       */
-      function generateSubtaskInnerHTML(text) {
-        return `
+    function generateSubtaskInnerHTML(text) {
+      return `
     <div class="flexrow">
       <span>${text}</span>
     </div>
@@ -871,46 +586,39 @@
       <div class="trash-icon"><img src="../img/trash.png" alt="trash"></div>
     </div>
   `;
-      }
+    }
 
-      /**
-       * Hängt den Click-Event-Listener am Lösch-Icon an, um das Subtask-Element zu entfernen.
-       * @param {HTMLElement} subtask - Das Subtask-Element.
-       */
-      function attachTrashEvent(subtask) {
-        const trashIcon = subtask.querySelector(".trash-icon");
-        trashIcon.addEventListener("click", () => {
-          subtask.remove();
-          validateForm();
-        });
-      }
-
-      /**
-       * Initializes all event listeners for subtask functionality.
-       */
-      function setupSubtaskListeners() {
-        const subtaskInput = document.querySelector(".subtask");
-        const addIcon = document.querySelector(".add-icon");
-        const iconsDiv = document.querySelector(".subtask-icons-div");
-        const deleteIcon = document.querySelector(".trash-icon");
-        const checkIcon = document.querySelector(".check-icon");
-        handleSubtaskFocusBlur(subtaskInput, addIcon, iconsDiv);
-        setupSubtaskIcons(
-          subtaskInput,
-          addIcon,
-          iconsDiv,
-          deleteIcon,
-          checkIcon
-        );
-      }
-
-      // Initializes all functionalities once the DOM content is loaded.
-      document.addEventListener("DOMContentLoaded", function () {
-        setupClearButtons();
-        setupAccountDropdown();
-        setupOutsideDropdownClick();
-        setupSubtaskListeners();
+    function attachTrashEvent(subtask) {
+      const trashIcon = subtask.querySelector(".trash-icon");
+      trashIcon.addEventListener("click", () => {
+        subtask.remove();
+        validateForm();
       });
-    </script>
-  </body>
+    }
+
+    function setupSubtaskListeners() {
+      const subtaskInput = document.querySelector(".subtask");
+      const addIcon = document.querySelector(".add-icon");
+      const iconsDiv = document.querySelector(".subtask-icons-div");
+      const deleteIcon = document.querySelector(".trash-icon");
+      const checkIcon = document.querySelector(".check-icon");
+      handleSubtaskFocusBlur(subtaskInput, addIcon, iconsDiv);
+      setupSubtaskIcons(
+        subtaskInput,
+        addIcon,
+        iconsDiv,
+        deleteIcon,
+        checkIcon
+      );
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      setupClearButtons();
+      setupAccountDropdown();
+      setupOutsideDropdownClick();
+      setupSubtaskListeners();
+    });
+  </script>
+</body>
+
 </html>

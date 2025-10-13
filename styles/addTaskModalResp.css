@@ -218,8 +218,13 @@
     height: 46px;
 }
 
-.dropdown-item.selected .contact-name {
+.dropdown-item.selected .contact-name-edit {
     color: white !important;
+}
+.contact-name-edit {
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 5px;
 }
 
 
@@ -299,7 +304,7 @@
     padding: 10px;
     border: 1px solid #d0d0d0;
     border-radius: 10px;
-    font-size: 16px;
+    font-size: 20px;
     outline: none;
     cursor: pointer;
     height: 24px;
@@ -347,7 +352,7 @@
     filter: invert(1) brightness(10);
 }
 
-.dropdown-list div.selected .contact-name {
+.dropdown-list div.selected .contact-name-edit {
     color: white !important;
 }
 

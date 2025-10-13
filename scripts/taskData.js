@@ -6,6 +6,11 @@ function isTouchDevice() {
   return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 }
 
+/**
+ * Compute initials from a full name.
+ * @param {string} fullName
+ * @returns {string}
+ */
 function getInitials(fullName) {
   const parts = fullName.trim().split(" ");
   return parts.length > 1
@@ -13,6 +18,10 @@ function getInitials(fullName) {
     : parts[0].substring(0, 2).toUpperCase();
 }
 
+/**
+ * Return a random color string from a predefined set.
+ * @returns {"red"|"green"|"blue"|"pink"|"orange"|"purple"}
+ */
 function getRandomColor() {
   const colors = ["red", "green", "blue", "pink", "orange", "purple"];
   return colors[Math.floor(Math.random() * colors.length)];
@@ -28,6 +37,10 @@ function enrichTasksWithUserData(tasks) {
   });
 }
 
+/**
+ * Load tasks from Firebase and enrich with user metadata.
+ * @returns {Promise<Array<object>>}
+ */
 async function loadTasksFromFirebase() {
   const url = "https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks.json";
   try {
@@ -51,6 +64,10 @@ document.addEventListener("click", function() {
   });
 });
 
+/**
+ * Filter rendered task cards by a search term, toggling visibility.
+ * @param {string} searchTerm lowercase search query
+ */
 function filterTasks(searchTerm) {
   const tasksElements = document.querySelectorAll(".draggable-cards");
   let found = false;
@@ -67,8 +84,10 @@ function filterTasks(searchTerm) {
   document.getElementById("errorTaskFound").style.display = found ? "none" : "block";
 }
 
+/**
+ * Enable drag and drop handlers for cards and columns when not touch device.
+ */
 function enableDragAndDrop() {
-  // Nur für Desktop-Geräte aktivieren
   if (!isTouchDevice()) {
     attachDragListenersToCards();
     attachDragOverListenersToColumns();
@@ -100,40 +119,64 @@ function attachDragOverListenersToColumns() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
+/**
+ * Initialize tasks list, render, enable DnD and bind search input.
+ * @returns {Promise<void>}
+ */
+async function initTaskData() {
   tasks = await loadTasksFromFirebase();
   generateTasks(tasks);
-  enableDragAndDrop();
+  if (typeof window.reinitializeDragAndDrop === 'function') {
+    window.reinitializeDragAndDrop();
+  }
   checkColumns();
   document.getElementById("searchInput").addEventListener("input", function () {
     filterTasks(this.value.trim().toLowerCase());
   });
-});
+}
 
-function closeModalAndReload() {
+/**
+ * Close floating modal (if open), reload tasks and re-render board.
+ * @returns {Promise<void>}
+ */
+async function closeModalAndReload() {
   const modal = document.getElementById('toggleModalFloating');
   if (modal) {
     modal.style.display = 'none';
   }
-  location.reload();
+  
+  try {
+    document.querySelectorAll('.draggable-cards').forEach(card => card.remove());
+    
+    const tasks = await loadTasksFromFirebase();
+    generateTasks(tasks);
+    if (typeof window.reinitializeDragAndDrop === 'function') {
+      window.reinitializeDragAndDrop();
+    }
+    checkColumns();
+  } catch (error) {
+    console.error('Error reloading board:', error);
+  }
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+/**
+ * Initialize overlay close behavior and inside-click blocker.
+ */
+function initTaskOverlay() {
   const floatingModal = document.getElementById('toggleModalFloating');
   const modalContent = document.querySelector('.main-section-task-overlay');
   if (floatingModal && modalContent) {
     floatingModal.addEventListener('click', function(event) {
       if (event.target === floatingModal) {
         floatingModal.style.display = 'none';
-        location.reload();
+        if (window.currentTaskId && typeof updateTaskCardInBackground === 'function') {
+          updateTaskCardInBackground(window.currentTaskId);
+        }
       }
     });
     modalContent.addEventListener('click', function(event) {
       event.stopPropagation();
     });
   }
-});
-
-function reloadPage() {
-  location.reload();
 }
+

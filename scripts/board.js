@@ -1,3 +1,8 @@
+/**
+ * Bind a button to open a modal by id.
+ * @param {string} addButtonId DOM id of the trigger button
+ * @param {string} modalId DOM id of the modal element
+ */
 function setupModalButton(addButtonId, modalId) {
   const addButton = document.getElementById(addButtonId);
   const modal = document.getElementById(modalId);
@@ -10,6 +15,10 @@ function setupModalButton(addButtonId, modalId) {
   });
 }
 
+/**
+ * Close a modal when clicking outside its content.
+ * @param {string} modalId DOM id of the modal element
+ */
 function setupModalClose(modalId) {
   const modal = document.getElementById(modalId);
   if (!modal) return;
@@ -20,6 +29,9 @@ function setupModalClose(modalId) {
   });
 }
 
+/**
+ * Toggle visibility of the main task modal.
+ */
 function toggleModal() {
   const modal = document.getElementById('taskModal');
   if (modal) {
@@ -27,6 +39,9 @@ function toggleModal() {
   }
 }
 
+/**
+ * Setup account profile dropdown open/close handlers.
+ */
 function setupAccountDropdown() {
   const accountButton = document.querySelector('.account');
   const dropdownMenu = document.querySelector('.dropdown-menu');
@@ -42,7 +57,11 @@ function setupAccountDropdown() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+/**
+ * Initialize board page scripts and wire up UI.
+ * @returns {Promise<void>}
+ */
+async function init() {
   setupModalButton('addTaskButtonTodo', 'taskModal');
   setupModalButton('addTaskButtonInProgress', 'taskModal');
   setupModalButton('addTaskButtonAwaitFeedback', 'taskModal');
@@ -50,14 +69,35 @@ document.addEventListener("DOMContentLoaded", () => {
   setupModalClose('taskModal');
   setupAccountDropdown();
   window.toggleModal = toggleModal;
-});
-
-document.addEventListener('DOMContentLoaded', function () {
+  
   const addTaskBtn = document.getElementById('addTaskButton');
   const taskModal = document.getElementById('taskModal');
+  if (addTaskBtn && taskModal) {
+    addTaskBtn.addEventListener('click', function (){
+      taskModal.style.display = 'block';
+    });
+  }
+  
+  if (typeof initTaskData === 'function') {
+    await initTaskData();
+  }
+  
+  if (typeof initTaskOverlay === 'function') {
+    initTaskOverlay();
+  }
+  
+  if (typeof initTaskForm === 'function') {
+    initTaskForm();
+  }
+  
+  if (typeof initEditModal === 'function') {
+    initEditModal();
+  }
+  
+  if (typeof initTaskDataModal === 'function') {
+    initTaskDataModal();
+  }
+}
 
-  addTaskBtn.addEventListener('click', function (){
-taskModal.style.display = 'block';
-  });
-});
+window.init = init;
 

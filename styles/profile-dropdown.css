@@ -1,4 +1,4 @@
-a{
+a {
     text-decoration: none;
     color: #cdcdcd !important;
 }
@@ -15,8 +15,8 @@ a{
     border-bottom-left-radius: 24px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     z-index: 1000;
-  }
-  
+}
+
 
 .dropdown-menu.show,
 .dropdown-menu.show-dropdown {
@@ -30,44 +30,40 @@ a{
     display: flex;
     flex-direction: column;
     width: 160px;
+    justify-content: space-between;
+}
+.dropdown-content-div{
+    margin-bottom: 8px;
 }
 
-.dropdown-content-div {
-    padding: 8px 16px;
-    transition: background-color 0.2s;
-    cursor: pointer;
-    border-radius: 24px;
-}
-
-.dropdown-content-div:hover {
+.resources-link:hover {
     background-color: #475569;
-}
-
-.dropdown-content-div-text {
-    display: flex;
-    align-items: center;
-    padding: 8px 0;
-}
-
-.dropdown-content-div-text a {
-    color: #2A3647;
-    text-decoration: none;
-    font-size: 16px;
-    width: 100%;
-}
-
-.dropdown-content-div-text a:hover {
-    color: #29ABE2;
 }
 
 .held-link {
     display: none;
 }
+.resources-link {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    transition: background-color 0.2s;
+    cursor: pointer;
+    border-radius: 24px;
+    white-space: nowrap;
+}
 
 @media (max-width: 925px) {
     .held-link {
         display: block;
+        padding: 8px 16px;
+        border-radius: 24px;
     }
+    .held-link:hover {
+        background-color: #475569;
+    }
+
+ 
 }
 
 @media (max-width: 768px) {
@@ -75,12 +71,12 @@ a{
         top: 79px;
         width: 180px;
     }
-    
+
     .dropdown-content {
         width: 100%;
     }
-    
-    .dropdown-content-div-text a {
+
+    .resources-link {
         font-size: 14px;
     }
 }
@@ -108,22 +104,29 @@ a{
 }
 
 .dropdown-menu.show {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  z-index: 10000 !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 10000 !important;
 }
 
 .account {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .dropdown-menu.show-dropdown {
-  display: block !important;
-  animation: fadeIn 0.3s ease-in-out;
+    display: block !important;
+    animation: fadeIn 0.3s ease-in-out;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

@@ -1,3 +1,7 @@
+/**
+ * Toggle priority state for the floating edit modal.
+ * @param {"urgent"|"medium"|"low"} priority
+ */
 function setPriorityFloatingEdit(priority) {
   const allButtons = document.querySelectorAll(
     '.priority-button-urgentFloating, .priority-button-mediumFloating, .priority-button-lowFloating'
@@ -15,6 +19,10 @@ function setPriorityFloatingEdit(priority) {
   }
 }
 
+/**
+ * Delete the currently opened task from Firebase and refresh the board.
+ * @returns {Promise<void>}
+ */
 async function deleteTaskFromFirebase() {
   if (!currentTaskId) {
     return;
@@ -26,7 +34,12 @@ async function deleteTaskFromFirebase() {
       throw new Error(`Error deleting task: ${response.statusText}`);
     }
     document.getElementById("toggleModalFloating").style.display = "none";
-    location.reload();
+    
+    
+    if (typeof closeModalAndReload === 'function') {
+      await closeModalAndReload();
+    }
+    
   } catch (error) {
     console.error(error);
   }

@@ -1,48 +1,46 @@
 (function () {
-  /** Initialen berechnen */
+  "use strict";
+
+  /**
+   * Erstellt Initialen aus vollem Namen.
+   * @param {string} fullName
+   * @returns {string}
+   */
   function getInitials(fullName) {
-    if (!fullName) return "";
+    if (!fullName) return "G";
     const parts = String(fullName).trim().split(/\s+/);
     const first = (parts[0] || "")[0] || "";
-    const last  = (parts.length > 1 ? parts[parts.length - 1][0] : "") || "";
-    return (first + last).toUpperCase();
+    const last = (parts.length > 1 ? parts[parts.length - 1][0] : "") || "";
+    return (first + last || "G").toUpperCase();
   }
 
-  /** State aus localStorage lesen */
-  function pickState() {
+  /**
+   * Liest Name/Gast-Status.
+   * @returns {{name:string,isGuest:boolean,initials:string}}
+   */
+  function readState() {
     const name = (localStorage.getItem("name") || "").trim();
     const rawGuest = (localStorage.getItem("isGuest") || "false") === "true";
     const isGuest = name ? false : rawGuest;
-    return { name, isGuest, initials: name ? getInitials(name) : "G" };
+    return { name, isGuest, initials: name && !isGuest ? getInitials(name) : "G" };
   }
 
-  /** Badge-Text setzen */
+  /** Schreibt die Initialen in den Header-Badge. */
   function setAccountBadge() {
     const accountInner = document.querySelector(".account div");
     if (!accountInner) return;
-
-    const { initials } = pickState();
-    accountInner.textContent = initials;
+    accountInner.textContent = readState().initials;
   }
 
-  /** Start */
+  /** Initialisiert Badge-Update inkl. storage-Event. */
   function init() {
     setAccountBadge();
-
-    // Auch bei Änderungen am Storage sofort updaten
     window.addEventListener("storage", (e) => {
-      if (e.key === "name" || e.key === "isGuest") {
-        setAccountBadge();
-      }
+      if (e.key === "name" || e.key === "isGuest") setAccountBadge();
     });
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
-  }
+  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", init) : init();
 
-  // optional global export
   window.updateAccountBadge = setAccountBadge;
 })();

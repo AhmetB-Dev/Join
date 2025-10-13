@@ -1,100 +1,6 @@
 let contacts = [];
 let selectedContact = null;
 
-function validateEmailInput(input) {
-    const email = input.value.trim();
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(de|com|net)$/;
-    
-    let errorElement;
-    if (input.id === 'editContactEmail') {
-        errorElement = document.getElementById('editEmailError');
-    } else if (input.id === 'addInputEmail') {
-        errorElement = document.getElementById('addEmailError');
-    }
-    
-    if (email && !emailPattern.test(email)) {
-        input.setCustomValidity('');
-        input.style.borderColor = '#ff0000';
-        if (errorElement) {
-            errorElement.textContent = '';
-            errorElement.classList.add('show');
-        }
-    } else {
-        input.setCustomValidity('');
-        input.style.borderColor = '#ccc';
-        if (errorElement) {
-            errorElement.textContent = '';
-            errorElement.classList.remove('show');
-        }
-    }
-}
-
-function validateAllFields(){
-    const name = document.getElementById('addInputName');
-    const email = document.getElementById('addInputEmail');
-    const phone = document.getElementById('addInputPhone');
-    const errorElement = document.getElementById('addInputError');
- 
-    if (!name.value.trim() || !email.value.trim() || !phone.value.trim()) {
-        name.style.borderColor = '#ff0000';
-        email.style.borderColor = '#ff0000';
-        phone.style.borderColor = '#ff0000';
-        
-        if (errorElement) {
-            errorElement.textContent = 'Bitte alle Felder ausfüllen';
-            errorElement.classList.add('show');
-        }
-        return false;
-    }
-    
-    if (!isValidEmail(email.value)) {
-        email.style.borderColor = '#ff0000';
-        const emailError = document.getElementById('addEmailError');
-        if (emailError) {
-            emailError.textContent = 'Bitte eine gültige E-Mail-Adresse eingeben';
-            emailError.classList.add('show');
-        }
-        return false;
-    }
-    
-    if (!isValidPhone(phone.value)) {
-        phone.style.borderColor = '#ff0000';
-        const phoneError = document.getElementById('addPhoneError');
-        if (phoneError) {
-            phoneError.textContent = 'Bitte eine gültige Telefonnummer eingeben';
-            phoneError.classList.add('show');
-        }
-        return false;
-    }
-    
-    name.style.borderColor = '#ccc';
-    email.style.borderColor = '#ccc';
-    phone.style.borderColor = '#ccc';
-    if (errorElement) {
-        errorElement.textContent = '';
-        errorElement.classList.remove('show');
-    }
-    const emailError = document.getElementById('addEmailError');
-    const phoneError = document.getElementById('addPhoneError');
-    if (emailError) {
-        emailError.textContent = '';
-        emailError.classList.remove('show');
-    }
-    if (phoneError) {
-        phoneError.textContent = '';
-        phoneError.classList.remove('show');
-    }
-    return true;
-}
-
-function isValidEmail(email) {
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(de|com|net)$/;
-    return emailPattern.test(email.trim());
-}
-
-function isValidPhone(phone) {
-    return phone.trim().length >= 6;
-}
 
 async function loadContacts() {
     const fetchedContacts = await firebaseGet('/contacts');
@@ -109,338 +15,157 @@ async function loadContacts() {
     displayContacts();
 };
 
-function displayContacts() {
-    const sortedContacts = contacts.sort((a, b) => a.name.localeCompare(b.name));
-    const groupedContacts = {};
-    sortedContacts.forEach(contact => {
-        const firstLetter = contact.name[0].toUpperCase();
-        if (!groupedContacts[firstLetter]) {
-            groupedContacts[firstLetter] = [];
-        }
-        groupedContacts[firstLetter].push(contact);
-    });
-    const contactsList = document.getElementById('contactsList');
-    contactsList.innerHTML = '';
-    let html = '';
-    Object.keys(groupedContacts).forEach(letter => {
-        html += `<div class = "contact-group">`;
-        html += `<div class = "group-letter">${letter}</div>`;
-        groupedContacts[letter].forEach(contact => {
-            html += `<div class="contact-item" onclick="selectContact('${contact.id}')">`;
-            const initials = getInitials(contact.name);
-            const avatarClass = getAvatarClass(contact.name);
-            html += `<div class="avatar-contact-circle ${avatarClass}">${initials}</div>`;
-            html += `<div class="contact-info">`;
-            html += `<div class="contact-name">${contact.name}</div>`;
-            html += `<div class="contact-email">${contact.email}</div>`;
-            html += `</div>`;
-            html += `</div>`;
-        });
-        html += `</div>`;
-    });
-    contactsList.innerHTML = html;
-};
-
-function selectContact(id) {
-    const allItems = document.querySelectorAll('.contact-item');
-    allItems.forEach(item => item.classList.remove('selected'));
-    const clickedItem = event.target.closest('.contact-item');
-    if (clickedItem) {
-        clickedItem.classList.add('selected');
-    }
-    selectedContact = contacts.find(contact => contact.id === id);
-    displayContactDetails();
-
-    if (isMobile()) {
-        showMobileDetailView();
-    }
-};
-
-function isMobile() {
-    return window.innerWidth <= 600;
-}
-
-function showMobileDetailView() {
-    const listPanel = document.querySelector('.contacts-list-panel');
-    const detailPanel = document.querySelector('.contact-details-panel');
-
-    listPanel.classList.add('hide-mobile');
-    detailPanel.classList.add('show-mobile');
-
-    if (selectedContact) {
-        setMobileHeaderWithBackButton();
-        setMobileActionMenu();
-    }
-}
-
-function showMobileListView() {
-    const listPanel = document.querySelector('.contacts-list-panel');
-    const detailPanel = document.querySelector('.contact-details-panel');
-
-    listPanel.classList.remove('hide-mobile');
-    detailPanel.classList.remove('show-mobile');
-
-    const contactsHeader = document.querySelector('.contacts-header');
-    if (isMobile() && contactsHeader) {
-        contactsHeader.innerHTML = `
-            <h1>Contacts</h1>
-            <hr>
-            <span class="contact-subtitle">Better with a team</span>
-        `;
-    }
-}
-
-function setMobileHeaderWithBackButton() {
-    const contactsHeader = document.querySelector('.contacts-header');
-    if (isMobile() && contactsHeader) {
-        contactsHeader.innerHTML = `
-            <h1>Contacts</h1>
-            <hr>
-            <span class="contact-subtitle">Better with a team</span>
-            <button class="mobile-back-button" onclick="showMobileListView()">
-                <img src="../img/icon/return-icon.png" alt="return button" class="return-button-contacts">
-            </button>
-        `;
-    }
-}
-
-function displayContactDetails() {
-
-    if (!selectedContact)
-        return;
-    const contactDetailsContent = document.getElementById('contactDetailsContent');
-    const initials = getInitials(selectedContact.name);
-    const avatarClass = getAvatarClass(selectedContact.name);
-    contactDetailsContent.innerHTML = '';
-    setMobileHeaderWithBackButton();
-    let html = '';
-    html += `<div class="contact-details-content">`;
-    html += `<div class="contact-details-content-header">`;
-    html += `<div class="contact-avatar-large">`;
-    html += `<div class="avatar-circle-contact-details ${avatarClass}">${initials}</div>`;
-    html += `</div>`;
-    html += `<div class="contact-info-section">`;
-    html += `<h2 class="contact-name-large">${selectedContact.name}</h2>`;
-    html += `<div class="contact-actions">`;
-    html += `<button class="edit-contact-btn" onclick="editContact('${selectedContact.id}')"><img src="../img/edit-contacts.png" alt="edit" class="edit-icon"></button>`;
-    html += `<button class="delete-contact-btn" onclick="deleteContact('${selectedContact.id}')"><img src="../img/delete-contacts.png" alt="edit" class="delete-icon"></button>`;
-    html += `</div>`;
-    html += `</div>`;
-    html += `</div>`;
-    html += `<div class="contact-information-text">`;
-    html += `<h3>Contact Information</h3>`;
-    html += `</div>`;
-    html += `<div class="contact-information-details">`;
-    html += `<div class="contact-detail-email"><h4>Email</h4><span>${selectedContact.email}</span></div>`;
-    html += `<div class="contact-detail-phone"><h4>Phone</h4><span>${selectedContact.phone}</span></div>`;
-    html += `</div>`;
-    html += `</div>`;
-   
-    
-    contactDetailsContent.innerHTML = html;
-};
-
-function setMobileActionMenu() {
-    const detailsContent = document.getElementById('contactDetailsContent');
-    if (isMobile() && detailsContent) {
-        if (!detailsContent.querySelector('.mobile-action-menu-container')) {
-            detailsContent.innerHTML += `
-            <div class="mobile-action-menu-container">
-            <button class="mobile-action-button" onclick="toggleMobileActionMenu()">
-                <span class="three-dots">⋮</span>
-            </button>
-            <div class="mobile-action-menu" id="mobileActionMenu" style="display: none;">
-                <div class="action-menu-item" onclick="editContact('${selectedContact.id}')">
-                    <img src="../img/edit-contacts.png" alt="edit">
-                </div>
-                <div class="action-menu-item" onclick="deleteContact('${selectedContact.id}')">
-                    <img src="../img/delete-contacts.png" alt="delete">
-                </div>
-            </div>
-        </div>
-`;
-        }
-    }
-}
-
-function toggleMobileActionMenu() {
-    const menu = document.getElementById('mobileActionMenu');
-    menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
-}
-
-document.addEventListener('click', function(event) {
-    const menu = document.getElementById('mobileActionMenu');
-    const button = document.querySelector('.mobile-action-button');
-    
-    if (menu && button && !menu.contains(event.target) && !button.contains(event.target)) {
-        menu.style.display = 'none';
-    }
-});
-
+/**
+ * Öffnet das Add-Contact-Modal.
+ */
 function openAddContactModal() {
-    document.getElementById('addContactModal').style.display = 'block';
+  const modal = document.getElementById('addContactModal');
+  if (modal) modal.style.display = 'block';
+}
 
-};
-
+/**
+ * Schließt Add-/Edit-Contact-Modal.
+ */
 function closeContactModal() {
-    document.getElementById('addContactModal').style.display = 'none';
-    document.getElementById('contactModal').style.display = 'none';
-};
+  const add = document.getElementById('addContactModal');
+  const edit = document.getElementById('contactModal');
+  if (add) add.style.display = 'none';
+  if (edit) edit.style.display = 'none';
+}
 
+/**
+ * Bricht das Hinzufügen ab und schließt das Modal.
+ */
 function cancelAddContact() {
-    document.getElementById('addContactModal').style.display = 'none';
+  const modal = document.getElementById('addContactModal');
+  if (modal) modal.style.display = 'none';
 }
 
+/**
+ * Öffnet das Edit-Modal und füllt es mit Daten des Kontakts.
+ * @param {string} contactId
+ */
 function editContact(contactId) {
-    selectedContact = contacts.find(c => c.id === contactId);
-    document.getElementById('contactModal').style.display = 'block';
-    document.getElementById('editContactName').value = selectedContact.name;
-    document.getElementById('editContactEmail').value = selectedContact.email;
-    document.getElementById('editContactPhone').value = selectedContact.phone;
-    const modalAvatar = document.getElementById('ModalAvatar');
-    const initials = getInitials(selectedContact.name);
-    const avatarClass = getAvatarClass(selectedContact.name);
-    modalAvatar.innerHTML = `<div class="avatar-circle ${avatarClass}">${initials}</div>`;
+  selectedContact = contacts.find(c => c.id === contactId) || null;
+  const modal = document.getElementById('contactModal');
+  if (!selectedContact || !modal) return;
+  modal.style.display = 'block';
+  setEditFormValues(selectedContact);
+  setEditAvatar(selectedContact);
+}
+
+function setEditFormValues(c) {
+  const n = document.getElementById('editContactName');
+  const e = document.getElementById('editContactEmail');
+  const p = document.getElementById('editContactPhone');
+  if (n) n.value = c.name;
+  if (e) e.value = c.email;
+  if (p) p.value = c.phone;
+}
+
+function setEditAvatar(c) {
+  const modalAvatar = document.getElementById('ModalAvatar');
+  if (!modalAvatar) return;
+  const initials = getInitials(c.name);
+  const avatarClass = getAvatarClass(c.name);
+  modalAvatar.innerHTML = `<div class="avatar-circle ${avatarClass}">${initials}</div>`;
 }
 
 
+/**
+ * Löscht einen Kontakt und aktualisiert die Ansicht.
+ * @param {string} contactId
+ */
 async function deleteContact(contactId) {
-    await firebaseDelete(`/contacts/${contactId}`);
-    selectedContact = null;
-    document.getElementById('contactDetailsContent').innerHTML = '';
-
-    if (isMobile()) {
-        showMobileListView();
-    }
-
-    loadContacts();
-    closeContactModal();
+  await firebaseDelete(`/contacts/${contactId}`);
+  selectedContact = null;
+  const details = document.getElementById('contactDetailsContent');
+  if (details) details.innerHTML = '';
+  if (typeof showMobileListView === 'function' && isMobile()) showMobileListView();
+  loadContacts();
+  closeContactModal();
 }
 
+/**
+ * Löscht den aktuell ausgewählten Kontakt (aus Edit-Modal heraus).
+ */
 async function editDeleteContact() {
-    await deleteContact(selectedContact.id);
-    loadContacts();
-    closeContactModal();
+  if (!selectedContact) return;
+  await deleteContact(selectedContact.id);
 }
 
+/**
+ * Speichert Änderungen am Kontakt aus dem Edit-Modal.
+ */
 async function saveContact() {
-    const name = document.getElementById('editContactName').value.trim();
-    const email = document.getElementById('editContactEmail').value.trim();
-    const phone = document.getElementById('editContactPhone').value.trim();
-    
-    if (!name || !email || !phone) {
-        return;
-    }
-    
-    if (!isValidEmail(email)) {
-        const emailError = document.getElementById('editEmailError');
-        const emailInput = document.getElementById('editContactEmail');
-        emailInput.style.borderColor = '#ff0000';
-        if (emailError) {
-            emailError.textContent = 'Bitte eine gültige E-Mail-Adresse eingeben';
-            emailError.classList.add('show');
-        }
-        return;
-    }
-    
-    const emailError = document.getElementById('editEmailError');
-    const emailInput = document.getElementById('editContactEmail');
-    emailInput.style.borderColor = '#ccc';
-    if (emailError) {
-        emailError.textContent = '';
-        emailError.classList.remove('show');
-    }
-    
-    if (!isValidPhone(phone)) {
-        const phoneError = document.getElementById('editPhoneError');
-        const phoneInput = document.getElementById('editContactPhone');
-        phoneInput.style.borderColor = '#ff0000';
-        if (phoneError) {
-            phoneError.textContent = 'Bitte eine gültige Telefonnummer eingeben';
-            phoneError.classList.add('show');
-        }
-        return;
-    }
-    
-    const phoneError = document.getElementById('editPhoneError');
-    const phoneInput = document.getElementById('editContactPhone');
-    phoneInput.style.borderColor = '#ccc';
-    if (phoneError) {
-        phoneError.textContent = '';
-        phoneError.classList.remove('show');
-    }
-    
-    const updatedContact = {
-        name: name,
-        email: email,
-        phone: phone
-    };
-    await firebasePut(`/contacts/${selectedContact.id}`, updatedContact);
-    selectedContact.name = name;
-    selectedContact.email = email;
-    selectedContact.phone = phone;
-    loadContacts();
-    displayContactDetails();
-    if (isMobile()) {
-        setMobileActionMenu();
-    }
-    
-    closeContactModal();
+  const { name, email, phone } = readEditForm();
+  if (!validateEditContactFields(name, email, phone)) return;
+  await firebasePut(`/contacts/${selectedContact.id}`, { name, email, phone });
+  updateSelectedContactData(name, email, phone);
+  refreshContactDisplay();
+  closeContactModal();
+}
+
+function readEditForm() {
+  return {
+    name: document.getElementById('editContactName').value.trim(),
+    email: document.getElementById('editContactEmail').value.trim(),
+    phone: document.getElementById('editContactPhone').value.trim()
+  };
+}
+
+/**
+ * Aktualisiert den selektierten Kontakt im Speicher.
+ */
+function updateSelectedContactData(name, email, phone) {
+  if (!selectedContact) return;
+  selectedContact.name = name;
+  selectedContact.email = email;
+  selectedContact.phone = phone;
+}
+
+/**
+ * Aktualisiert Liste und Detailansicht nach Änderungen.
+ */
+function refreshContactDisplay() {
+  loadContacts();
+  if (typeof displayContactDetails === 'function') displayContactDetails();
+  if (typeof setMobileActionMenu === 'function' && isMobile()) setMobileActionMenu();
 }
 
 
+/**
+ * Erstellt einen neuen Kontakt aus dem Add-Modal.
+ */
 async function createAddContact() {
-    const name = document.getElementById('addInputName').value.trim();
-    const email = document.getElementById('addInputEmail').value.trim();
-    const phone = document.getElementById('addInputPhone').value.trim();
-    
-    if (!validateAllFields()) {
-        return;
-    }
-    
-    if (!isValidEmail(email)) {
-        return;
-    }
-    const contact = {
-        name: name,
-        email: email,
-        phone: phone
-    };
-    await firebasePost('/contacts', contact);
-    loadContacts();
-    closeContactModal();
-    document.getElementById('addInputName').value = '';
-    document.getElementById('addInputEmail').value = '';
-    document.getElementById('addInputPhone').value = '';
+  const name = document.getElementById('addInputName').value.trim();
+  const email = document.getElementById('addInputEmail').value.trim();
+  const phone = document.getElementById('addInputPhone').value.trim();
+  if (!validateAllFields()) return;
+  await firebasePost('/contacts', { name, email, phone });
+  refreshContactsAfterAdd();
+  clearAddContactForm();
 }
 
-window.addEventListener('resize', function () {
-    const listPanel = document.querySelector('.contacts-list-panel');
-    const detailPanel = document.querySelector('.contact-details-panel');
+/**
+ * Aktualisiert die Ansicht nach dem Hinzufügen.
+ */
+function refreshContactsAfterAdd() {
+  loadContacts();
+  closeContactModal();
+}
 
-    if (!isMobile()) {
-        listPanel.classList.remove('hide-mobile');
-        detailPanel.classList.remove('show-mobile');
+/**
+ * Leert die Eingabefelder im Add-Modal.
+ */
+function clearAddContactForm() {
+  const n = document.getElementById('addInputName');
+  const e = document.getElementById('addInputEmail');
+  const p = document.getElementById('addInputPhone');
+  if (n) n.value = '';
+  if (e) e.value = '';
+  if (p) p.value = '';
+}
 
-        const contactsHeader = document.querySelector('.contacts-header');
-        if (contactsHeader) {
-            contactsHeader.innerHTML = `
-                <h1>Contacts</h1>
-                <hr>
-                <span class="contact-subtitle">Better with a team</span>
-            `;
-        }
-    } else if (selectedContact) {
-        showMobileDetailView();
-        setMobileHeaderWithBackButton();
-    } else {
-        showMobileListView();
-    }
-});
 
-document.addEventListener('DOMContentLoaded', function () {
-    if (isMobile()) {
-        showMobileListView();
-    }
-});
 

@@ -25,9 +25,14 @@
 
     <!-- Scripts -->
     <script src="../scripts/firebase.js"></script>
+    <script src="../scripts/auth-ui.js" defer></script>
+
+    <script src="../scripts/addtask-core.js" defer></script>
+    <script src="../scripts/addtask-widgets.js" defer></script>
+    <script src="../scripts/addTask-page.js" defer></script>
+
     <script src="../scripts/account-name.js"></script>
     <script src="../scripts/dropdown.js"></script>
-    <script src="../scripts/addTask.js" defer></script>
     <script src="../scripts/summary.js"></script>
   </head>
 
@@ -50,28 +55,20 @@
             </a>
           </div>
           <div class="menu-content-div resp-cont-div">
-            <a href="./board.html">
-              <img src="../img/icon/board.png" alt="board" />Board
-            </a>
+            <a href="./board.html"> <img src="../img/icon/board.png" alt="board" />Board </a>
           </div>
           <div class="menu-content-div">
-            <a href="contacts.html">
-              <img src="../img/icon/contacts.png" alt="contacts" />Contacts
-            </a>
+            <a href="contacts.html"> <img src="../img/icon/contacts.png" alt="contacts" />Contacts </a>
           </div>
         </div>
       </div>
       <div class="policy-container">
         <div class="policy-container-div">
           <div>
-            <a href="../resources/private-policy/privacy-policy.html"
-              >Privacy Policy</a
-            >
+            <a href="../resources/private-policy/privacy-policy.html">Privacy Policy</a>
           </div>
           <div>
-            <a href="../resources/legal-notice/legal-notice.html"
-              >Legal Notice</a
-            >
+            <a href="../resources/legal-notice/legal-notice.html">Legal Notice</a>
           </div>
         </div>
       </div>
@@ -94,36 +91,21 @@
           </div>
         </div>
       </div>
-
       <div class="dropdown-menu">
         <div class="dropdown-content">
           <div class="dropdown-content-div">
-            <div class="dropdown-content-div-text">
-              <div><a href="../resources/help/help.html">Help</a></div>
-            </div>
+            <a class="held-link" href="../resources/help/help.html">Help</a>
           </div>
           <div class="dropdown-content-div">
-            <div class="dropdown-content-div-text">
-              <div>
-                <a href="../resources/legal-notice/legal-notice.html"
-                  >Legal notice</a
-                >
-              </div>
-            </div>
+            <a class="resources-link" href="../resources/legal-notice/legal-notice.html">Legal notice</a>
           </div>
           <div class="dropdown-content-div">
-            <div class="dropdown-content-div-text">
-              <div>
-                <a href="../resources/private-policy/privacy-policy.html"
-                  >Privacy Policy</a
-                >
-              </div>
-            </div>
+            <a class="resources-link" href="../resources/private-policy/privacy-policy.html"
+              >Privacy Policy</a
+            >
           </div>
-          <div class="dropdown-content-div">
-            <div class="dropdown-content-div-text">
-              <div><a href="../index.html">Logout</a></div>
-            </div>
+          <div class="dropdown-content-div" onclick="logout()">
+            <a class="resources-link" href="../index.html">Logout</a>
           </div>
         </div>
       </div>
@@ -135,51 +117,28 @@
         <div class="task-form-container">
           <div class="task-form-left">
             <label class="star-red">Title</label>
-            <input
-              class="padding-bottom"
-              placeholder="Enter a title"
-              type="text"
-              id="task-title"
-              required
-            />
+            <input class="padding-bottom" placeholder="Enter a title" type="text" id="task-title" required />
 
             <label>Description</label>
-            <textarea
-              placeholder="Enter a Description"
-              class="padding-bottom"
-              id="task-desc"
-            ></textarea>
+            <textarea placeholder="Enter a Description" class="padding-bottom" id="task-desc"></textarea>
 
             <label class="star-red">Due Date</label>
             <input class="padding-bottom" type="date" id="task-due" required />
           </div>
 
-          <img
-            class="partition"
-            src="../img/space-line.svg"
-            alt="partition line"
-          />
+          <img class="partition" src="../img/space-line.svg" alt="partition line" />
 
           <div class="task-form-right">
             <div>
               <label>Priority</label>
               <div class="priority-btn">
-                <button
-                  class="btn-urgent button-padding"
-                  style="padding-right: 20px; padding-left: 20px"
-                >
+                <button class="btn-urgent button-padding" style="padding-right: 20px; padding-left: 20px">
                   <img src="../img/icon-urgent.png" alt /> Urgent
                 </button>
-                <button
-                  class="btn-medium button-padding"
-                  style="padding-right: 20px; padding-left: 20px"
-                >
+                <button class="btn-medium button-padding" style="padding-right: 20px; padding-left: 20px">
                   <img src="../img/icon/icon-medium-orange.svg" alt /> Medium
                 </button>
-                <button
-                  class="btn-low button-padding"
-                  style="padding-right: 20px; padding-left: 20px"
-                >
+                <button class="btn-low button-padding" style="padding-right: 20px; padding-left: 20px">
                   <img src="../img/icon-low.png" alt /><span> Low </span>
                 </button>
               </div>
@@ -192,18 +151,12 @@
 
             <label class="star-red">Category</label>
             <select id="task-category" required>
-              <option value="" disabled selected hidden>
-                Select task category
-              </option>
+              <option value="" disabled selected hidden>Select task category</option>
             </select>
 
             <label>Subtasks</label>
             <div class="subtask-input-group">
-              <input
-                type="text"
-                id="subtask-input"
-                placeholder="Add new subtask"
-              />
+              <input type="text" id="subtask-input" placeholder="Add new subtask" />
               <button type="button" id="add-subtask-btn">+</button>
             </div>
 
@@ -215,19 +168,11 @@
         </div>
 
         <div class="create-formerror">
-          <div class="form-error" id="form-error-message">
-            This field is required
-          </div>
+          <div class="form-error" id="form-error-message">This field is required</div>
           <div class="clear-creat-div">
             <button id="clear-task-btn">
               Clear
-              <svg
-                width="25"
-                height="24"
-                viewBox="0 0 25 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M12.2496 11.9998L17.4926 17.2428M7.00659 17.2428L12.2496 11.9998L7.00659 17.2428ZM17.4926 6.75684L12.2486 11.9998L17.4926 6.75684ZM12.2486 11.9998L7.00659 6.75684L12.2486 11.9998Z"
                   stroke="#2A3647"
@@ -239,13 +184,7 @@
             </button>
             <button id="create-task-btn">
               Create Task
-              <svg
-                width="16"
-                height="12"
-                viewBox="0 0 16 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M5.79923 9.15L14.2742 0.675C14.4742 0.475 14.7117 0.375 14.9867 0.375C15.2617 0.375 15.4992 0.475 15.6992 0.675C15.8992 0.875 15.9992 1.1125 15.9992 1.3875C15.9992 1.6625 15.8992 1.9 15.6992 2.1L6.49923 11.3C6.29923 11.5 6.0659 11.6 5.79923 11.6C5.53256 11.6 5.29923 11.5 5.09923 11.3L0.79923 7C0.59923 6.8 0.503397 6.5625 0.51173 6.2875C0.520064 6.0125 0.62423 5.775 0.82423 5.575C1.02423 5.375 1.26173 5.275 1.53673 5.275C1.81173 5.275 2.04923 5.375 2.24923 5.575L5.79923 9.15Z"
                   fill="white"
@@ -260,34 +199,20 @@
         <div class="logo-content-container-bottom">
           <div class="menu-content-bottom">
             <div class="bottom-menu">
-              <a href="../summary.html"
-                ><img src="../img/icon/summary.png" alt="summary" />Summary</a
-              >
+              <a href="../summary.html"><img src="../img/icon/summary.png" alt="summary" />Summary</a>
             </div>
             <div class="selected-menu menu-content-div bottom-menu">
-              <a href="./add_task.html"
-                ><img src="../img/icon/add_task.png" alt="add task" />Add
-                Task</a
-              >
+              <a href="./add_task.html"><img src="../img/icon/add_task.png" alt="add task" />Add Task</a>
             </div>
             <div class="menu-content-div resp-cont-div bottom-menu">
-              <a href="./board.html"
-                ><img src="../img/icon/board.png" alt="board" />Board</a
-              >
+              <a href="./board.html"><img src="../img/icon/board.png" alt="board" />Board</a>
             </div>
             <div class="menu-content-div bottom-menu">
-              <a href="contacts.html"
-                ><img
-                  src="../img/icon/contacts.png"
-                  alt="contacts"
-                />Contacts</a
-              >
+              <a href="contacts.html"><img src="../img/icon/contacts.png" alt="contacts" />Contacts</a>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <script src="../scripts/log.js" defer></script>
   </body>
 </html>

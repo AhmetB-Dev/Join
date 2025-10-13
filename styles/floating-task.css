@@ -142,6 +142,8 @@
     align-items: center;
     flex-direction: row;
     gap:16px;
+    width: 20px;
+    height: 20px;
 }
 
 .subtask-container{
@@ -151,6 +153,10 @@
     flex-direction: column;
     height: 100px;
     color: #2a3647;
+}
+.subtask-edit-checkbox{
+    width: 20px;
+    height: 20px;
 }
 
 .subtask-container-div{
@@ -173,6 +179,7 @@
     width: 100%;
     gap:16px;
     padding-top:32px;
+    padding-right:10px;
 }
 
 .delete-edit-container img{

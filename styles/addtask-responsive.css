@@ -595,7 +595,7 @@
   .create-formerror {
     display: flex;
     justify-content: space-between;
-    min-width: 50.5em;
+    min-width: 52.5em;
     max-width: 200.5em;
   }
 }
@@ -753,9 +753,8 @@
     border-radius: 6px;
     width: 38px;
     height: 38px;
-    display: grid
-;
+    display: grid;
     place-items: center;
     cursor: pointer;
-}
+  }
 }

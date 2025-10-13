@@ -30,7 +30,7 @@ h1 {
     justify-content: space-between;
     align-items: center;
     flex-direction: row;
-    width: 1208px;
+    width: 1250px;
     
 }
 
@@ -88,6 +88,8 @@ h1 {
 
 .add-task-btn-text{
     color: white ;
+    white-space: nowrap;
+
 }
 
 .add-task-button:hover {
@@ -100,7 +102,7 @@ h1 {
     justify-content: flex-start;
     align-items: flex-start;
     flex-direction: row;
-    max-width: 1208px;
+    max-width: 1250px;
     padding-right: 64px;
     padding-left: 64px;
     gap:24px;
@@ -465,3 +467,22 @@ h6 {
   .wrapper::-webkit-scrollbar {
     width: 12px;             
   }
+
+/* Prevent scrolling during drag and drop */
+body.no-scroll-drag {
+  overflow: hidden !important;
+  touch-action: none !important;
+  -webkit-overflow-scrolling: none !important;
+  position: fixed !important;
+  width: 100% !important;
+}
+
+body.no-scroll-drag .wrapper {
+  overflow: hidden !important;
+  touch-action: none !important;
+}
+
+body.no-scroll-drag .board-main {
+  overflow: hidden !important;
+  touch-action: none !important;
+}
