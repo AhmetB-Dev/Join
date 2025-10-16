@@ -2,118 +2,55 @@ window.currentTask = null;
 window.currentTaskId = null;
 
 /**
- * Detect if current device supports touch.
- * @returns {boolean}
- */
-function isTouchDevice() {
-  return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-}
-
-/**
- * Normalize users array and compute total count including placeholder.
- * @param {Array<{name:string,initials?:string,color?:string}>} users
- * @returns {{realUsers:Array<object>, totalCount:number}}
- */
-function getRealUserArrayAndCount(users) {
-  if (!isValidUserArray(users)) {
-    return { realUsers: [], totalCount: 0 };
-  }
-  const { updatedUsers, placeholderCount } = extractPlaceholder(users);
-  return {
-    realUsers: updatedUsers,
-    totalCount: updatedUsers.length + placeholderCount
-  };
-}
-
-/**
- * Validate if the input is an array for users list.
- * @param {any} users
- * @returns {boolean}
- */
-function isValidUserArray(users) {
-  return Array.isArray(users);
-}
-
-/**
- * Extract trailing "+N" placeholder from users and return count and trimmed list.
- * @param {Array<any>} users
- * @returns {{updatedUsers:Array<any>, placeholderCount:number}}
- */
-function extractPlaceholder(users) {
-  let placeholderCount = 0;
-  let updatedUsers = users;
-  const lastUser = users[users.length - 1];
-  if (lastUser && typeof lastUser.name === 'string' && lastUser.name.trim().startsWith('+')) {
-    const parsedCount = parseInt(lastUser.name.trim().replace('+', ''));
-    if (!isNaN(parsedCount)) {
-      placeholderCount = parsedCount;
-      updatedUsers = users.slice(0, users.length - 1);
-    }
-  }
-  return { updatedUsers, placeholderCount };
-}
-
-
-function removeDuplicateUsers(users) {
-  if (!Array.isArray(users)) return [];
-  const seen = new Set();
-  return users.filter(user => {
-    const identifier = user.name || JSON.stringify(user);
-    if (seen.has(identifier)) {
-      return false;
-    }
-    seen.add(identifier);
-    return true;
-  });
-}
-
-function renderUserBadges(users, maxToShow = 3) {
-  if (!users || !Array.isArray(users) || users.length === 0) {
-    return '';
-  }
-  const { realUsers, totalCount } = getRealUserArrayAndCount(users);
-  const uniqueUsers = removeDuplicateUsers(realUsers); 
-  if (uniqueUsers.length === 0) {
-    return '';
-  }
-  let badges = '';
-  uniqueUsers.slice(0, maxToShow).forEach(u => {
-    const initials = u.initials || '?';
-    const colorClass = u.color || 'default';
-    badges += `<div class="profile-badge-floating-${colorClass}">${initials}</div>`;
-  });
-  const uniqueCount = uniqueUsers.length;
-  if (uniqueCount > maxToShow) {
-    badges += `<div class="profile-badge-floating-gray">+${uniqueCount - maxToShow}</div>`;
-  }
-  return badges;
-}
-
-function removeDuplicateUsers(users) {
-  if (!Array.isArray(users)) return [];
-  const seen = new Set();
-  return users.filter(user => {
-    const identifier = user.name || JSON.stringify(user);
-    if (seen.has(identifier)) {
-      return false;
-    } 
-    seen.add(identifier);
-    return true;
-  });
-}
-
-/**
  * Patch subtask status for currentTask and update progress in Firebase.
  * @param {string} taskId
  * @param {number} subtaskIndex
  * @param {boolean} newStatus
+ * @returns {void}
  */
 function updateSubtaskStatus(taskId, subtaskIndex, newStatus) {
-  if (!window.currentTask || window.currentTaskId !== taskId) return;
+  if (!validateSubtaskUpdate(taskId)) return;
+  applySubtaskStatusChange(subtaskIndex, newStatus);
+  const newProgress = calculateSubtaskProgress();
+  persistSubtaskChanges(taskId, newProgress);
+}
+
+/**
+ * Validate if subtask update is allowed.
+ * @param {string} taskId
+ * @returns {boolean}
+ */
+function validateSubtaskUpdate(taskId) {
+  return window.currentTask && window.currentTaskId === taskId;
+}
+
+/**
+ * Apply status change to subtask in memory.
+ * @param {number} subtaskIndex
+ * @param {boolean} newStatus
+ * @returns {void}
+ */
+function applySubtaskStatusChange(subtaskIndex, newStatus) {
   window.currentTask.subtasks[subtaskIndex].completed = newStatus;
+}
+
+/**
+ * Calculate progress percentage from subtasks.
+ * @returns {number}
+ */
+function calculateSubtaskProgress() {
   const total = window.currentTask.subtasks.length;
   const completed = window.currentTask.subtasks.filter(st => st.completed).length;
-  const newProgress = total ? (completed / total) * 100 : 0;
+  return total ? (completed / total) * 100 : 0;
+}
+
+/**
+ * Persist subtask changes to Firebase.
+ * @param {string} taskId
+ * @param {number} newProgress
+ * @returns {void}
+ */
+function persistSubtaskChanges(taskId, newProgress) {
   const url = `https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks/${taskId}.json`;
   fetch(url, {
     method: "PATCH",
@@ -132,48 +69,68 @@ function updateSubtaskStatus(taskId, subtaskIndex, newStatus) {
  */
 async function updateTaskCardInBackground(taskId) {
   try {
-    const response = await fetch(`https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks/${taskId}.json`);
-    const updatedTask = await response.json();
+    const updatedTask = await fetchTaskFromFirebase(taskId);
     if (updatedTask) {
-      enrichTasksWithUserData([updatedTask]);
-      const existingCard = document.getElementById(taskId);
-      if (existingCard) {
-        const newCard = createTaskElement({ ...updatedTask, firebaseKey: taskId });
-        attachTaskListeners(updatedTask, newCard);
-        existingCard.parentNode.replaceChild(newCard, existingCard);
-        if (typeof window.reinitializeDragAndDrop === 'function') {
-          window.reinitializeDragAndDrop();
-        }
-        checkColumns();
-      }
+      refreshTaskCard(taskId, updatedTask);
     }
   } catch (error) {
     console.error('Error updating task card:', error);
   }
 }
 
-function getPriorityLabel(iconPath) {
-  if (!iconPath) return "Unknown";
-  if (iconPath.includes("urgent")) return "Urgent";
-  if (iconPath.includes("medium")) return "Medium";
-  if (iconPath.includes("low")) return "Low";
-  return "Unknown";
+/**
+ * Fetch task data from Firebase.
+ * @param {string} taskId
+ * @returns {Promise<object|null>}
+ */
+async function fetchTaskFromFirebase(taskId) {
+  const response = await fetch(`https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks/${taskId}.json`);
+  return await response.json();
 }
 
-function extractPriority(iconPath) {
-  if (!iconPath) return 'medium';
-  const lower = iconPath.toLowerCase();
-  if (lower.includes('urgent')) return 'urgent';
-  if (lower.includes('medium')) return 'medium';
-  if (lower.includes('low')) return 'low';
-  return 'medium';
+/**
+ * Refresh task card in DOM.
+ * @param {string} taskId
+ * @param {object} updatedTask
+ * @returns {void}
+ */
+function refreshTaskCard(taskId, updatedTask) {
+  enrichTasksWithUserData([updatedTask]);
+  const existingCard = document.getElementById(taskId);
+  if (!existingCard) return;
+  replaceTaskCard(existingCard, updatedTask, taskId);
+  reinitializeDragIfNeeded();
+  checkColumns();
 }
-window.extractPriority = extractPriority;
+
+/**
+ * Replace existing card with updated one.
+ * @param {HTMLElement} existingCard
+ * @param {object} updatedTask
+ * @param {string} taskId
+ * @returns {void}
+ */
+function replaceTaskCard(existingCard, updatedTask, taskId) {
+  const newCard = createTaskElement({ ...updatedTask, firebaseKey: taskId });
+  attachTaskListeners(updatedTask, newCard);
+  existingCard.parentNode.replaceChild(newCard, existingCard);
+}
+
+/**
+ * Reinitialize drag and drop if function exists.
+ * @returns {void}
+ */
+function reinitializeDragIfNeeded() {
+  if (typeof window.reinitializeDragAndDrop === 'function') {
+    window.reinitializeDragAndDrop();
+  }
+}
 
 /**
  * Update modal header category styling and text.
  * @param {{category:string}} task
  * @param {HTMLElement} modal
+ * @returns {void}
  */
 function setCategoryHeader(task, modal) {
   const cat = modal.querySelector('.main-section-task-overlay > div:first-child');
@@ -182,6 +139,11 @@ function setCategoryHeader(task, modal) {
   cat.querySelector('h4').textContent = task.category;
 }
 
+/**
+ * Set modal text fields.
+ * @param {{title:string,description:string,dueDate:string,priority:string}} task
+ * @returns {void}
+ */
 function setModalFields(task) {
   document.getElementById('modalTitle').innerText = task.title || "No Title";
   document.getElementById('modalDescription').innerText = task.description || "No Description";
@@ -190,25 +152,40 @@ function setModalFields(task) {
   document.getElementById('modalPriorityIcon').src = task.priority || "";
 }
 
+/**
+ * Set assigned users in modal.
+ * @param {{users:Array}} task
+ * @returns {void}
+ */
 function setAssignedUsers(task) {
   const assign = document.getElementById('modalAssignedTo');
   if (task.users && Array.isArray(task.users)) {
     const uniqueUsers = removeDuplicateUsers(task.users);
-    assign.innerHTML = uniqueUsers.map(u =>
-      `<div class="flexrow profile-names">
-          <div class="profile-badge-floating-${u.color || 'default'}">${u.initials || '?'}</div>
-         <span class="account-name">${u.name || 'Unknown'}</span>
-       </div>`
-    ).join("");
+    assign.innerHTML = buildUserListHTML(uniqueUsers);
   } else {
     assign.innerHTML = "";
   }
 }
 
 /**
+ * Build HTML for user list.
+ * @param {Array} uniqueUsers
+ * @returns {string}
+ */
+function buildUserListHTML(uniqueUsers) {
+  return uniqueUsers.map(u =>
+    `<div class="flexrow profile-names">
+        <div class="profile-badge-floating-${u.color || 'default'}">${u.initials || '?'}</div>
+       <span class="account-name">${u.name || 'Unknown'}</span>
+     </div>`
+  ).join("");
+}
+
+/**
  * Fill modal header and main fields for a task.
  * @param {any} task
  * @param {HTMLElement} modal
+ * @returns {void}
  */
 function renderModalHeader(task, modal) {
   setCategoryHeader(task, modal);
@@ -216,30 +193,61 @@ function renderModalHeader(task, modal) {
   setAssignedUsers(task);
 }
 
+/**
+ * Clear subtasks container.
+ * @returns {HTMLElement}
+ */
 function clearSubtasksContainer() {
   const ms = document.getElementById("modalSubtasks");
   ms.innerHTML = "";
   return ms;
 }
 
+/**
+ * Normalize subtask text from various formats.
+ * @param {any} st
+ * @returns {string}
+ */
 function normalizeSubtaskText(st) {
   if (typeof st === 'string') return st;
   const raw = (st && typeof st.text !== 'undefined') ? st.text : st;
   return typeof raw === 'string' ? raw : String(raw ?? '');
 }
 
+/**
+ * Create subtask DOM element.
+ * @param {any} st
+ * @param {number} index
+ * @returns {HTMLElement}
+ */
 function createSubtaskElement(st, index) {
   const text = normalizeSubtaskText(st);
   const completed = !!(st && st.completed);
   const div = document.createElement("div");
   div.classList.add("subtask-container-div-item");
-  div.innerHTML = `<div class="flexrow">
-                     <input type="checkbox" class="subtask-checkbox" data-index="${index}" ${completed ? "checked" : ""}>
-                     <span>${text}</span>
-                   </div>`;
+  div.innerHTML = buildSubtaskHTML(text, index, completed);
   return div;
 }
 
+/**
+ * Build subtask HTML string.
+ * @param {string} text
+ * @param {number} index
+ * @param {boolean} completed
+ * @returns {string}
+ */
+function buildSubtaskHTML(text, index, completed) {
+  return `<div class="flexrow">
+            <input type="checkbox" class="subtask-checkbox" data-index="${index}" ${completed ? "checked" : ""}>
+            <span>${text}</span>
+          </div>`;
+}
+
+/**
+ * Add change listeners to subtask checkboxes.
+ * @param {HTMLElement} container
+ * @returns {void}
+ */
 function addSubtaskListeners(container) {
   container.querySelectorAll(".subtask-checkbox").forEach(cb => {
     cb.addEventListener("change", function () {
@@ -251,6 +259,7 @@ function addSubtaskListeners(container) {
 /**
  * Render subtasks list inside the task modal.
  * @param {{subtasks?:Array<{text:string,completed:boolean}>}} task
+ * @returns {void}
  */
 function renderSubtasks(task) {
   const ms = clearSubtasksContainer();
@@ -265,6 +274,7 @@ function renderSubtasks(task) {
 /**
  * Open the floating task overlay for the given task object.
  * @param {{firebaseKey?:string,id?:string}} task
+ * @returns {void}
  */
 function openTaskModal(task) {
   window.currentTask = task;
@@ -274,71 +284,6 @@ function openTaskModal(task) {
   renderModalHeader(task, modal);
   renderSubtasks(task);
   modal.style.display = 'flex';
-}
-
-/**
- * Persist a column change for a task and move its DOM card.
- * @param {string} taskId
- * @param {string} newColumn
- * @returns {Promise<void>}
- */
-async function updateTaskColumnInFirebase(taskId, newColumn) {
-  try {
-    const url = `https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks/${taskId}.json`;
-    const r = await fetch(url, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ column: newColumn })
-    });
-    if (!r.ok) throw new Error(`Error updating task column: ${r.statusText}`);   
-    updateTaskDOMPosition(taskId, newColumn);
-  } catch (e) {
-    console.error('Error updating task column:', e);
-  }
-}
-
-/**
- * Move a task card element to a new column in the DOM.
- * @param {string} taskId
- * @param {string} newColumn
- */
-function updateTaskDOMPosition(taskId, newColumn) {
-  const taskElement = document.getElementById(taskId);
-  const targetColumn = document.getElementById(newColumn); 
-  if (taskElement && targetColumn) {
-    if (taskElement.parentNode && taskElement.parentNode !== targetColumn) {
-      taskElement.parentNode.removeChild(taskElement);
-    }
-    if (!targetColumn.contains(taskElement)) {
-      targetColumn.appendChild(taskElement);
-    }
-    checkColumns();
-  }
-}
-
-function checkColumns() {
-  document.querySelectorAll('.task-board-container').forEach(col => {
-    const img = col.querySelector('img');
-    if (!img) return;
-    const hasTasks = col.querySelectorAll('.draggable-cards').length > 0;
-    img.style.display = hasTasks ? 'none' : 'block';
-  });
-}
-
-function enableDragAndDrop() {
-  if (!isTouchDevice()) {
-    document.querySelectorAll('.draggable-cards').forEach(card => {
-      card.addEventListener('dragstart', () => card.classList.add('dragging'));
-      card.addEventListener('dragend', () => card.classList.remove('dragging'));
-    });
-    document.querySelectorAll('.task-board-container').forEach(col => {
-      col.addEventListener('dragover', e => {
-        e.preventDefault();
-        const dragCard = document.querySelector('.dragging');
-        if (dragCard) col.appendChild(dragCard);
-      });
-    });
-  }
 }
 
 /**
@@ -354,69 +299,6 @@ function calculateProgress(task) {
 }
 
 /**
- * Map a task priority to an icon path with fallback.
- * @param {any} task
- * @returns {string}
- */
-function getPriorityImage(task) {
-  const mapping = {
-    urgent: "../img/icon-urgent.png",
-    medium: "../img/priority-img/medium.png",
-    low: "../img/icon-low.png"
-  };
-  let prio = extractPriority(task.priority);
-  if (!mapping[prio]) prio = "medium";
-  return mapping[prio];
-}
-
-function createHeader(task) {
-  const labelType = task.category === "Technical task" ? "technical-task" : "user-story";
-  const headerTitle = task.category === "Technical task" ? "Technical Task" : "User Story";
-  return `
-    <div class="card-label-${labelType} padding-left">
-      <h4>${headerTitle}</h4>
-      <img src="../img/drag-drop-icon.png" alt="drag-and-drop-icon" class="drag-drop-icon">
-    </div>`;
-}
-
-function createBody(task) {
-  return `
-    <div><h5 class="card-label-user-story-h5 padding-left">${task.title}</h5></div>
-    <div><h6 class="card-label-user-story-h6 padding-left">${task.description}</h6></div>`;
-}
-
-function createProgressSection(total, completed, progress) {
-  if (total === 0 || completed === 0) {
-    return "";
-  }
-  return `
-    <div class="task-progress">
-      <div class="progress-main-container">
-        <div class="progress-container">
-          <div class="progress-bar" style="width: ${progress}%;"></div>
-        </div>
-      </div>
-      <span class="progress-text">${completed} / ${total} tasks</span>
-    </div>`;
-}
-
-function createFooter(task) {
-  const userBadges = renderUserBadges(task.users, 3);
-  const taskPriority = getPriorityImage(task);
-  return `
-    <div class="card-footer">
-      <div class="padding-left profile-badge-container">
-        ${userBadges}
-      </div>
-      <div class="priority-container-img">
-        <img src="${taskPriority}" alt="Priority" 
-             onerror="this.src='../img/priority-img/medium.png'" 
-             class="priority-container-img">
-      </div>
-    </div>`;
-}
-
-/**
  * Create a draggable card element for a task.
  * @param {{firebaseKey?:string,id?:string,title:string,description:string,priority?:string,users?:Array}} task
  * @returns {HTMLElement}
@@ -429,35 +311,50 @@ function createTaskElement(task) {
   el.setAttribute("draggable", isTouchDevice() ? "false" : "true");
   el.dataset.title = task.title.toLowerCase();
   el.dataset.description = task.description.toLowerCase();
-  el.innerHTML = `
+  el.innerHTML = assembleTaskHTML(task, total, completed, progress);
+  return el;
+}
+
+/**
+ * Assemble full task card HTML.
+ * @param {object} task
+ * @param {number} total
+ * @param {number} completed
+ * @param {number} progress
+ * @returns {string}
+ */
+function assembleTaskHTML(task, total, completed, progress) {
+  return `
     ${createHeader(task)}
     ${createBody(task)}
     ${createProgressSection(total, completed, progress)}
     ${createFooter(task)}
   `;
-  return el;
 }
 
 /**
  * Bind click and drag-end events to a task element.
  * @param {any} task
  * @param {HTMLElement} taskEl
+ * @returns {void}
  */
 function attachTaskListeners(task, taskEl) {
   taskEl.addEventListener("click", () => openTaskModal(task));
   if (!isTouchDevice()) {
-    taskEl.addEventListener("dragend", async function () {
-      const newCol = taskEl.closest(".task-board-container")?.id;
-      if (newCol) await updateTaskColumnInFirebase(taskEl.id, newCol);
-    });
+    attachDragEndListener(taskEl);
   }
 }
 
+/**
+ * Attach drag end listener to task element.
+ * @param {HTMLElement} taskEl
+ * @returns {void}
+ */
+function attachDragEndListener(taskEl) {
+  taskEl.addEventListener("dragend", async function () {
+    const newCol = taskEl.closest(".task-board-container")?.id;
+    if (newCol) await updateTaskColumnInFirebase(taskEl.id, newCol);
+  });
+}
 
-
-
-
-
-
-
-
+window.extractPriority = extractPriority;

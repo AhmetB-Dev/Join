@@ -2,10 +2,10 @@
   "use strict";
   const { initials, colorIdx, currentUserLower, fetchContacts } = window.AddTaskCore || {};
 
-  /** Query */
+  /** Query helper */
   const q = (root, selector) => root.querySelector(selector);
 
-  /** Mini-Element-Helper */
+  /** Mini element helper */
   const el = (tag, cls, text) => {
     const n = document.createElement(tag);
     if (cls) n.className = cls;
@@ -13,7 +13,7 @@
     return n;
   };
 
-  /** Fehler anzeigen */
+  /** Show a field error */
   const showFieldError = (field, message = "This field is required") => {
     if (!field) return;
     field.classList.add("at-error");
@@ -23,7 +23,7 @@
     field.insertAdjacentElement("afterend", hint);
   };
 
-  /** Fehler entfernen */
+  /** Clear a field error */
   const clearFieldError = (field) => {
     if (!field) return;
     field.classList.remove("at-error");
@@ -31,7 +31,7 @@
     if (next?.classList.contains("at-error-message")) next.remove();
   };
 
-  /** Kategorie-Select absichern */
+  /** Ensure category select options are safe/valid */
   const ensureCategoryOptions = (container) => {
     const select = q(container, "#task-category");
     if (!select) return;
@@ -45,7 +45,7 @@
     }
   };
 
-  /** Assigned-UI bauen */
+  /** Build the "Assigned" UI */
   const buildAssignUI = (hiddenInput) => {
     const wrap = el("div", "at-assign-field"),
       input = el("input", "at-assign-input"),
@@ -62,7 +62,7 @@
     return { wrap, input, panel, preview };
   };
 
-  /** Assigned initialisieren */
+  /** Initialize "Assigned" */
   const initAssigned = (container) => {
     const hidden = q(container, "#task-assigned");
     if (!hidden) return null;
@@ -85,7 +85,7 @@
     };
   };
 
-  /** Auswahl leeren */
+  /** Clear selection */
   const clearAssignees = (state) => {
     state.selectedByName.clear();
     renderAssigneePreview(state);
@@ -95,7 +95,7 @@
     });
   };
 
-  /** Kontaktzeile bauen */
+  /** Build a contact row */
   const buildContactRow = (fullName, state) => {
     const row = el("div", "at-assign-item");
     row.dataset.name = fullName;
@@ -112,14 +112,14 @@
     return row;
   };
 
-  /** Kontakte rendern */
+  /** Render contacts into the dropdown */
   const rebuildContacts = async (state) => {
     state.panel.innerHTML = "";
     const contacts = await fetchContacts();
     contacts.forEach((n) => state.panel.appendChild(buildContactRow(n, state)));
   };
 
-  /** Auswahl toggeln */
+  /** Toggle a selected assignee */
   const toggleAssignee = (state, fullName) => {
     if (state.selectedByName.has(fullName)) state.selectedByName.delete(fullName);
     else {
@@ -135,7 +135,7 @@
     renderAssigneePreview(state);
   };
 
-  /** Badge bauen */
+  /** Build an assignee badge */
   const buildAssigneeBadge = (person, state) => {
     const b = el("div", `at-assign-badge at-badge-c${person.colorIndex}`, initials(person.name));
     b.title = `${person.name} – remove`;
@@ -148,7 +148,7 @@
     return b;
   };
 
-  /** +N Badge */
+  /** +N badge for overflowed assignees */
   const buildAssigneeMore = (chosen) => {
     const more = el("div", "at-assign-more", `+${chosen.length - 3}`);
     more.title = chosen
@@ -158,7 +158,7 @@
     return more;
   };
 
-  /** Panelzeile deselektieren */
+  /** Mark a panel row as deselected */
   const markRowDeselected = (state, fullName) => {
     state.panel.querySelectorAll(".at-assign-item").forEach((r) => {
       if (r.dataset.name === fullName) {
@@ -168,7 +168,7 @@
     });
   };
 
-  /** Badges rendern */
+  /** Render assignee badges preview */
   const renderAssigneePreview = (state) => {
     state.preview.innerHTML = "";
     const chosen = [...state.selectedByName.values()];
@@ -180,7 +180,7 @@
     state.preview.append(strip, hint);
   };
 
-  /** Subtask-Shell holen */
+  /** Ensure the subtask shell exists */
   const ensureSubtaskShell = (container) => {
     let shell = container.querySelector("#subtask-shell");
     if (!shell) {
@@ -197,14 +197,14 @@
     return /** @type {HTMLUListElement} */ (list);
   };
 
-  /** Shell steuern */
+  /** Shell controls */
   const openShell = (listEl) => listEl?.parentElement?.classList.add("is-open");
   const closeShell = (listEl) => listEl?.parentElement?.classList.remove("is-open");
   const checkAutoClose = (listEl) => {
     if (listEl && !listEl.querySelector("li")) closeShell(listEl);
   };
 
-  /** Icon-Button */
+  /** Icon button helper */
   const makeIconButton = (pathData, title) => {
     const btn = el("button", "at-subtask-action-btn");
     btn.type = "button";
@@ -213,7 +213,7 @@
     return btn;
   };
 
-  /** Subtask-Item bauen */
+  /** Create a subtask list item */
   const createSubtaskItem = (text, list) => {
     const li = el("li", "at-subtask-item");
     li.dataset.text = text;
@@ -236,7 +236,7 @@
     return li;
   };
 
-  /** Subtask anhängen */
+  /** Append a subtask to the list */
   const appendSubtask = (list, text) => {
     if (!text) return;
     const li = createSubtaskItem(text, list);
@@ -245,7 +245,7 @@
     li.parentElement?.scrollTo({ top: li.parentElement.scrollHeight, behavior: "smooth" });
   };
 
-  /** Editiermodus */
+  /** Enter edit mode for a subtask item */
   const enterEditMode = (li) => {
     const span = li.querySelector(".at-subtask-text");
     if (!span) return;
@@ -269,7 +269,7 @@
     input.addEventListener("blur", () => finish(true));
   };
 
-  /** Subtask-Composer init */
+  /** Initialize subtask composer */
   const initSubtaskComposer = (container) => {
     const input = q(container, "#subtask-input"),
       add = q(container, "#add-subtask-btn"),
@@ -304,7 +304,7 @@
     };
   };
 
-  /** Priority init */
+  /** Initialize priority control */
   const initPriority = (container) => {
     const urgent = q(container, ".btn-urgent"),
       medium = q(container, ".btn-medium"),
@@ -326,7 +326,7 @@
     };
   };
 
-  // Back-compat Aliases & Export
+  // Back-compat aliases & export
   const $ = q,
     showErr = showFieldError,
     clearErr = clearFieldError;

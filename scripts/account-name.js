@@ -2,7 +2,7 @@
   "use strict";
 
   /**
-   * Erstellt Initialen aus vollem Namen.
+   * Build initials from a full name.
    * @param {string} fullName
    * @returns {string}
    */
@@ -15,7 +15,7 @@
   }
 
   /**
-   * Liest Name/Gast-Status.
+   * Read name/guest state.
    * @returns {{name:string,isGuest:boolean,initials:string}}
    */
   function readState() {
@@ -25,14 +25,14 @@
     return { name, isGuest, initials: name && !isGuest ? getInitials(name) : "G" };
   }
 
-  /** Schreibt die Initialen in den Header-Badge. */
+  /** Write initials into the header badge. */
   function setAccountBadge() {
     const accountInner = document.querySelector(".account div");
     if (!accountInner) return;
     accountInner.textContent = readState().initials;
   }
 
-  /** Initialisiert Badge-Update inkl. storage-Event. */
+  /** Initialize badge updates incl. storage event. */
   function init() {
     setAccountBadge();
     window.addEventListener("storage", (e) => {

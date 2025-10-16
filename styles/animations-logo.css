@@ -38,3 +38,19 @@
         opacity: 1 !important;
     }
 }
+
+/* Splash fades out */
+#splash.is-fading { opacity: 0; transition: opacity 600ms ease; }
+
+/* Logo FLIP-ish animation handled in CSS */
+.header-logo.logo-anim {
+  animation: logoFlipIn 1400ms cubic-bezier(.2,.8,.2,1) both;
+  will-change: transform, opacity;
+}
+
+/* Feel free to tweak these keyframes for your layout */
+@keyframes logoFlipIn {
+  0%   { transform: translate(-12px, 8px) scale(1.25); opacity: 0; }
+  40%  { opacity: 1; }
+  100% { transform: none; opacity: 1; }
+}

@@ -20,7 +20,7 @@
     "awaiting feedback": "awaitFeedback",
   };
 
-  /** Liest Daten von Firebase oder via fetch. */
+  /** Read data from Firebase (if available) or via fetch. */
   /** @param {string} path @returns {Promise<any>} */
   const firebaseGetPath = (path) =>
     typeof window.firebaseGet === "function"
@@ -29,7 +29,7 @@
           .then((r) => r.json())
           .catch(() => null);
 
-  /** Normalisiert Spaltennamen. */
+  /** Normalize column names. */
   /** @param {string} rawColumn @returns {"toDoColumn"|"inProgress"|"awaitFeedback"|"done"|""} */
   const normalizeColumn = (rawColumn) => {
     const lowered = String(rawColumn || "")
@@ -44,7 +44,7 @@
     return "";
   };
 
-  /** Normalisiert Priorität. */
+  /** Normalize priority. */
   /** @param {string} rawPriority @returns {"urgent"|"medium"|"low"} */
   const normalizePriority = (rawPriority) => {
     const lowered = String(rawPriority || "").toLowerCase();
@@ -53,7 +53,7 @@
     return "medium";
   };
 
-  /** Parst Datumstext zu Date. */
+  /** Parse date text into a Date. */
   /** @param {string|Date|null} inputDate @returns {Date|null} */
   const parseDate = (inputDate) => {
     if (!inputDate) return null;
@@ -68,7 +68,7 @@
     return isNaN(d) ? null : d;
   };
 
-  /** Transformiert Rohdaten in kompakte Tasks. */
+  /** Transform raw data into compact task objects. */
   /** @param {any} rawData @returns {{id:string,column:string,priority:string,dueDate:Date|null}[]} */
   const parseAndNormalizeTasks = (rawData) => {
     const isObj = (x) => x && typeof x === "object" && !Array.isArray(x);
@@ -81,7 +81,7 @@
     }));
   };
 
-  /** Zählt Kennzahlen fürs Dashboard. */
+  /** Compute dashboard counters. */
   /** @param {ReturnType<parseAndNormalizeTasks>} tasks @returns {{total:number,todo:number,inProgress:number,awaitFeedback:number,done:number,urgent:number}} */
   const computeCounters = (tasks) => {
     const counters = { total: 0, todo: 0, inProgress: 0, awaitFeedback: 0, done: 0, urgent: 0 };
@@ -96,7 +96,7 @@
     return counters;
   };
 
-  /** Nächste künftige Fälligkeit. */
+  /** Next upcoming due date (formatted), or an em dash if none. */
   /** @param {ReturnType<parseAndNormalizeTasks>} tasks @returns {string} */
   const nextDeadline = (tasks) => {
     const today = new Date();
@@ -111,7 +111,7 @@
       : "—";
   };
 
-  /** Normalisiert Labeltext fürs DOM-Mapping. */
+  /** Normalize label text for DOM mapping. */
   /** @param {string} rawLabelHtml @returns {string} */
   const norm = (rawLabelHtml) =>
     String(rawLabelHtml || "")
@@ -121,7 +121,7 @@
       .replace(/\s+/g, " ")
       .trim();
 
-  /** Schreibt Zähler/Deadline ins DOM. */
+  /** Write counters/deadline into the DOM. */
   /** @param {ReturnType<computeCounters>} counters @param {ReturnType<parseAndNormalizeTasks>} tasks */
   const renderCounters = (counters, tasks) => {
     document.querySelectorAll(".js-count-container").forEach((box) => {
@@ -137,7 +137,7 @@
     if (deadline) deadline.textContent = nextDeadline(tasks);
   };
 
-  /** Rendert Begrüßung & Badge. */
+  /** Render greeting & profile badge. */
   /** @returns {void} */
   const renderGreeting = () => {
     const greet = document.querySelector(".js-greeting"),
@@ -163,11 +163,11 @@
     }
   };
 
-  /** Prüft Mobile-Breite. */
+  /** Check for mobile width. */
   /** @returns {boolean} */
   const isMobile = () => window.innerWidth <= 925;
 
-  /** Baut den Begrüßungs‑Splash. */
+  /** Build the greeting splash element. */
   /** @returns {HTMLElement} */
   const buildSplash = () => {
     let splash = document.getElementById("greetSplash");
@@ -184,7 +184,7 @@
     return splash;
   };
 
-  /** Zeigt & blendet den Splash aus. */
+  /** Show and then fade out the splash (mobile only). */
   /** @returns {void} */
   const showAndFadeSplash = () => {
     if (!isMobile()) return;
@@ -197,7 +197,7 @@
     }, 900);
   };
 
-  /** Liest & löscht Trigger, dann zeigt Splash. */
+  /** Read & clear the splash trigger, then show splash. */
   /** @returns {void} */
   const consumeTrigger = () => {
     const key = "summary.triggerSplash";
@@ -210,7 +210,7 @@
     }
   };
 
-  /** Initialisiert Splash‑Logik (DOMContentLoaded + storage). */
+  /** Initialize splash logic (DOMContentLoaded + storage). */
   /** @returns {void} */
   const initSplash = () => {
     const onReady = () => consumeTrigger();
@@ -221,7 +221,7 @@
     });
   };
 
-  /** Holt Tasks, berechnet Kennzahlen und rendert. */
+  /** Fetch tasks, compute counters, and render. */
   /** @returns {Promise<void>} */
   const fetchAndRender = async () => {
     try {
@@ -232,7 +232,7 @@
     } catch {}
   };
 
-  /** Startet Polling & refresht bei Tab‑Rückkehr. */
+  /** Start polling & refresh when returning to the tab. */
   /** @returns {void} */
   const startSummaryLoop = () => {
     document.addEventListener("visibilitychange", () => {

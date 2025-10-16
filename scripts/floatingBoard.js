@@ -34,12 +34,9 @@ async function deleteTaskFromFirebase() {
       throw new Error(`Error deleting task: ${response.statusText}`);
     }
     document.getElementById("toggleModalFloating").style.display = "none";
-    
-    
     if (typeof closeModalAndReload === 'function') {
       await closeModalAndReload();
     }
-    
   } catch (error) {
     console.error(error);
   }

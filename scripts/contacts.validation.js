@@ -5,26 +5,53 @@
 function validateEmailInput(input) {
   const email = input.value.trim();
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(de|com|net)$/;
-  let errorElement;
-  if (input.id === 'editContactEmail') {
-    errorElement = document.getElementById('editEmailError');
-  } else if (input.id === 'addInputEmail') {
-    errorElement = document.getElementById('addEmailError');
-  }
+  const errorElement = getEmailErrorElement(input.id);
   if (email && !emailPattern.test(email)) {
-    input.setCustomValidity('');
-    input.style.borderColor = '#ff0000';
-    if (errorElement) {
-      errorElement.textContent = '';
-      errorElement.classList.add('show');
-    }
+    showEmailError(input, errorElement);
   } else {
-    input.setCustomValidity('');
-    input.style.borderColor = '#ccc';
-    if (errorElement) {
-      errorElement.textContent = '';
-      errorElement.classList.remove('show');
-    }
+    clearEmailError(input, errorElement);
+  }
+}
+
+/**
+ * Get error element for email input.
+ * @param {string} inputId
+ * @returns {HTMLElement|null}
+ */
+function getEmailErrorElement(inputId) {
+  if (inputId === 'editContactEmail') {
+    return document.getElementById('editEmailError');
+  } else if (inputId === 'addInputEmail') {
+    return document.getElementById('addEmailError');
+  }
+  return null;
+}
+
+/**
+ * Show email validation error.
+ * @param {HTMLInputElement} input
+ * @param {HTMLElement|null} errorElement
+ */
+function showEmailError(input, errorElement) {
+  input.setCustomValidity('');
+  input.style.borderColor = '#ff0000';
+  if (errorElement) {
+    errorElement.textContent = '';
+    errorElement.classList.add('show');
+  }
+}
+
+/**
+ * Clear email validation error.
+ * @param {HTMLInputElement} input
+ * @param {HTMLElement|null} errorElement
+ */
+function clearEmailError(input, errorElement) {
+  input.setCustomValidity('');
+  input.style.borderColor = '#ccc';
+  if (errorElement) {
+    errorElement.textContent = '';
+    errorElement.classList.remove('show');
   }
 }
 

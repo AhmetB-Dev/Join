@@ -14,8 +14,11 @@ async function loadContacts(assignedUsers = []) {
   }
 }
 
-
-
+/**
+ * Create a set of lowercased assigned user names.
+ * @param {Array<{name:string}>} assignedUsers
+ * @returns {Set<string>}
+ */
 function createAssignedUserNamesSet(assignedUsers) {
   return new Set(assignedUsers.map(u => u.name.trim().toLowerCase()));
 }
@@ -51,26 +54,49 @@ function processContactEntry(id, contact, selectedContacts, assignedUserNames, b
   }
 }
 
+/**
+ * Check if a contact is in the assigned users set.
+ * @param {{name:string}} contact
+ * @param {Set<string>} assignedUserNames
+ * @returns {boolean}
+ */
 function isContactAssigned(contact, assignedUserNames) {
   const contactName = contact.name.trim().toLowerCase();
   return assignedUserNames.has(contactName);
 }
 
+/**
+ * Mark a contact entry as selected and create badge.
+ * @param {string} id
+ * @param {HTMLElement} item
+ * @param {{name:string,color?:string}} contact
+ * @param {Set<string>} selectedContacts
+ * @param {HTMLElement} badgesContainer
+ * @returns {void}
+ */
 function selectContactEntry(id, item, contact, selectedContacts, badgesContainer) {
   selectedContacts.add(id);
   item.classList.add('selected');
-  
   const checkbox = item.querySelector('.custom-checkbox');
   setCheckboxSelected(checkbox);
   createContactBadge(contact, id, badgesContainer, selectedContacts);
 }
 
+/**
+ * Set checkbox to selected state.
+ * @param {HTMLElement} checkbox
+ * @returns {void}
+ */
 function setCheckboxSelected(checkbox) {
   checkbox.src = "../img/checkboxchecked.png";
   checkbox.style.filter = "brightness(0) invert(1)";
 }
 
-
+/**
+ * Convert hex color to simple color name.
+ * @param {string} colorValue
+ * @returns {string}
+ */
 function getSimpleColor(colorValue) {
   if (colorValue.startsWith('#')) {
     switch (colorValue.toUpperCase()) {
@@ -101,12 +127,21 @@ function createDropdownItem(id, contact, selectedContacts, badgesContainer) {
   return item;
 }
 
+/**
+ * Create a dropdown item container element.
+ * @returns {HTMLElement}
+ */
 function createDropdownItemContainer() {
   const item = document.createElement("div");
   item.classList.add("dropdown-item");
   return item;
 }
 
+/**
+ * Generate HTML for a dropdown item.
+ * @param {{name:string}} contact
+ * @returns {string}
+ */
 function generateDropdownItemHTML(contact) {
   const initials = getInitials(contact.name);
   const avatarClass = getAvatarClass(contact.name);
@@ -152,6 +187,16 @@ function handleDropdownSelection(item, id, contact, selectedContacts, badgesCont
   }
 }
 
+/**
+ * Add a contact to the selection.
+ * @param {HTMLElement} item
+ * @param {string} id
+ * @param {{name:string,color?:string}} contact
+ * @param {Set<string>} selectedContacts
+ * @param {HTMLElement} badgesContainer
+ * @param {HTMLElement} checkbox
+ * @returns {void}
+ */
 function addDropdownSelection(item, id, contact, selectedContacts, badgesContainer, checkbox) {
   selectedContacts.add(id);
   item.classList.add('selected');
@@ -160,6 +205,15 @@ function addDropdownSelection(item, id, contact, selectedContacts, badgesContain
   createContactBadge(contact, id, badgesContainer, selectedContacts);
 }
 
+/**
+ * Remove a contact from the selection.
+ * @param {HTMLElement} item
+ * @param {string} id
+ * @param {Set<string>} selectedContacts
+ * @param {HTMLElement} badgesContainer
+ * @param {HTMLElement} checkbox
+ * @returns {void}
+ */
 function removeDropdownSelection(item, id, selectedContacts, badgesContainer, checkbox) {
   selectedContacts.delete(id);
   item.classList.remove('selected');
@@ -171,12 +225,24 @@ function removeDropdownSelection(item, id, selectedContacts, badgesContainer, ch
   }
 }
 
+/**
+ * Build a badge element with given class.
+ * @param {string} badgeClass
+ * @returns {HTMLElement}
+ */
 function buildBadgeElement(badgeClass) {
   const badge = document.createElement('div');
   badge.className = `assignee-badge ${badgeClass}`;
   return badge;
 }
 
+/**
+ * Set data attributes and content for a badge.
+ * @param {HTMLElement} badge
+ * @param {{name:string,color?:string}} contact
+ * @param {string} id
+ * @returns {void}
+ */
 function setBadgeData(badge, contact, id) {
   badge.dataset.contactId = id;
   badge.dataset.contactName = contact.name;
@@ -184,6 +250,13 @@ function setBadgeData(badge, contact, id) {
   badge.textContent = getInitials(contact.name);
 }
 
+/**
+ * Attach click listener to badge for removal.
+ * @param {HTMLElement} badge
+ * @param {Set<string>} selectedContacts
+ * @param {string} id
+ * @returns {void}
+ */
 function attachBadgeClickListener(badge, selectedContacts, id) {
   badge.addEventListener('click', () => {
     badge.remove();
@@ -214,27 +287,33 @@ function attachBadgeClickListener(badge, selectedContacts, id) {
  */
 function createContactBadge(contact, id, container, selectedContacts) {
   if (isDuplicateBadge(container, id, contact.name)) return;
-  
   const badgeClass = getBadgeClassFromColor(contact.color);
   const badge = buildBadgeElement(badgeClass);
-  
-  setupBadgeData(badge, contact, id);
+  setBadgeData(badge, contact, id);
   attachBadgeClickListener(badge, selectedContacts, id);
   container.appendChild(badge);
 }
 
+/**
+ * Check if a badge already exists in the container.
+ * @param {HTMLElement} container
+ * @param {string} id
+ * @param {string} contactName
+ * @returns {boolean}
+ */
 function isDuplicateBadge(container, id, contactName) {
   return container.querySelector(`[data-contact-id="${id}"]`) ||
          container.querySelector(`[data-contact-name="${contactName}"]`);
 }
 
+/**
+ * Get badge CSS class from color value.
+ * @param {string} color
+ * @returns {string}
+ */
 function getBadgeClassFromColor(color) {
   const simpleColor = getSimpleColor(color || "default");
   return getBadgeClassFromAnyColor(simpleColor);
-}
-
-function setupBadgeData(badge, contact, id) {
-  setBadgeData(badge, contact, id);
 }
 
 /**
@@ -245,15 +324,14 @@ function readAssigneesFromBadges() {
   const badges = document.querySelectorAll('#assigneeBadges .assignee-badge');
   const users = [];
   const seen = new Set();
-  
   badges.forEach(badge => {
+    if (badge.classList.contains('assigned-more-badge')) return;
     const user = extractUserFromBadge(badge);
     if (user && !seen.has(user.name)) {
       seen.add(user.name);
       users.push(user);
     }
   });
-  
   return users;
 }
 
@@ -265,13 +343,16 @@ function readAssigneesFromBadges() {
 function extractUserFromBadge(badge) {
   const userName = badge.dataset.contactName || badge.textContent.trim();
   if (!userName) return null;
-  
   return {
     name: userName,
     color: badge.dataset.contactColor || "default"
   };
 }
 
+/**
+ * Get the currently selected priority.
+ * @returns {string}
+ */
 function getSelectedPriority() {
   if (document.querySelector('.edit-priority-urgent.active')) return 'urgent';
   if (document.querySelector('.edit-priority-medium.active')) return 'medium';
@@ -279,6 +360,11 @@ function getSelectedPriority() {
   return 'medium';
 }
 
+/**
+ * Get priority icon path from priority value.
+ * @param {string} priority
+ * @returns {string}
+ */
 function getPriorityPath(priority) {
   switch (priority) {
     case 'urgent': return '../img/priority-img/urgent.png';
@@ -295,14 +381,12 @@ function getPriorityPath(priority) {
 function readSubtasksFromEditModal() {
   const subtaskItems = document.querySelectorAll('#editSubtasksList .subtask-item');
   const subtasks = [];
-  
   subtaskItems.forEach(item => {
     const subtask = extractSubtaskFromItem(item);
     if (subtask) {
       subtasks.push(subtask);
     }
   });
-  
   return subtasks;
 }
 
@@ -314,9 +398,7 @@ function readSubtasksFromEditModal() {
 function extractSubtaskFromItem(item) {
   const checkbox = item.querySelector('.subtask-edit-checkbox');
   const span = item.querySelector('span');
-  
   if (!span) return null;
-  
   return {
     text: span.innerText.replace('• ', '').trim(),
     completed: checkbox ? checkbox.checked : false

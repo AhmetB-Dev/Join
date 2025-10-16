@@ -2,7 +2,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    width: 84%;
+    width: 78%;
     flex-direction: column;
     max-width: 1000px;
 }
@@ -16,6 +16,8 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    position: relative;
+    z-index: 2001;
 }
 
 .close-modal-div-x img {
@@ -24,6 +26,7 @@
     width: 16px;
     height: 16px;
     cursor: pointer;
+    pointer-events: auto;
 }   
 
 .close-modal-div-x img:hover {

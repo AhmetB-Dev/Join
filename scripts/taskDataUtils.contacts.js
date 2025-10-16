@@ -1,9 +1,4 @@
 /**
- * Contact management utilities for assignee dropdown in edit modal.
- * Handles loading, displaying, and selecting contacts/assignees.
- */
-
-/**
  * Load contacts from Firebase or fallback to local/sample.
  * @param {Array} assignedUsers
  */
@@ -165,8 +160,6 @@ function selectContactItem(item, id, contact, selectedContacts, badgesContainer)
   createContactBadge(contact, id, badgesContainer, selectedContacts);
 }
 
-
-
 /**
  * Create dropdown item for a contact.
  * @param {string} id
@@ -242,15 +235,6 @@ function handleDropdownSelection(item, id, contact, selectedContacts, badgesCont
   }
 }
 
-/**
- * Add contact selection.
- * @param {HTMLElement} item
- * @param {string} id
- * @param {Object} contact
- * @param {Set} selectedContacts
- * @param {HTMLElement} badgesContainer
- * @param {HTMLElement} checkbox
- */
 function addDropdownSelection(item, id, contact, selectedContacts, badgesContainer, checkbox) {
   selectedContacts.add(id);
   item.classList.add('selected');
@@ -276,7 +260,6 @@ function removeDropdownSelection(item, id, selectedContacts, badgesContainer, ch
   if (badge) badge.remove();
 }
 
-
 /**
  * Create contact badge with click handler.
  * @param {Object} contact
@@ -290,6 +273,7 @@ function createContactBadge(contact, id, container, selectedContacts) {
   const badge = buildContactBadgeElement(contact, id);
   attachBadgeClickHandler(badge, contact, id, selectedContacts);
   container.appendChild(badge);
+  updateBadgeVisibility(container);
 }
 
 /**
@@ -318,9 +302,11 @@ function buildContactBadgeElement(contact, id) {
  */
 function attachBadgeClickHandler(badge, contact, id, selectedContacts) {
   badge.addEventListener('click', () => {
+    const container = badge.parentElement;
     badge.remove();
     selectedContacts.delete(id);
     deselectDropdownItem(contact);
+    if (container) updateBadgeVisibility(container);
   });
 }
 
@@ -346,7 +332,8 @@ function deselectDropdownItem(contact) {
  */
 function findDropdownItemByName(dropdownList, contactName) {
   return Array.from(dropdownList.querySelectorAll('.dropdown-item')).find(item => {
-    return item.querySelector('.custom-checkbox')?.closest('.dropdown-item')?.querySelector('.contact-name')?.textContent === contactName;
+    const nameElement = item.querySelector('.contact-name-edit') || item.querySelector('.contact-name');
+    return nameElement && nameElement.textContent.trim() === contactName.trim();
   });
 }
 
@@ -364,6 +351,32 @@ function updateDropdownCheckbox(item, checked) {
 }
 
 /**
+ * Update badge visibility: show max 5, hide rest, show +N badge.
+ * @param {HTMLElement} container
+ * @returns {void}
+ */
+function updateBadgeVisibility(container) {
+  const allBadges = Array.from(container.querySelectorAll('.assignee-badge:not(.assigned-more-badge)'));
+  const maxVisible = 5;
+  let moreBadge = container.querySelector('.assigned-more-badge');
+  allBadges.forEach((badge, index) => {
+    badge.style.display = index < maxVisible ? '' : 'none';
+  });
+  const hiddenCount = Math.max(0, allBadges.length - maxVisible);
+  if (hiddenCount > 0) {
+    if (!moreBadge) {
+      moreBadge = document.createElement('div');
+      moreBadge.className = 'assignee-badge avatar-contact-circle profile-badge-343D63 assigned-more-badge';
+      container.appendChild(moreBadge);
+    }
+    moreBadge.textContent = `+${hiddenCount}`;
+    moreBadge.style.display = '';
+  } else if (moreBadge) {
+    moreBadge.remove();
+  }
+}
+
+/**
  * Read assignees from badges.
  * @returns {Array<{name:string}>}
  */
@@ -372,6 +385,7 @@ function readAssigneesFromBadges() {
   const users = [];
   const seen = new Set();
   badges.forEach(badge => {
+    if (badge.classList.contains('assigned-more-badge')) return;
     const userName = badge.dataset.contactName || badge.textContent.trim();
     if (!seen.has(userName) && userName) {
       seen.add(userName);

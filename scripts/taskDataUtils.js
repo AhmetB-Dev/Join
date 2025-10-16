@@ -119,13 +119,13 @@ function generateTasks(tasksData) {
  */
 function readSubtasksFromEditModal() {
   const subtaskItems = document.querySelectorAll('#editSubtasksList .subtask-item');
-  const currentSubtasks = normalizeCurrentSubtasks();
   const subtasks = [];
   subtaskItems.forEach((item, index) => {
     const span = item.querySelector('span');
+    const checkbox = item.querySelector('.subtask-edit-checkbox');
     if (span) {
       const text = span.innerText.replace(/^(•|â€¢)\s*/, '').trim();
-      const completed = currentSubtasks?.[index]?.completed || false;
+      const completed = checkbox ? checkbox.checked : false;
       subtasks.push({ text, completed });
     }
   });
@@ -167,4 +167,55 @@ function getPriorityPath(priority) {
     case 'low': return '../img/priority-img/low.png';
     default: return '../img/priority-img/medium.png';
   }
+}
+
+/**
+ * Remove duplicate users from array based on name.
+ * @param {Array} users
+ * @returns {Array}
+ */
+function removeDuplicateUsers(users) {
+  if (!Array.isArray(users)) return [];
+  const seen = new Set();
+  return users.filter(user => {
+    const identifier = user.name || JSON.stringify(user);
+    if (seen.has(identifier)) return false;
+    seen.add(identifier);
+    return true;
+  });
+}
+
+/**
+ * Detect if current device supports touch.
+ * @returns {boolean}
+ */
+function isTouchDevice() {
+  return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+}
+
+/**
+ * Get priority label from icon path.
+ * @param {string} iconPath
+ * @returns {string}
+ */
+function getPriorityLabel(iconPath) {
+  if (!iconPath) return "Unknown";
+  if (iconPath.includes("urgent")) return "Urgent";
+  if (iconPath.includes("medium")) return "Medium";
+  if (iconPath.includes("low")) return "Low";
+  return "Unknown";
+}
+
+/**
+ * Extract priority from icon path.
+ * @param {string} iconPath
+ * @returns {string}
+ */
+function extractPriority(iconPath) {
+  if (!iconPath) return 'medium';
+  const lower = iconPath.toLowerCase();
+  if (lower.includes('urgent')) return 'urgent';
+  if (lower.includes('medium')) return 'medium';
+  if (lower.includes('low')) return 'low';
+  return 'medium';
 }

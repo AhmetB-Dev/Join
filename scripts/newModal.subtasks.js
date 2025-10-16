@@ -11,6 +11,7 @@ function setSubtasksList(task) {
     const item = createEditModalSubtaskItem(subtask, index);
     list.appendChild(item);
   });
+  setupEditDeleteDelegation(list);
 }
 
 /**
@@ -33,10 +34,8 @@ function normalizeSubtasks(subtasks) {
  * Try to extract a plain string from various subtask shapes, including nested {text:{text:...}}.
  */
 function extractSubtaskText(value) {
-  // Direct string
   if (typeof value === 'string') return value;
   let t = value;
-  // Follow nested .text up to a few levels
   for (let i = 0; i < 3 && t && typeof t === 'object'; i++) {
     if (typeof t.text !== 'undefined') {
       t = t.text;
@@ -46,7 +45,6 @@ function extractSubtaskText(value) {
     break;
   }
   if (typeof t === 'string') return t;
-  // Last resort: avoid [object Object]
   return '';
 }
 
@@ -99,10 +97,12 @@ function createSubtaskCheckbox(subtask, index) {
 
 /**
  * Create span for subtask text.
+ * @param {{text:string}} subtask
+ * @returns {HTMLElement}
  */
 function createSubtaskSpan(subtask) {
   const span = document.createElement('span');
-  const txt = extractSubtaskText(subtask);
+  const txt = typeof subtask === 'string' ? subtask : (subtask.text || '');
   span.textContent = `• ${txt}`;
   span.style.flex = '1';
   return span;
@@ -122,13 +122,10 @@ function createSubtaskActions(subtask, item, span) {
   return div;
 }
 
-/**
- * Wire up edit click to inline input.
- */
 function setupSubtaskEditAction(div, subtask, item, span) {
   const editIcon = div.querySelector('.subtask-edit-edit');
   editIcon.addEventListener('click', () => {
-    const input = createEditInput(extractSubtaskText(subtask));
+    const input = createSubtaskInlineEditInput(extractSubtaskText(subtask));
     item.replaceChild(input, span);
     input.focus();
     setupEditInputHandlers(input, subtask, span, item);
@@ -138,7 +135,7 @@ function setupSubtaskEditAction(div, subtask, item, span) {
 /**
  * Basic text input for subtask inline edit.
  */
-function createEditInput(text) {
+function createSubtaskInlineEditInput(text) {
   const input = document.createElement('input');
   input.type = 'text';
   input.value = text;
@@ -186,9 +183,6 @@ function removeSubtaskFromCurrentTask(item) {
 
 /**
  * Persist subtask completion and progress to Firebase.
- * @param {string} taskId
- * @param {number} subtaskIndex
- * @param {boolean} newStatus
  */
 async function updateSubtaskStatusInFirebase(taskId, subtaskIndex, newStatus) {
   try {
@@ -220,6 +214,7 @@ function initSubtaskCreation() {
     addNewSubtask(text, list);
     input.value = '';
   });
+  setupEditDeleteDelegation(list);
 }
 
 /**
@@ -241,9 +236,6 @@ function normalizeCurrentTaskSubtasks() {
   else if (!Array.isArray(window.currentTask.subtasks)) window.currentTask.subtasks = Object.values(window.currentTask.subtasks);
 }
 
-/**
- * Create DOM for newly added subtask row.
- */
 function createNewSubtaskElement(text, subtaskObj, list) {
   const el = createEditModalSubtaskContainer();
   const checkbox = createNewSubtaskCheckbox();
@@ -280,9 +272,6 @@ function createNewSubtaskActions(subtaskObj, el, span, list) {
   return div;
 }
 
-/**
- * Edit handler for newly added subtask row.
- */
 function setupNewSubtaskEditAction(div, subtaskObj, el, span) {
   const editIcon = div.querySelector('.subtask-edit-edit');
   editIcon.addEventListener('click', () => {
@@ -293,9 +282,6 @@ function setupNewSubtaskEditAction(div, subtaskObj, el, span) {
   });
 }
 
-/**
- * Delete handler for newly added subtask row.
- */
 function setupNewSubtaskDeleteAction(div, el, list) {
   const deleteIcon = div.querySelector('.subtask-delete-edit');
   deleteIcon.addEventListener('click', () => {
@@ -304,11 +290,111 @@ function setupNewSubtaskDeleteAction(div, el, list) {
   });
 }
 
-/**
- * Remove newly added subtask from currentTask based on DOM index.
- */
 function removeNewSubtaskFromCurrentTask(el, list) {
   if (!window.currentTask || !window.currentTask.subtasks) return;
   const idx = Array.from(list.children).indexOf(el);
   if (idx !== -1) window.currentTask.subtasks.splice(idx, 1);
+}
+
+/**
+ * Delegate clicks on edit/delete icons within the subtasks list.
+ * @param {HTMLElement|null} list
+ * @returns {void}
+ */
+function setupEditDeleteDelegation(list) {
+  if (!list || list.__delegated) return;
+  list.addEventListener('click', (e) => {
+    handleSubtaskIconClick(e);
+  });
+  list.__delegated = true;
+}
+
+/**
+ * Handle click on subtask edit/delete icons.
+ * @param {Event} e
+ * @returns {void}
+ */
+function handleSubtaskIconClick(e) {
+  const editIcon = e.target.closest?.('.subtask-edit-edit');
+  const deleteIcon = e.target.closest?.('.subtask-delete-edit');
+  if (!editIcon && !deleteIcon) return;
+  const item = e.target.closest('.subtask-item');
+  if (!item) return;
+  if (deleteIcon) {
+    handleSubtaskDelete(item);
+  } else if (editIcon) {
+    handleSubtaskEdit(item);
+  }
+}
+
+function handleSubtaskDelete(item) {
+  item.remove();
+  removeSubtaskFromCurrentTask(item);
+}
+
+/**
+ * Handle subtask edit action.
+ * @param {HTMLElement} item
+ * @returns {void}
+ */
+function handleSubtaskEdit(item) {
+  const span = item.querySelector('span');
+  const current = (span?.textContent || '').replace(/^•\s*/, '');
+  const input = createSubtaskInlineEditInput(current);
+  item.replaceChild(input, span);
+  input.focus();
+  attachSubtaskEditInputHandlers(input, item, current);
+}
+
+/**
+ * Attach blur and keypress handlers to subtask edit input.
+ * @param {HTMLElement} input
+ * @param {HTMLElement} item
+ * @param {string} current
+ * @returns {void}
+ */
+function attachSubtaskEditInputHandlers(input, item, current) {
+  input.addEventListener('blur', () => {
+    saveSubtaskEditAndReplace(input, item, current);
+  });
+  input.addEventListener('keypress', (ev) => {
+    if (ev.key === 'Enter') input.blur();
+  });
+}
+
+/**
+ * Save subtask edit and replace input with span.
+ * @param {HTMLElement} input
+ * @param {HTMLElement} item
+ * @param {string} current
+ * @returns {void}
+ */
+function saveSubtaskEditAndReplace(input, item, current) {
+  const newText = input.value.trim() || current;
+  updateSubtaskTextInCurrentTask(item, newText);
+  const newSpan = createSubtaskSpanForDelegation(newText);
+  item.replaceChild(newSpan, input);
+}
+
+/**
+ * Update subtask text in currentTask by item index.
+ */
+function updateSubtaskTextInCurrentTask(item, newText) {
+  const listEl = document.getElementById('editSubtasksList');
+  const idx = listEl ? Array.from(listEl.children).indexOf(item) : -1;
+  if (idx !== -1 && window.currentTask && Array.isArray(window.currentTask.subtasks)) {
+    window.currentTask.subtasks[idx].text = newText;
+  }
+}
+
+/**
+ * Create a subtask span element with text for delegation handler.
+ * @param {string} text
+ * @returns {HTMLElement}
+ */
+function createSubtaskSpanForDelegation(text) {
+  const span = document.createElement('span');
+  span.textContent = `• ${text}`;
+  span.style.flex = '1';
+  return span;
 }

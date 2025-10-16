@@ -1,92 +1,152 @@
 /**
- * Befüllt das Edit-Modal mit Task-Daten und bindet benötigte UIs.
+ * Fills the Edit-Modal with task data and binds required UIs.
  * @param {{title?:string,description?:string,dueDate?:string,priority?:string,category?:string,users?:Array,subtasks?:any}} task
  */
 function fillEditModal(task) {
-  if (task.subtasks && !Array.isArray(task.subtasks) && typeof task.subtasks === 'object') {
-  }
-
-/** Debug-only: logs any DOM mutations inside #editSubtasksList to find conflicting renderers */
-function setupSubtasksListDebugObserver() {
-  const list = document.getElementById('editSubtasksList');
-  if (!list || list.__observerAttached) return;
-  try {
-    const obs = new MutationObserver(muts => {
-      muts.forEach(m => {
-        if (m.type === 'childList') {
-          m.addedNodes.forEach(n => {
-            if (n.nodeType === 1) {
-              if (n.classList && n.classList.contains('added-subtasks')) {
-                const hasCheckbox = n.querySelector('.subtask-edit-checkbox');
-                if (!hasCheckbox) {
-                  n.remove();
-                } else {
-                  n.classList.remove('added-subtasks');
-                }
-              }
-            }
-          });
-        }
-      });
-    });
-    obs.observe(list, { childList: true, subtree: true, characterData: true });
-    list.__observerAttached = true;
-  } catch (e) {
-    console.error('[EditModal][Observer] attach error:', e);
-  }
-}
-/**
- * Re-sanitize the subtasks list in the edit modal. If any span text is "[object Object]"
- * or legacy nodes like '.added-subtasks' are present, rebuild the list from currentTask.subtasks.
- */
-function sanitizeSubtasksList() {
-  try {
-    const list = document.getElementById('editSubtasksList');
-    if (!list) return;
-    list.querySelectorAll('.added-subtasks').forEach(node => node.remove());
-    const validItems = list.querySelectorAll('.subtask-item:not(.added-subtasks)');
-    const hasBadSpan = Array.from(validItems).some(item => {
-      const span = item.querySelector('span');
-      return span && (span.textContent || '').includes('[object Object]');
-    });
-    if (validItems.length === 0 || hasBadSpan) {
-      if (window.currentTask && window.currentTask.subtasks) {
-        const task = { ...window.currentTask };
-        if (!Array.isArray(task.subtasks) && typeof task.subtasks === 'object') {
-          task.subtasks = Object.values(task.subtasks);
-        }
-        list.innerHTML = '';
-        try { 
-          setSubtasksList(task);
-        } catch (e) { 
-          console.error('[EditModal][Sanitize] setSubtasksList failed:', e); 
-        }
-      }
-    }
-  } catch (e) {
-    console.error('[EditModal][Sanitize] error:', e);
-  }
-}
-  
   setTaskFields(task);
   setAssigneeBadges(task);
   setupSubtasksListDebugObserver();
-  
   try {
     setSubtasksList(task);
   } catch (e) {
     console.error('[EditModal] setSubtasksList error:', e);
   }
-   setTimeout(sanitizeSubtasksList, 100);
+  setTimeout(sanitizeSubtasksList, 100);
+  if (typeof initTaskDataModal === 'function') {
+    initTaskDataModal();
+  }
   loadContacts(task.users || []);
   if (typeof ensureAssigneeDropdownBinding === 'function') {
     ensureAssigneeDropdownBinding(task.users || []);
   }
 }
 
+/**
+ * Debug-only: logs any DOM mutations inside #editSubtasksList to find conflicting renderers.
+ * @returns {void}
+ */
+function setupSubtasksListDebugObserver() {
+  const list = document.getElementById('editSubtasksList');
+  if (!list || list.__observerAttached) return;
+  try {
+    const obs = createSubtasksListObserver();
+    obs.observe(list, { childList: true, subtree: true, characterData: true });
+    list.__observerAttached = true;
+  } catch (e) {
+    console.error('[EditModal][Observer] attach error:', e);
+  }
+}
 
 /**
- * Setzt Formularfelder des Edit-Modals aus Taskdaten.
+ * Create MutationObserver for subtasks list.
+ * @returns {MutationObserver}
+ */
+function createSubtasksListObserver() {
+  return new MutationObserver(muts => {
+    muts.forEach(m => {
+      if (m.type === 'childList') {
+        processAddedNodes(m.addedNodes);
+      }
+    });
+  });
+}
+
+/**
+ * Process added nodes in mutation.
+ * @param {NodeList} addedNodes
+ * @returns {void}
+ */
+function processAddedNodes(addedNodes) {
+  addedNodes.forEach(n => {
+    if (n.nodeType === 1 && n.classList && n.classList.contains('added-subtasks')) {
+      handleAddedSubtaskNode(n);
+    }
+  });
+}
+
+/**
+ * Handle added subtask node validation.
+ * @param {HTMLElement} node
+ * @returns {void}
+ */
+function handleAddedSubtaskNode(node) {
+  const hasCheckbox = node.querySelector('.subtask-edit-checkbox');
+  if (!hasCheckbox) {
+    node.remove();
+  } else {
+    node.classList.remove('added-subtasks');
+  }
+}
+/**
+ * Re-sanitize the subtasks list in the edit modal.
+ * @returns {void}
+ */
+function sanitizeSubtasksList() {
+  try {
+    const list = document.getElementById('editSubtasksList');
+    if (!list) return;
+    removeLegacySubtaskNodes(list);
+    const validItems = list.querySelectorAll('.subtask-item:not(.added-subtasks)');
+    if (shouldRebuildSubtasksList(validItems)) {
+      rebuildSubtasksList(list);
+    }
+  } catch (e) {
+    console.error('[EditModal][Sanitize] error:', e);
+  }
+}
+
+/**
+ * Remove legacy subtask nodes.
+ * @param {HTMLElement} list
+ * @returns {void}
+ */
+function removeLegacySubtaskNodes(list) {
+  list.querySelectorAll('.added-subtasks').forEach(node => node.remove());
+}
+
+/**
+ * Check if subtasks list should be rebuilt.
+ * @param {NodeList} validItems
+ * @returns {boolean}
+ */
+function shouldRebuildSubtasksList(validItems) {
+  if (validItems.length === 0) return true;
+  return Array.from(validItems).some(item => {
+    const span = item.querySelector('span');
+    return span && (span.textContent || '').includes('[object Object]');
+  });
+}
+
+/**
+ * Rebuild subtasks list from currentTask.
+ * @param {HTMLElement} list
+ * @returns {void}
+ */
+function rebuildSubtasksList(list) {
+  if (!window.currentTask || !window.currentTask.subtasks) return;
+  const task = normalizeTaskSubtasks();
+  list.innerHTML = '';
+  try {
+    setSubtasksList(task);
+  } catch (e) {
+    console.error('[EditModal][Sanitize] setSubtasksList failed:', e);
+  }
+}
+
+/**
+ * Normalize task subtasks to array.
+ * @returns {Object}
+ */
+function normalizeTaskSubtasks() {
+  const task = { ...window.currentTask };
+  if (!Array.isArray(task.subtasks) && typeof task.subtasks === 'object') {
+    task.subtasks = Object.values(task.subtasks);
+  }
+  return task;
+}
+
+/**
+ * Sets form fields of the Edit-Modal from task data.
  * @param {any} task
  */
 function setTaskFields(task) {
@@ -104,9 +164,8 @@ function setTaskFields(task) {
   }
 }
 
-
 /**
- * Erzeugt HTML für einen Assignee-Badge.
+ * Creates HTML for an Assignee-Badge.
  * @param {{name:string,initials?:string}} user
  * @returns {string}
  */
@@ -121,21 +180,30 @@ function createBadgeHTML(user) {
 }
 
 /**
- * Rendert Assignee-Badges in der Edit-Ansicht.
+ * Renders Assignee-Badges in the Edit view.
  * @param {{users?:Array<{name:string}>}} task
  */
 function setAssigneeBadges(task) {
   const badges = document.getElementById('assigneeBadges');
   if (badges && task.users && task.users.length > 0) {
     const uniqueUsers = removeDuplicateUsers(task.users);
-    badges.innerHTML = uniqueUsers.map(createBadgeHTML).join("");
+    const maxVisible = 5;
+    if (uniqueUsers.length <= maxVisible) {
+      badges.innerHTML = uniqueUsers.map(createBadgeHTML).join("");
+    } else {
+      const shown = uniqueUsers.slice(0, maxVisible);
+      const hiddenCount = uniqueUsers.length - maxVisible;
+      let html = shown.map(createBadgeHTML).join("");
+      html += `<div class="assignee-badge avatar-contact-circle profile-badge-floating-default assigned-more-badge">+${hiddenCount}</div>`;
+      badges.innerHTML = html;
+    }
   } else {
     badges.innerHTML = "";
   }
 }
 
 /**
- * Entfernt doppelte Nutzer anhand des Namens.
+ * Removes duplicate users by name.
  * @param {Array<any>} users
  * @returns {Array<any>}
  */
@@ -155,11 +223,8 @@ function removeDuplicateUsers(users) {
   });
 }
 
-/** Subtask-Logik und -Helfer sind in newModal.subtasks.js ausgelagert */
-/** Dropdown-Handler ist in newModal.dropdown.js ausgelagert */
-
 /**
- * Extrahiert die Priorität (urgent|medium|low) aus einem Pfad/String.
+ * Extracts the priority (urgent|medium|low) from a path/string.
  * @param {string} priorityPath
  * @returns {('urgent'|'medium'|'low')}
  */
@@ -172,7 +237,7 @@ function extractPriority(priorityPath) {
 }
 
 /**
- * Aktiviert visuell die ausgewählte Priorität im Edit-Modal.
+ * Visually activates the selected priority in the Edit-Modal.
  * @param {('urgent'|'medium'|'low')} priority
  */
 function setEditPriority(priority) {
@@ -196,7 +261,7 @@ function setEditPriority(priority) {
 }
 
 /**
- * Speichert den aktuell bearbeiteten Task in Firebase und schließt das Modal.
+ * Saves the currently edited task to Firebase and closes the modal.
  */
 async function saveEditedTaskToFirebase() {
   if (!currentTask) return;
@@ -210,7 +275,7 @@ async function saveEditedTaskToFirebase() {
 }
 
 /**
- * Übernimmt die Eingaben aus dem Edit-Formular in currentTask.
+ * Takes the inputs from the Edit form into currentTask.
  */
 function updateTaskFromInputs() {
   currentTask.title = document.getElementById('editTaskTitle').value.trim() || currentTask.title;
@@ -227,7 +292,7 @@ function updateTaskFromInputs() {
 }
 
 /**
- * Aktualisiert einen Task in Firebase via PUT.
+ * Updates a task in Firebase via PUT.
  * @param {{firebaseKey?:string}} task
  */
 async function updateTaskInFirebase(task) {
@@ -245,7 +310,7 @@ async function updateTaskInFirebase(task) {
 }
 
 /**
- * Schließt das Edit-Modal (optional Event-bubbling stoppen).
+ * Closes the Edit-Modal (optionally stop event bubbling).
  */
 function closeEditModal(event) {
   if (event) event.stopPropagation();
@@ -254,7 +319,7 @@ function closeEditModal(event) {
 }
 
 /**
- * Schließt das Task-Overlay und aktualisiert ggf. die Task-Karte.
+ * Closes the Task-Overlay and updates the task card if necessary.
  */
 function closeTaskOverlay(event) {
   if (event) event.stopPropagation();
@@ -267,9 +332,8 @@ function closeTaskOverlay(event) {
   }
 }
 
-
 /**
- * Mappt beliebige Farbwerte auf Badge-Classes.
+ * Maps arbitrary color values to Badge-Classes.
  * @param {string} colorValue
  * @returns {string}
  */
@@ -293,7 +357,7 @@ function getBadgeClassFromAnyColor(colorValue) {
 }
 
 /**
- * Öffnet das Edit-Modal aus dem Overlay heraus und lädt ggf. frische Daten.
+ * Opens the Edit-Modal from the overlay and loads fresh data if necessary.
  */
 async function editTaskFromOverlay(event) {
   event.stopPropagation();
@@ -320,11 +384,12 @@ async function editTaskFromOverlay(event) {
   document.getElementById('toggleModalFloating').style.display = 'none';
   const modal = document.getElementById('editTaskModal');
   if (modal) modal.style.display = 'flex';
+  if (typeof initTaskDataModal === 'function') {
+    initTaskDataModal();
+  }
 }
 
-/** Subtask-Initialisierung sowie New-Subtask-Helfer sind in newModal.subtasks.js ausgelagert */
-
-
+/** Subtask initialization and New-Subtask helpers are outsourced to newModal.subtasks.js */
 function initEditModal() {
   document.getElementById('confirmEditBtn')?.addEventListener('click', saveEditedTaskToFirebase);
   initSubtaskCreation();

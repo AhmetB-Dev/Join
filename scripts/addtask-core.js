@@ -1,12 +1,12 @@
 (() => {
   "use strict";
-  /** Firebase Endpunkte. */
+  /** Firebase endpoints. */
   const FIREBASE_BASE_URL = "https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app";
   const FIREBASE_TASKS_URL = `${FIREBASE_BASE_URL}/tasks.json`;
   const FIREBASE_CONTACTS_URL = `${FIREBASE_BASE_URL}/contacts.json`;
 
   /**
-   * Initialen aus Namen.
+   * Initials from a full name.
    * @param {string} fullName
    * @returns {string}
    */
@@ -18,11 +18,11 @@
     return (p[0][0] + (p[1] ? p[p.length - 1][0] : p[0][1] || "")).toUpperCase();
   };
 
-  /** Farbindex 1..7 aus Name. */
+  /** Color index 1..7 derived from a name. */
   const colorIdx = (name) =>
     (Array.from(String(name || "")).reduce((a, c) => a + c.charCodeAt(0), 0) % 7) + 1;
 
-  /** Aktueller Benutzer (lowercase) aus Storage. */
+  /** Current user (lowercased) read from storage. */
   const currentUserLower = () =>
     (
       localStorage.getItem("name") ||
@@ -33,7 +33,7 @@
       .trim()
       .toLowerCase();
 
-  /** Kategorie-Label normalisieren → Anzeige-Labels. */
+  /** Normalize category label → display labels. */
   const normCategory = (raw) => {
     const v = String(raw || "")
       .trim()
@@ -43,7 +43,7 @@
     return "Technical task";
   };
 
-  /** Kontakte holen (Firebase) mit Fallback-Namen. */
+  /** Fetch contacts (Firebase) with fallback names when unavailable. */
   const fetchContacts = async () => {
     try {
       const resp = await fetch(FIREBASE_CONTACTS_URL);
@@ -62,7 +62,7 @@
     }
   };
 
-  /** Task speichern und Key auch unter /tasks/<key>/id schreiben. */
+  /** Persist a task and also write its key under /tasks/<key>/id. */
   const persistTask = async (task) => {
     const resp = await fetch(FIREBASE_TASKS_URL, {
       method: "POST",

@@ -5,7 +5,7 @@
     window.AddTaskWidgets || {};
 
   /**
-   * Payload aus Formularwerten bauen.
+   * Build payload from form values.
    * @param {HTMLElement} wrap
    * @param {ReturnType<initPriority>} prio
    * @param {ReturnType<initSubtaskComposer>} subt
@@ -33,7 +33,7 @@
   };
 
   /**
-   * Validierung und Button-Handler verbinden.
+   * Wire up validation and button handlers.
    * @param {HTMLElement} wrap
    * @param {ReturnType<initPriority>} prio
    * @param {ReturnType<initSubtaskComposer>} subt
@@ -86,7 +86,7 @@
     });
   };
 
-  /** Init-Entry für die Add-Task-Seite. */
+  /** Init entry point for the Add Task page. */
   const init = () => {
     const root = document.getElementById("addtask-container");
     if (!root) return;

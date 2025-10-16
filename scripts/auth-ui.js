@@ -1,221 +1,320 @@
 (() => {
   "use strict";
+  const REDIRECT_AFTER_AUTH = "../summary.html";
+  const { isValidEmail, createUser, verifyLogin } = window.AuthCore || {};
 
-  const splash = document.getElementById("splash");
-  const logo = document.getElementById("joinLogo");
-  const loginPanel = document.getElementById("loginPanel");
-  const signupPanel = document.getElementById("signupPanel");
-  const signContainer = document.querySelector(".sign-container");
-  const headerRight =
-    document.querySelector(".header-right-side") ||
-    document.querySelector(".header-right") ||
-    document.getElementById("headerRight") ||
-    document.querySelector("header .header-right") ||
-    document.querySelector("header .header-right-side");
-  const SPLASH_HOLD_MS = 800;
+  /** Get element by id. @param {string} id @returns {HTMLElement|null} */
+  const byId = (id) => document.getElementById(id);
 
-  /** Schaltet die Hauptansicht sichtbar. */
-  function revealMain() {
-    document.body.classList.add("show-login");
-  }
+  /** Get trimmed value of input by id. @param {string} id @returns {string} */
+  const valueOf = (id) => (byId(id)?.value || "").trim();
 
-  /** Prüft Reduced-Motion. */
-  function prefersReduced() {
-    const mq = window.matchMedia?.("(prefers-reduced-motion: reduce)");
-    return !!mq && mq.matches;
-  }
+  /** Mark elements invalid (aria-invalid). @param {HTMLElement[]} els */
+  const setInvalid = (els) => els.filter(Boolean).forEach((n) => n.setAttribute("aria-invalid", "true"));
 
-  /** Liefert Marken-Container im Header. */
-  function getBrand() {
-    return document.getElementById("brandSlot") || document.querySelector("header .brand");
-  }
+  /** Clear aria-invalid on elements. @param {HTMLElement[]} els */
+  const clearInvalid = (els) => els.filter(Boolean).forEach((n) => n.removeAttribute("aria-invalid"));
 
-  /** Platziert Logo im Header. */
-  function setLogoInHeader() {
-    const brand = getBrand();
-    if (!logo || !brand) return false;
-    brand.appendChild(logo);
-    logo.classList.remove("splash-logo");
-    logo.classList.add("header-logo");
-    return true;
-  }
+  /**
+   * Show a status message (creates host if missing).
+   * @param {string} text
+   * @param {boolean=} ok
+   */
+  const showMsg = (text, ok = false) => {
+    const isSignup = window.mode === "signup" || byId("signupPanel")?.classList.contains("show");
+    const id = isSignup ? "authMessageSignup" : "authMessageLogin";
+    let host = byId(id) || byId("authMessage");
+    if (!host) {
+      const panel = isSignup ? byId("signupPanel") : byId("loginPanel");
+      if (!panel) return;
+      host = document.createElement("div");
+      host.id = id;
+      host.className = "auth-message";
+      panel.prepend(host);
+    }
+    host.textContent = text || "";
+    host.style.color = ok ? "#1B5E20" : "#DC2626";
+    host.classList.toggle("is-hidden", !text);
+    host.setAttribute("role", "status");
+    host.setAttribute("aria-live", "polite");
+    if (!host.style.minHeight) host.style.minHeight = "24px";
+  };
 
-  /** Berechnet FLIP-Werte. */
-  function computeFlip(first, last) {
-    return {
-      dx: first.left - last.left,
-      dy: first.top - last.top,
-      sx: first.width / Math.max(last.width, 1),
-      sy: first.height / Math.max(last.height, 1),
+  /** Read signup values. @returns {{name:string,email:string,pass:string,pass2:string,accepted:boolean}} */
+  const readSignup = () => ({
+    name: valueOf("signupName"),
+    email: valueOf("signupEmail"),
+    pass: valueOf("signupPassword"),
+    pass2: valueOf("signupPasswordConfirm"),
+    accepted: !!byId("acceptPolicy")?.checked,
+  });
+
+  /** Return missing/invalid signup elements. @param {ReturnType<readSignup>} p @returns {HTMLElement[]} */
+  const findMissing = (p) => {
+    const m = [];
+    if (!p.name) m.push(byId("signupName"));
+    if (!p.email) m.push(byId("signupEmail"));
+    if (!p.pass) m.push(byId("signupPassword"));
+    if (!p.pass2) m.push(byId("signupPasswordConfirm"));
+    if (!p.accepted) m.push(byId("acceptPolicy"));
+    return m;
+  };
+
+  /** Reset signup fields & errors. */
+  const resetSignup = () => {
+    ["signupName", "signupEmail", "signupPassword", "signupPasswordConfirm"].forEach((id) => {
+      const e = byId(id);
+      if (e) e.value = "";
+    });
+    const cb = byId("acceptPolicy");
+    if (cb) cb.checked = false;
+    clearInvalid([
+      byId("signupName"),
+      byId("signupEmail"),
+      byId("signupPassword"),
+      byId("signupPasswordConfirm"),
+      byId("acceptPolicy"),
+    ]);
+  };
+
+  /** Show short success toast. @param {string=} msg */
+  const toast = (msg = "Erfolgreich registriert") => {
+    document.querySelector(".toast-signup")?.remove();
+    const t = document.createElement("div");
+    t.className = "toast-signup";
+    t.role = "status";
+    t.setAttribute("aria-live", "polite");
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => {
+      t.classList.add("hide");
+      t.addEventListener("transitionend", () => t.remove(), { once: true });
+    }, 700);
+  };
+
+  /** Switch UI to login after signup. */
+  const postSignupSwitch = () =>
+    setTimeout(() => {
+      window.mode = "login";
+      renderAuth();
+      byId("loginEmail")?.focus();
+    }, 900);
+
+  /** Store login flags (non-guest). @param {{name?:string}} user */
+  const setLoggedIn = (user) => {
+    const name = String(user?.name || "").trim();
+    localStorage.setItem("isGuest", "false");
+    localStorage.setItem("name", name || "");
+    sessionStorage.setItem("summary.triggerSplash", "1");
+    localStorage.setItem("summary.triggerSplash", "1");
+  };
+
+  /** Validate signup inputs. @returns {{msg:string,els:HTMLElement[]}|null} */
+  const validateSignup = (p) => {
+    const miss = findMissing(p);
+    if (miss.length) return { msg: "Bitte alle Felder ausfüllen.", els: miss };
+    if (!isValidEmail(p.email))
+      return { msg: "Bitte gültige E-Mail-Adresse eingeben.", els: [byId("signupEmail")] };
+    if (p.pass !== p.pass2)
+      return {
+        msg: "Passwörter stimmen nicht überein.",
+        els: [byId("signupPassword"), byId("signupPasswordConfirm")],
+      };
+    return null;
+  };
+
+  /** Handle signup submit. @param {Event} e */
+  const onSignupSubmit = async (e) => {
+    e?.preventDefault();
+    const p = readSignup();
+    clearInvalid([
+      byId("signupName"),
+      byId("signupEmail"),
+      byId("signupPassword"),
+      byId("signupPasswordConfirm"),
+      byId("acceptPolicy"),
+    ]);
+    showMsg("");
+    const err = validateSignup(p);
+    if (err) return setInvalid(err.els), showMsg(err.msg);
+    try {
+      await createUser({ fullName: p.name, emailAddress: p.email, password: p.pass });
+      resetSignup();
+      toast();
+      postSignupSwitch();
+    } catch (ex) {
+      setInvalid([byId("signupEmail")]);
+      showMsg(ex?.message || "Registrierung fehlgeschlagen.");
+    }
+  };
+
+  /** Validate login inputs. @returns {{msg:string,els:HTMLElement[]}|null} */
+  const validateLogin = (email, pass) => {
+    if (!isValidEmail(email))
+      return { msg: "Bitte gültige E-Mail-Adresse eingeben.", els: [byId("loginEmail")] };
+    if (!email || !pass)
+      return { msg: "Bitte E-Mail und Passwort eingeben.", els: [byId("loginEmail"), byId("loginPassword")] };
+    return null;
+  };
+
+  /** Handle login submit. @param {Event} e */
+  const onLoginSubmit = async (e) => {
+    e?.preventDefault();
+    const email = valueOf("loginEmail"),
+      pass = valueOf("loginPassword");
+    clearInvalid([byId("loginEmail"), byId("loginPassword")]);
+    showMsg("");
+    const err = validateLogin(email, pass);
+    if (err) return setInvalid(err.els), showMsg(err.msg);
+    try {
+      const u = await verifyLogin(email, pass);
+      setLoggedIn(u);
+      showMsg("Login erfolgreich. Weiterleiten …", true);
+      window.location.href = REDIRECT_AFTER_AUTH;
+    } catch {
+      setInvalid([byId("loginEmail"), byId("loginPassword")]);
+      showMsg("E-Mail und Passwort prüfen.");
+    }
+  };
+
+  /** Clear error when policy checked. */
+  const onPolicyChange = () => {
+    const cb = byId("acceptPolicy");
+    if (cb?.checked) {
+      clearInvalid([cb]);
+      showMsg("");
+    }
+  };
+
+  /** Bind click/submit handlers and guest login. */
+  const bindAuthUI = () => {
+    const login = byId("loginBtn"),
+      signup = byId("createAccountBtn");
+    [login, signup].forEach((b) => {
+      if (b) b.type = "button";
+    });
+    signup?.addEventListener("click", onSignupSubmit);
+    login?.addEventListener("click", onLoginSubmit);
+    login?.closest("form")?.addEventListener("submit", onLoginSubmit);
+    signup?.closest("form")?.addEventListener("submit", onSignupSubmit);
+    byId("acceptPolicy")?.addEventListener("change", onPolicyChange);
+    byId("btn-guest-log-in")?.addEventListener("click", handleGuestLogin);
+  };
+
+  /** True if pointer is in right-side hitbox. @param {PointerEvent} ev @param {HTMLInputElement} el @param {number=} px */
+  const isRightHitbox = (ev, el, px = 36) => el.getBoundingClientRect().right - ev.clientX <= px;
+
+  /** Toggle password visibility & icon classes. @param {HTMLInputElement} el */
+  const togglePass = (el) => {
+    const isPass = el.type === "password";
+    el.type = isPass ? "text" : "password";
+    el.classList.toggle("passwort-icon", !isPass);
+    el.classList.toggle("visibile-icon", isPass);
+  };
+
+  /** Add right-hitbox toggle to an input. @param {string} id */
+  const attachPassToggle = (id) => {
+    const el = byId(id);
+    if (!el) return;
+    el.type = "password";
+    el.classList.add("passwort-icon");
+    const onDown = (e) => {
+      if (isRightHitbox(e, el)) {
+        e.preventDefault();
+        togglePass(el);
+      }
     };
-  }
+    el.addEventListener("pointerdown", onDown);
+  };
 
-  /** Führt FLIP-Transform aus. */
-  function runFlip(logoEl, t) {
-    logoEl.style.transformOrigin = "top left";
-    logoEl.style.willChange = "transform, opacity";
-    logoEl.style.transform = `translate(${t.dx}px,${t.dy}px) scale(${t.sx},${t.sy})`;
-    void logoEl.getBoundingClientRect();
-    logoEl.style.transition = "transform 1400ms cubic-bezier(.2,.8,.2,1), opacity 1400ms ease";
-    logoEl.style.transform = "none";
-  }
+  /** Enable password toggles for all inputs. */
+  const setupPassToggles = () =>
+    ["loginPassword", "signupPassword", "signupPasswordConfirm"].forEach(attachPassToggle);
 
-  /** Registriert Cleanup nach Animation. */
-  function addFlipCleanup() {
-    const onEnd = () => {
-      Object.assign(logo.style, { transition: "", transform: "", willChange: "" });
-      splash?.remove();
-      logo.removeEventListener("transitionend", onEnd);
-    };
-    logo.addEventListener("transitionend", onEnd);
-  }
+  /** Show the main view (CSS hook). */
+  const revealMain = () => document.body.classList.add("show-login");
 
-  /** Animiert Logo in den Header. */
-  function animateLogoIntoHeader() {
-    const brand = getBrand();
-    if (!logo || !brand) {
-      splash?.remove();
+  /** Animate splash logo via CSS and remove splash. */
+  const animateSplash = () => {
+    const s = byId("splash"),
+      l = byId("joinLogo");
+    const brand = byId("brandSlot") || document.querySelector("header .brand");
+    if (!s || !l) return;
+    if (!brand) return void s.remove();
+    brand.appendChild(l);
+    l.classList.remove("splash-logo");
+    l.classList.add("header-logo", "logo-anim");
+    const reduce = !!matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+    if (reduce) {
+      s.classList.add("is-fading");
+      s.addEventListener("transitionend", () => s.remove(), { once: true });
       return;
     }
-    const first = logo.getBoundingClientRect();
-    if (!setLogoInHeader()) {
-      splash?.remove();
-      return;
-    }
-    const last = logo.getBoundingClientRect();
-    if (prefersReduced()) {
-      splash?.remove();
-      return;
-    }
-    runFlip(logo, computeFlip(first, last));
-    splash?.classList.add("is-fading");
-    addFlipCleanup();
-  }
+    s.classList.add("is-fading");
+    l.addEventListener("animationend", () => s.remove(), { once: true });
+  };
 
-  /** Aktiviert Gastmodus und leitet weiter. */
-  function handleGuestLogin() {
+  /** Render auth view for current mode. */
+  const renderAuth = () => {
+    const isS = window.mode === "signup";
+    byId("loginPanel")?.classList.toggle("show", !isS);
+    byId("signupPanel")?.classList.toggle("show", isS);
+    (
+      document.querySelector(".header-right-side") || document.querySelector(".header-right")
+    )?.classList.toggle("hidden", isS);
+    document.querySelector(".sign-container")?.classList.toggle("hidden", isS);
+  };
+
+  /** Switch to signup mode. @param {Event} e */
+  const openSignup = (e) => {
+    e?.preventDefault?.();
+    window.mode = "signup";
+    renderAuth();
+  };
+
+  /** Switch back to login mode. @param {Event} e */
+  const backToLogin = (e) => {
+    e?.preventDefault?.();
+    window.mode = "login";
+    renderAuth();
+  };
+
+  /** Bind mode switch buttons. */
+  const bindModeButtons = () => {
+    byId("switchAuthBtn")?.addEventListener("click", openSignup);
+    byId("switchAuthBtnBottom")?.addEventListener("click", openSignup);
+    byId("openSignupBtn")?.addEventListener("click", openSignup);
+    byId("backToLoginBtn")?.addEventListener("click", backToLogin);
+  };
+
+  /** Guest login: mark and redirect. */
+  const handleGuestLogin = () => {
     try {
       localStorage.setItem("isGuest", "true");
       ["name", "firstName", "lastName"].forEach((k) => localStorage.removeItem(k));
       sessionStorage.setItem("summary.triggerSplash", "1");
       localStorage.setItem("summary.triggerSplash", "1");
     } catch {}
-    window.location.href = "../summary.html";
-  }
+    window.location.href = REDIRECT_AFTER_AUTH;
+  };
 
-  /** Schaltet Panels. */
-  function setPanels(isSignup) {
-    loginPanel?.classList.toggle("show", !isSignup);
-    signupPanel?.classList.toggle("show", isSignup);
-  }
-
-  /** Schaltet Header-Rechts. */
-  function setHeaderRight(isSignup) {
-    headerRight?.classList.toggle("hidden", isSignup);
-  }
-
-  /** Schaltet Umschaltcontainer. */
-  function setSignContainer(isSignup) {
-    signContainer?.classList.toggle("hidden", isSignup);
-  }
-
-  /** Rendert Auth-UI. */
-  function renderAuthUI() {
-    const isSignup = window.mode === "signup";
-    setPanels(isSignup);
-    setHeaderRight(isSignup);
-    setSignContainer(isSignup);
-  }
-
-  /** Prüft rechte Hitbox. */
-  function isRightHitbox(ev, el, px = 36) {
-    const r = el.getBoundingClientRect();
-    return r.right - ev.clientX <= px;
-  }
-
-  /** Schaltet Passwortfeld. */
-  function togglePassword(el) {
-    const isPass = el.type === "password";
-    el.type = isPass ? "text" : "password";
-    el.classList.toggle("passwort-icon", !isPass);
-    el.classList.toggle("visibile-icon", isPass);
-  }
-
-  /** Bindet Toggle an Feld. */
-  function attachPasswordToggleById(id) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.type = "password";
-    el.classList.add("passwort-icon");
-    function onPointerDown(ev) {
-      if (isRightHitbox(ev, el)) {
-        ev.preventDefault();
-        togglePassword(el);
-      }
-    }
-    el.addEventListener("pointerdown", onPointerDown);
-  }
-
-  /** Initialisiert Passwort-Toggles. */
-  function setupPasswordToggle() {
-    attachPasswordToggleById("loginPassword");
-    attachPasswordToggleById("signupPassword");
-    attachPasswordToggleById("signupPasswordConfirm");
-  }
-
-  /** Öffnet Signup per Klick. */
-  function handleOpenSignupClick(e) {
-    e.preventDefault();
-    window.mode = "signup";
-    renderAuthUI();
-  }
-
-  /** Zurück zum Login. */
-  function handleBackToLoginClick(e) {
-    e.preventDefault();
-    window.mode = "login";
-    renderAuthUI();
-  }
-
-  /** Bindet Modus-Buttons. */
-  function bindModeButtons() {
-    document.getElementById("switchAuthBtn")?.addEventListener("click", handleOpenSignupClick);
-    document.getElementById("switchAuthBtnBottom")?.addEventListener("click", handleOpenSignupClick);
-    document.getElementById("openSignupBtn")?.addEventListener("click", handleOpenSignupClick);
-    document.getElementById("backToLoginBtn")?.addEventListener("click", handleBackToLoginClick);
-  }
-
-  /** Startsequenz. */
-  function boot() {
+  /** Initialize module, bind UI, run splash. */
+  const init = () => {
+    window.mode = new URLSearchParams(location.search).get("mode") === "signup" ? "signup" : "login";
+    window.renderAuth = renderAuth;
+    bindModeButtons();
+    bindAuthUI();
+    setupPassToggles();
+    renderAuth();
     revealMain();
     setTimeout(() => {
       try {
-        animateLogoIntoHeader();
+        animateSplash();
       } catch {
-        if (setLogoInHeader()) splash?.remove();
-        else splash?.remove();
+        byId("splash")?.remove();
       }
-    }, SPLASH_HOLD_MS + 60);
-  }
+    }, 860);
+  };
 
-  /** Initialisiert Datei. */
-  function init() {
-    window.mode = new URLSearchParams(location.search).get("mode") === "signup" ? "signup" : "login";
-    window.renderAuthUI = renderAuthUI;
-    bindModeButtons();
-    document.getElementById("btn-guest-log-in")?.addEventListener("click", handleGuestLogin);
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", () => {
-        renderAuthUI();
-        setupPasswordToggle();
-        boot();
-      });
-    } else {
-      renderAuthUI();
-      setupPasswordToggle();
-      boot();
-    }
-  }
-
-  init();
+  document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", init) : init();
 })();

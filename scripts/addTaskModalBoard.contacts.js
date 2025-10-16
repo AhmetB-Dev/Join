@@ -60,6 +60,7 @@ function addContactToAssigned(contactName, initials, avatarClass) {
   const profile = createAssignedProfileElement(contactName, initials, avatarClass);
   attachAssignedProfileClick(profile);
   container.appendChild(profile);
+  updateAssignedBadgesView();
   validateForm();
 }
 
@@ -89,6 +90,7 @@ function removeContactFromAssigned(contactName) {
   if (!container) return;
   const profile = container.querySelector(`[data-contact-name="${contactName}"]`);
   if (profile) profile.remove();
+  updateAssignedBadgesView();
   validateForm();
 }
 
@@ -180,8 +182,20 @@ function attachCheckboxChangeHandler(checkbox, contactName, initials, avatarClas
 function attachItemClickToggle(item, checkbox) {
   item.addEventListener('click', function (e) {
     if (e.target.tagName.toLowerCase() === 'input') return;
+    const wasChecked = checkbox.checked;
     checkbox.checked = !checkbox.checked;
-    checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+    const changeEvent = new Event('change', { bubbles: true, cancelable: true });
+    checkbox.dispatchEvent(changeEvent);
+    if (checkbox.checked && !wasChecked) {
+      const contactName = checkbox.getAttribute('data-contact-name');
+      const initials = checkbox.getAttribute('data-contact-initials');
+      const avatarClass = checkbox.closest('.dropdown-item')?.querySelector('.avatar-contact-circle')?.className.split(' ').find(c => c.startsWith('profile-badge-'));
+      addContactToAssigned(contactName, initials, avatarClass);
+    } else if (!checkbox.checked && wasChecked) {
+      const contactName = checkbox.getAttribute('data-contact-name');
+      removeContactFromAssigned(contactName);
+    }
+    updateDropdownStates();
   });
 }
 
@@ -211,6 +225,26 @@ function attachAssignedProfileClick(profile) {
   profile.addEventListener('click', function () {
     this.remove();
     updateDropdownStates();
+    updateAssignedBadgesView();
     validateForm();
   });
+}
+
+/**
+ * Update the assigned badges view to show max 5 badges and a "+N" bubble for the rest.
+ * @returns {void}
+ */
+function updateAssignedBadgesView() {
+  const container = document.querySelector('.assigned-to-profiles-container');
+  if (!container) return;
+  container.querySelectorAll('.assigned-more-badge').forEach(n => n.remove());
+  const badges = Array.from(container.querySelectorAll('[data-contact-name]'));
+  badges.forEach(b => (b.style.display = ''));
+  if (badges.length <= 5) return;
+  const hiddenCount = badges.length - 5;
+  badges.slice(5).forEach(b => (b.style.display = 'none'));
+  const more = document.createElement('div');
+  more.className = 'avatar-contact-circle profile-badge-343D63 assigned-more-badge';
+  more.textContent = `+${hiddenCount}`;
+  container.appendChild(more);
 }

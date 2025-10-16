@@ -16,7 +16,7 @@ async function loadContacts() {
 };
 
 /**
- * Öffnet das Add-Contact-Modal.
+ * Opens the Add-Contact-Modal.
  */
 function openAddContactModal() {
   const modal = document.getElementById('addContactModal');
@@ -24,7 +24,7 @@ function openAddContactModal() {
 }
 
 /**
- * Schließt Add-/Edit-Contact-Modal.
+ * Closes Add-/Edit-Contact-Modal.
  */
 function closeContactModal() {
   const add = document.getElementById('addContactModal');
@@ -34,7 +34,7 @@ function closeContactModal() {
 }
 
 /**
- * Bricht das Hinzufügen ab und schließt das Modal.
+ * Cancels adding and closes the modal.
  */
 function cancelAddContact() {
   const modal = document.getElementById('addContactModal');
@@ -42,7 +42,7 @@ function cancelAddContact() {
 }
 
 /**
- * Öffnet das Edit-Modal und füllt es mit Daten des Kontakts.
+ * Opens the Edit-Modal and fills it with contact data.
  * @param {string} contactId
  */
 function editContact(contactId) {
@@ -73,7 +73,7 @@ function setEditAvatar(c) {
 
 
 /**
- * Löscht einen Kontakt und aktualisiert die Ansicht.
+ * Deletes a contact and updates the view.
  * @param {string} contactId
  */
 async function deleteContact(contactId) {
@@ -87,7 +87,7 @@ async function deleteContact(contactId) {
 }
 
 /**
- * Löscht den aktuell ausgewählten Kontakt (aus Edit-Modal heraus).
+ * Deletes the currently selected contact (from Edit-Modal).
  */
 async function editDeleteContact() {
   if (!selectedContact) return;
@@ -95,7 +95,7 @@ async function editDeleteContact() {
 }
 
 /**
- * Speichert Änderungen am Kontakt aus dem Edit-Modal.
+ * Saves changes to the contact from the Edit-Modal.
  */
 async function saveContact() {
   const { name, email, phone } = readEditForm();
@@ -115,7 +115,7 @@ function readEditForm() {
 }
 
 /**
- * Aktualisiert den selektierten Kontakt im Speicher.
+ * Updates the selected contact in memory.
  */
 function updateSelectedContactData(name, email, phone) {
   if (!selectedContact) return;
@@ -125,7 +125,7 @@ function updateSelectedContactData(name, email, phone) {
 }
 
 /**
- * Aktualisiert Liste und Detailansicht nach Änderungen.
+ * Updates list and detail view after changes.
  */
 function refreshContactDisplay() {
   loadContacts();
@@ -135,7 +135,7 @@ function refreshContactDisplay() {
 
 
 /**
- * Erstellt einen neuen Kontakt aus dem Add-Modal.
+ * Creates a new contact from the Add-Modal.
  */
 async function createAddContact() {
   const name = document.getElementById('addInputName').value.trim();
@@ -148,7 +148,7 @@ async function createAddContact() {
 }
 
 /**
- * Aktualisiert die Ansicht nach dem Hinzufügen.
+ * Updates the view after adding.
  */
 function refreshContactsAfterAdd() {
   loadContacts();
@@ -156,7 +156,7 @@ function refreshContactsAfterAdd() {
 }
 
 /**
- * Leert die Eingabefelder im Add-Modal.
+ * Clears the input fields in the Add-Modal.
  */
 function clearAddContactForm() {
   const n = document.getElementById('addInputName');

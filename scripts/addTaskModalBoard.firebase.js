@@ -12,17 +12,34 @@ async function addTaskToFirebase() {
       body: JSON.stringify(taskData)
     });
     const resData = await response.json();
-    const firebaseId = resData.name;
-    if (!firebaseId) return;
-    await updateFirebaseTaskId(firebaseURL, firebaseId);
-    clearForm();
-    closeModal();
-    if (typeof closeModalAndReload === 'function') {
-      await closeModalAndReload();
-    }
+    await handleTaskCreationSuccess(firebaseURL, resData.name);
   } catch (error) {
-    console.error('Error while saving task to Firebase', error);
+    handleTaskCreationError(error);
   }
+}
+
+/**
+ * Handle successful task creation in Firebase.
+ * @param {string} firebaseURL Base tasks endpoint URL
+ * @param {string} firebaseId Firebase id for the newly created task
+ * @returns {Promise<void>}
+ */
+async function handleTaskCreationSuccess(firebaseURL, firebaseId) {
+  if (!firebaseId) return;
+  await updateFirebaseTaskId(firebaseURL, firebaseId);
+  clearForm();
+  closeModal();
+  if (typeof closeModalAndReload === 'function') {
+    await closeModalAndReload();
+  }
+}
+
+/**
+ * Handle errors during task creation.
+ * @param {Error} error The error that occurred
+ */
+function handleTaskCreationError(error) {
+  console.error('Error while saving task to Firebase', error);
 }
 
 /**
