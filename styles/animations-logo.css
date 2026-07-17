@@ -6,19 +6,23 @@
     background: #fff;
     z-index: 1000;
     pointer-events: none;
-    transition: background .8s ease, opacity .8s ease;
-}
-
-.splash.is-fading {
-    opacity: 0;
-    background: transparent;
 }
 
 .splash-logo {
     width: 140px;
     height: auto;
     display: block;
+    animation: splashLogoEnter 600ms ease-out both;
     will-change: transform, opacity;
+}
+
+.splash-logo.logo-traveling {
+    position: fixed;
+    z-index: 1;
+    margin: 0;
+    animation: none;
+    opacity: 1;
+    will-change: left, top, width, height;
 }
 
 .header-logo {
@@ -28,29 +32,19 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .splash {
-        transition: none;
-    }
-
     .splash-logo {
-        transition: none;
+        animation: none;
         transform: none !important;
         opacity: 1 !important;
     }
 }
 
-/* Splash fades out */
-#splash.is-fading { opacity: 0; transition: opacity 600ms ease; }
+@keyframes splashLogoEnter {
+    from {
+        opacity: 0;
+    }
 
-/* Logo FLIP-ish animation handled in CSS */
-.header-logo.logo-anim {
-  animation: logoFlipIn 1400ms cubic-bezier(.2,.8,.2,1) both;
-  will-change: transform, opacity;
-}
-
-/* Feel free to tweak these keyframes for your layout */
-@keyframes logoFlipIn {
-  0%   { transform: translate(-12px, 8px) scale(1.25); opacity: 0; }
-  40%  { opacity: 1; }
-  100% { transform: none; opacity: 1; }
+    to {
+        opacity: 1;
+    }
 }

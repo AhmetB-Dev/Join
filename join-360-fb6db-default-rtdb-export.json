@@ -1,0 +1,612 @@
+{
+  "contacts": {
+    "-Oa-_BkmOUxSdRMtGEfx": {
+      "email": "Müller@web.de",
+      "name": "Thomas Müller",
+      "phone": "12345676543"
+    },
+    "-Oa1-LqofBJOFBsQA7T7": {
+      "email": "Fredi@gmail.com",
+      "name": "Frederik Schneider",
+      "phone": "3212313232112321"
+    },
+    "-OaHNMnAkk_ajDhyFJLS": {
+      "email": "schmidt@gmail.com",
+      "name": "Lukas Schmidt",
+      "phone": "490000000002"
+    },
+    "-OaHNa1Lo-k7ZwpYk3ST": {
+      "email": "Bauer@gmail.com",
+      "name": "Sophie Bauer",
+      "phone": "490000000003"
+    },
+    "-OaOJOLDBa0re4zQPrpB": {
+      "email": "Mayer@web.de",
+      "name": "Johannes Mayer",
+      "phone": "011266541"
+    },
+    "-OaOJZP8WAy1lhWiBbfS": {
+      "email": "Erhart@gmail.de",
+      "name": "Michael Erhart",
+      "phone": "012365489"
+    },
+    "-OaOK-1gb_TkudBzRmgZ": {
+      "email": "Fischer@web.de",
+      "name": "Tim Fischer",
+      "phone": "8956526"
+    },
+    "-OaOVLqpImdqYU1GMpfK": {
+      "email": "mueller@test.de",
+      "name": "Anna Müller",
+      "phone": "012214562"
+    },
+    "-OaOYGar9iGUVn3WyFmN": {
+      "email": "maier@web.de",
+      "name": "max maier",
+      "phone": "12652"
+    },
+    "-OaUYGSH4Wueu0vaCY3i": {
+      "email": "mustermann@example.de",
+      "name": "Eva Mustermann",
+      "phone": "0178954236"
+    },
+    "-ObFBrlxTAJRw7TP22rD": {
+      "email": "raith@mail.de",
+      "name": "Peter Raith",
+      "phone": "01569748"
+    },
+    "-ObFLLJQsxK1mouQ8HPY": {
+      "email": "richard@web.de",
+      "name": "Andrea Richard",
+      "phone": "017641236"
+    }
+  },
+  "emailIndex": {
+    "123@web_de": "u-mfzjryej-ln9uhq",
+    "12aaa@web_de": "u-mfzhwys7-lncjzj",
+    "1@gmail_com": "u-mgmo0hjo-mi5gwd",
+    "a": "u-mfx34s5d-eyqtmz",
+    "a@aaf_da": "u-mg8ml4c1-8j6bzs",
+    "a@gmail_c": "u-mg8kajkv-b8ryqb",
+    "a@gmail_com": "u-mg8bn2he-memqwk",
+    "a@gmail_de": "u-mg72owba-1zb1cg",
+    "a@gmail_g": "u-mg8kb6qk-y3ofwt",
+    "a@qwd_a": "u-mgfn9cr1-s9gzb5",
+    "a@sdfdsf_re": "u-mggarhwd-v58s85",
+    "aa@gmail_com": "u-mg8kpnga-f3hmvv",
+    "aaa@web_de": "u-mg72qps6-opjg6r",
+    "aasa@web_de": "u-mfzgcnic-6bivfk",
+    "ads": "u-mfziz5k4-u6gohf",
+    "afs@fre_gr": "u-mgfn6w58-0lerbs",
+    "asa@dasaddsasad_cwdsasdok": "u-mgfn8oqk-05xtl4",
+    "asaaa@web_de": "u-mfzjp4ev-a00lvo",
+    "asasd@d_frde": "u-mg6hgbkv-pzhw8n",
+    "asd@gmail_com": "u-mg8klzq8-ruawaz",
+    "b@web_de": "u-mgs17tm7-a0e0a0",
+    "d@web_de": "u-mgfn3rd8-hmfdaf",
+    "das": "u-mg6gt2wd-8t8k0u",
+    "h@gmail_cc": "u-mg8mjvwm-ajn59p",
+    "johan@gmail_com": "u-mg32ijr9-4w9o3a",
+    "lilly@fee_de": "u-mgronrox-4b1l2f",
+    "max@gmail_com": "u-mg4bbxpv-wc0rav",
+    "meier@gmail_com": "u-mg8i55wv-haj9pc",
+    "muller@gmail_com": "u-mg736axd-1f8myz",
+    "musterman@g_de": "u-mg6hfuy6-829dc9",
+    "q@gdfd_de": "u-mggbhu11-icq4mh",
+    "q@gmail_c": "u-mg8mgp2p-0vuxkx",
+    "r@gmail_com": "u-mgjsmxee-52ay58",
+    "robin@gmail_com": "u-mfzpr493-b7av0m",
+    "rudiger@web_de": "u-mfzj4ain-yfmq4h",
+    "s@gmail_c": "u-mg8m9teh-ifh0qi",
+    "schmidt@web_de": "u-mfzawscy-eg9muh",
+    "schneider@web_de": "u-mg72s87b-ovzmgg",
+    "stone@gamil_com": "u-mg8bpiki-0s4w7g",
+    "test": "u-mg5g5a8v-0nxuds",
+    "test111@web_de": "u-mg7qig7a-6nqjyo",
+    "test1de": "u-mg5gdhj8-194pr9",
+    "test3242@web_de": "u-mg7qkc2b-2wvaq6",
+    "test@gmail_com": "u-mggba0fa-ifn5gq",
+    "test@test2_de": "u-mgozoi8a-g6iz4j",
+    "test@test_com": "u-mggivu5l-7uncvj",
+    "test@test_de": "u-mggiuzad-4jx2fo",
+    "test@testde": "u-mg6eedjp-82kih8",
+    "testde": "u-mg5g65r7-ept514",
+    "testuser@gmail_ca": "u-mg72l7pl-8ohz2e",
+    "tobias_schmidt@gmail_com": "u-mgpa6ty6-pl1mxl",
+    "user@gmai_d": "u-mg727yz1-r8bxsh",
+    "w@gmail_cd": "u-mg8mf6f1-6zzx2h",
+    "z@gmail_com": "u-mgjsp0j9-2te67n"
+  },
+  "tasks": {
+    "-ObByliR9_vcy4mU0pLT": {
+      "category": "Technical task",
+      "column": "done",
+      "description": "No description provided",
+      "dueDate": "11/10/2025",
+      "firebaseKey": "-ObByliR9_vcy4mU0pLT",
+      "id": "-ObByliR9_vcy4mU0pLT",
+      "priority": "../img/priority-img/urgent.png",
+      "progress": 0,
+      "title": "Board erstellen",
+      "users": [
+        {
+          "name": "Thomas Müller"
+        },
+        {
+          "name": "Frederik Schneider"
+        },
+        {
+          "name": "Lukas Schmidt"
+        },
+        {
+          "name": "Sophie Bauer"
+        },
+        {
+          "name": "Johannes Mayer"
+        },
+        {
+          "name": "Michael Erhart"
+        },
+        {
+          "name": "max maier"
+        }
+      ]
+    },
+    "-ObByyieuRjt0S-LmLo8": {
+      "category": "Technical task",
+      "column": "inProgress",
+      "description": "No description provided",
+      "dueDate": "12/10/2025",
+      "firebaseKey": "-ObByyieuRjt0S-LmLo8",
+      "id": "-ObByyieuRjt0S-LmLo8",
+      "priority": "../img/priority-img/medium.png",
+      "progress": 0,
+      "title": "test assigned to",
+      "users": [
+        {
+          "name": "Thomas Müller"
+        }
+      ]
+    },
+    "-ObWQQ5rP9xxQBsrjSdn": {
+      "category": "User Story",
+      "column": "done",
+      "description": "No description provided",
+      "dueDate": "02/09/2025",
+      "id": "-ObWQQ5rP9xxQBsrjSdn",
+      "priority": "../img/priority-img/urgent.png",
+      "progress": 0,
+      "title": "Database",
+      "users": [
+        {
+          "name": "Andrea Richard"
+        },
+        {
+          "name": "Peter Raith"
+        },
+        {
+          "name": "Eva Mustermann"
+        }
+      ]
+    },
+    "-ObZOfSW6Lhdq9EXOTlQ": {
+      "category": "Technical task",
+      "column": "awaitFeedback",
+      "description": "No description provided",
+      "dueDate": "14/10/2025",
+      "firebaseKey": "-ObZOfSW6Lhdq9EXOTlQ",
+      "id": "-ObZOfSW6Lhdq9EXOTlQ",
+      "priority": "../img/priority-img/low.png",
+      "progress": 0,
+      "subtasks": [
+        {
+          "completed": true,
+          "text": "test"
+        }
+      ],
+      "title": "test",
+      "users": [
+        {
+          "name": "Thomas Müller"
+        },
+        {
+          "name": "Frederik Schneider"
+        }
+      ]
+    }
+  },
+  "users": {
+    "u-mfxu9gy2-oiqbrf": {
+      "createdAt": 1758709559306,
+      "email": "g",
+      "name": "g g",
+      "passwordHash": "h:103",
+      "uid": "u-mfxu9gy2-oiqbrf"
+    },
+    "u-mfzawscy-eg9muh": {
+      "createdAt": 1758797987218,
+      "email": "schmidt@web.de",
+      "name": "tom schmidt",
+      "passwordHash": "h:97",
+      "uid": "u-mfzawscy-eg9muh"
+    },
+    "u-mfzgcnic-6bivfk": {
+      "createdAt": 1758807125508,
+      "email": "aasa@web.de",
+      "name": "as",
+      "passwordHash": "h:115",
+      "uid": "u-mfzgcnic-6bivfk"
+    },
+    "u-mfzhwys7-lncjzj": {
+      "createdAt": 1758809752855,
+      "email": "12aaa@web.de",
+      "name": "a",
+      "passwordHash": "h:65",
+      "uid": "u-mfzhwys7-lncjzj"
+    },
+    "u-mfziz5k4-u6gohf": {
+      "createdAt": 1758811534564,
+      "email": "ads",
+      "name": "asd",
+      "passwordHash": "h:10097115",
+      "uid": "u-mfziz5k4-u6gohf"
+    },
+    "u-mfzj4ain-yfmq4h": {
+      "createdAt": 1758811774271,
+      "email": "rudiger@web.de",
+      "name": "rudiger meier",
+      "passwordHash": "h:97",
+      "uid": "u-mfzj4ain-yfmq4h"
+    },
+    "u-mfzjp4ev-a00lvo": {
+      "createdAt": 1758812746135,
+      "email": "asaaa@web.de",
+      "name": "ads",
+      "passwordHash": "h:97",
+      "uid": "u-mfzjp4ev-a00lvo"
+    },
+    "u-mfzjryej-ln9uhq": {
+      "createdAt": 1758812878315,
+      "email": "123@web.de",
+      "name": "as fa",
+      "passwordHash": "h:97",
+      "uid": "u-mfzjryej-ln9uhq"
+    },
+    "u-mfzpr493-b7av0m": {
+      "createdAt": 1758822916935,
+      "email": "robin@gmail.com",
+      "name": "robin musterman",
+      "passwordHash": "h:97",
+      "uid": "u-mfzpr493-b7av0m"
+    },
+    "u-mg32ijr9-4w9o3a": {
+      "createdAt": 1759025750662,
+      "email": "johan@gmail.com",
+      "name": "johan Schmidt",
+      "passwordHash": "h:97",
+      "uid": "u-mg32ijr9-4w9o3a"
+    },
+    "u-mg4bbxpv-wc0rav": {
+      "createdAt": 1759101024883,
+      "email": "max@gmail.com",
+      "name": "max Musterman",
+      "passwordHash": "h:97",
+      "uid": "u-mg4bbxpv-wc0rav"
+    },
+    "u-mg5g5a8v-0nxuds": {
+      "createdAt": 1759169578783,
+      "email": "test",
+      "name": "test",
+      "passwordHash": "h:495051525354",
+      "uid": "u-mg5g5a8v-0nxuds"
+    },
+    "u-mg5g65r7-ept514": {
+      "createdAt": 1759169619619,
+      "email": "testde",
+      "name": "Testoger",
+      "passwordHash": "h:495051525354",
+      "uid": "u-mg5g65r7-ept514"
+    },
+    "u-mg5gdhj8-194pr9": {
+      "createdAt": 1759169961476,
+      "email": "test1de",
+      "name": "test",
+      "passwordHash": "h:495051525354",
+      "uid": "u-mg5gdhj8-194pr9"
+    },
+    "u-mg6eedjp-82kih8": {
+      "createdAt": 1759227109909,
+      "email": "test@testde",
+      "name": "Test",
+      "passwordHash": "h:495051495051",
+      "uid": "u-mg6eedjp-82kih8"
+    },
+    "u-mg6gt2wd-8t8k0u": {
+      "createdAt": 1759231155181,
+      "email": "das",
+      "name": "dsa",
+      "passwordHash": "h:97",
+      "uid": "u-mg6gt2wd-8t8k0u"
+    },
+    "u-mg6hfuy6-829dc9": {
+      "createdAt": 1759232217966,
+      "email": "musterman@g.de",
+      "name": "gunta musterman",
+      "passwordHash": "h:61",
+      "uid": "u-mg6hfuy6-829dc9"
+    },
+    "u-mg6hgbkv-pzhw8n": {
+      "createdAt": 1759232239519,
+      "email": "asasd@d.frde",
+      "name": "a asd",
+      "passwordHash": "h:61",
+      "uid": "u-mg6hgbkv-pzhw8n"
+    },
+    "u-mg727ysm-4x6xfo": {
+      "createdAt": 1759267121638,
+      "email": "user@gmai.d",
+      "name": "accept user",
+      "passwordHash": "h:61",
+      "uid": "u-mg727ysm-4x6xfo"
+    },
+    "u-mg727yz1-r8bxsh": {
+      "createdAt": 1759267121869,
+      "email": "user@gmai.d",
+      "name": "accept user",
+      "passwordHash": "h:61",
+      "uid": "u-mg727yz1-r8bxsh"
+    },
+    "u-mg727z5i-xcitnf": {
+      "createdAt": 1759267122102,
+      "email": "user@gmai.d",
+      "name": "accept user",
+      "passwordHash": "h:61",
+      "uid": "u-mg727z5i-xcitnf"
+    },
+    "u-mg72l7pl-8ohz2e": {
+      "createdAt": 1759267739721,
+      "email": "testuser@gmail.ca",
+      "name": "user test",
+      "passwordHash": "h:41",
+      "uid": "u-mg72l7pl-8ohz2e"
+    },
+    "u-mg72owba-1zb1cg": {
+      "createdAt": 1759267911574,
+      "email": "a@gmail.de",
+      "name": "t u",
+      "passwordHash": "h:71",
+      "uid": "u-mg72owba-1zb1cg"
+    },
+    "u-mg72qps6-opjg6r": {
+      "createdAt": 1759267996422,
+      "email": "aaa@web.de",
+      "name": "a",
+      "passwordHash": "h:61",
+      "uid": "u-mg72qps6-opjg6r"
+    },
+    "u-mg72s87b-ovzmgg": {
+      "createdAt": 1759268066951,
+      "email": "schneider@web.de",
+      "name": "micha schneider",
+      "passwordHash": "h:61",
+      "uid": "u-mg72s87b-ovzmgg"
+    },
+    "u-mg736axd-1f8myz": {
+      "createdAt": 1759268723665,
+      "email": "muller@gmail.com",
+      "name": "frederik muller",
+      "passwordHash": "h:61",
+      "uid": "u-mg736axd-1f8myz"
+    },
+    "u-mg7qig7a-6nqjyo": {
+      "createdAt": 1759307921542,
+      "email": "test111@web.de",
+      "name": "Pascal",
+      "passwordHash": "h:256",
+      "uid": "u-mg7qig7a-6nqjyo"
+    },
+    "u-mg7qkc2b-2wvaq6": {
+      "createdAt": 1759308009491,
+      "email": "test3242@web.de",
+      "name": "Pascal Nehlsen",
+      "passwordHash": "h:256",
+      "uid": "u-mg7qkc2b-2wvaq6"
+    },
+    "u-mg8bn2he-memqwk": {
+      "createdAt": 1759343408978,
+      "email": "a@gmail.com",
+      "name": "as",
+      "passwordHash": "h:c2",
+      "uid": "u-mg8bn2he-memqwk"
+    },
+    "u-mg8bpiki-0s4w7g": {
+      "createdAt": 1759343523138,
+      "email": "stone@gamil.com",
+      "name": "dennis stone",
+      "passwordHash": "h:61",
+      "uid": "u-mg8bpiki-0s4w7g"
+    },
+    "u-mg8i55wv-haj9pc": {
+      "createdAt": 1759354330928,
+      "email": "meier@gmail.com",
+      "name": "Daniel Meier",
+      "passwordHash": "h:61",
+      "uid": "u-mg8i55wv-haj9pc"
+    },
+    "u-mg8kajkv-b8ryqb": {
+      "createdAt": 1759357941151,
+      "email": "a@gmail.c",
+      "name": "a",
+      "passwordHash": "h:61",
+      "uid": "u-mg8kajkv-b8ryqb"
+    },
+    "u-mg8kb6qk-y3ofwt": {
+      "createdAt": 1759357971165,
+      "email": "a@gmail.g",
+      "name": "a",
+      "passwordHash": "h:61",
+      "uid": "u-mg8kb6qk-y3ofwt"
+    },
+    "u-mg8klzq8-ruawaz": {
+      "createdAt": 1759358475296,
+      "email": "asd@gmail.com",
+      "name": "a",
+      "passwordHash": "h:61",
+      "uid": "u-mg8klzq8-ruawaz"
+    },
+    "u-mg8kpnga-f3hmvv": {
+      "createdAt": 1759358646010,
+      "email": "aa@gmail.com",
+      "name": "a a",
+      "passwordHash": "h:61",
+      "uid": "u-mg8kpnga-f3hmvv"
+    },
+    "u-mg8m9teh-ifh0qi": {
+      "createdAt": 1759361266457,
+      "email": "s@gmail.c",
+      "name": "as asdsda",
+      "passwordHash": "h:61",
+      "uid": "u-mg8m9teh-ifh0qi"
+    },
+    "u-mg8mf6f1-6zzx2h": {
+      "createdAt": 1759361516606,
+      "email": "w@gmail.cd",
+      "name": "d a",
+      "passwordHash": "h:61",
+      "uid": "u-mg8mf6f1-6zzx2h"
+    },
+    "u-mg8mgp2p-0vuxkx": {
+      "createdAt": 1759361587441,
+      "email": "q@gmail.c",
+      "name": "a",
+      "passwordHash": "h:61",
+      "uid": "u-mg8mgp2p-0vuxkx"
+    },
+    "u-mg8mjvwm-ajn59p": {
+      "createdAt": 1759361736262,
+      "email": "h@gmail.cc",
+      "name": "a",
+      "passwordHash": "h:61",
+      "uid": "u-mg8mjvwm-ajn59p"
+    },
+    "u-mg8ml4c1-8j6bzs": {
+      "createdAt": 1759361793841,
+      "email": "a@aaf.da",
+      "name": "ad",
+      "passwordHash": "h:61",
+      "uid": "u-mg8ml4c1-8j6bzs"
+    },
+    "u-mgfn3rd8-hmfdaf": {
+      "createdAt": 1759785926733,
+      "email": "d@web.de",
+      "name": "asda",
+      "passwordHash": "h:61",
+      "uid": "u-mgfn3rd8-hmfdaf"
+    },
+    "u-mgfn6w58-0lerbs": {
+      "createdAt": 1759786072892,
+      "email": "afs@fre.gr",
+      "name": "asd asd",
+      "passwordHash": "h:61",
+      "uid": "u-mgfn6w58-0lerbs"
+    },
+    "u-mgfn8oqk-05xtl4": {
+      "createdAt": 1759786156604,
+      "email": "asa@dasaddsasad.cwdsasdok",
+      "name": "adas asd",
+      "passwordHash": "h:61",
+      "uid": "u-mgfn8oqk-05xtl4"
+    },
+    "u-mgfn9cr1-s9gzb5": {
+      "createdAt": 1759786187725,
+      "email": "a@qwd.a",
+      "name": "as das",
+      "passwordHash": "h:61",
+      "uid": "u-mgfn9cr1-s9gzb5"
+    },
+    "u-mggarhwd-v58s85": {
+      "createdAt": 1759825665373,
+      "email": "a@sdfdsf.re",
+      "name": "daa as",
+      "passwordHash": "h:61",
+      "uid": "u-mggarhwd-v58s85"
+    },
+    "u-mggba0fa-ifn5gq": {
+      "createdAt": 1759826529190,
+      "email": "test@gmail.com",
+      "name": "test k",
+      "passwordHash": "h:61",
+      "uid": "u-mggba0fa-ifn5gq"
+    },
+    "u-mggbhu11-icq4mh": {
+      "createdAt": 1759826894149,
+      "email": "q@gdfd.de",
+      "name": "a",
+      "passwordHash": "h:61",
+      "uid": "u-mggbhu11-icq4mh"
+    },
+    "u-mggiuzad-4jx2fo": {
+      "createdAt": 1759839264806,
+      "email": "test@test.de",
+      "name": "Diana Test",
+      "passwordHash": "h:1c0",
+      "uid": "u-mggiuzad-4jx2fo"
+    },
+    "u-mggivu5l-7uncvj": {
+      "createdAt": 1759839304809,
+      "email": "test@test.com",
+      "name": "Diana Test",
+      "passwordHash": "h:13d",
+      "uid": "u-mggivu5l-7uncvj"
+    },
+    "u-mgjsmxee-52ay58": {
+      "createdAt": 1760037083799,
+      "email": "r@gmail.com",
+      "name": "a",
+      "passwordHash": "h:61",
+      "uid": "u-mgjsmxee-52ay58"
+    },
+    "u-mgjsp0j9-2te67n": {
+      "createdAt": 1760037181174,
+      "email": "z@gmail.com",
+      "name": "micha veben",
+      "passwordHash": "h:7a",
+      "uid": "u-mgjsp0j9-2te67n"
+    },
+    "u-mgmo0hjo-mi5gwd": {
+      "createdAt": 1760210716885,
+      "email": "1@gmail.com",
+      "name": "a a",
+      "passwordHash": "h:31",
+      "uid": "u-mgmo0hjo-mi5gwd"
+    },
+    "u-mgozoi8a-g6iz4j": {
+      "createdAt": 1760351245642,
+      "email": "test@test2.de",
+      "name": "test",
+      "passwordHash": "h:1c0",
+      "uid": "u-mgozoi8a-g6iz4j"
+    },
+    "u-mgpa6ty6-pl1mxl": {
+      "createdAt": 1760368896798,
+      "email": "tobias_schmidt@gmail.com",
+      "name": "Tobias schmidt",
+      "passwordHash": "h:61",
+      "uid": "u-mgpa6ty6-pl1mxl"
+    },
+    "u-mgronrox-4b1l2f": {
+      "createdAt": 1760514134001,
+      "email": "lilly@fee.de",
+      "name": "lilly",
+      "passwordHash": "h:19e",
+      "uid": "u-mgronrox-4b1l2f"
+    },
+    "u-mgs17tm7-a0e0a0": {
+      "createdAt": 1760535225007,
+      "email": "b@web.de",
+      "name": "\\zx",
+      "passwordHash": "h:61",
+      "uid": "u-mgs17tm7-a0e0a0"
+    }
+  }
+}

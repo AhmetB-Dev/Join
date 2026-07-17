@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const REDIRECT_AFTER_AUTH = "../summary.html";
+  const REDIRECT_AFTER_AUTH = "./summary.html";
   const { isValidEmail, createUser, verifyLogin } = window.AuthCore || {};
 
   /** Get element by id. @param {string} id @returns {HTMLElement|null} */
@@ -234,24 +234,94 @@
   /** Show the main view (CSS hook). */
   const revealMain = () => document.body.classList.add("show-login");
 
-  /** Animate splash logo via CSS and remove splash. */
+  /** Move the animated logo into its reserved header slot without a visual swap. */
+  const finishSplash = (splash, splashLogo, headerLogo, moveAnimation) => {
+    headerLogo.replaceWith(splashLogo);
+    moveAnimation?.cancel();
+    splashLogo.removeAttribute("style");
+    splashLogo.className = "header-logo";
+    splash.remove();
+  };
+
+  /** Create and measure the logo's permanent responsive header position. */
+  const prepareHeaderLogo = (logo, brand) => {
+    const intrinsicWidth = logo.naturalWidth || 274;
+    const intrinsicHeight = logo.naturalHeight || 357;
+    logo.setAttribute("width", String(intrinsicWidth));
+    logo.setAttribute("height", String(intrinsicHeight));
+
+    const headerLogo = logo.cloneNode(false);
+    headerLogo.removeAttribute("id");
+    headerLogo.className = "header-logo";
+    headerLogo.style.visibility = "hidden";
+    brand.appendChild(headerLogo);
+    return { headerLogo, target: headerLogo.getBoundingClientRect() };
+  };
+
+  /** Animate the centered splash logo slowly into the header. */
   const animateSplash = () => {
     const s = byId("splash"),
       l = byId("joinLogo");
     const brand = byId("brandSlot") || document.querySelector("header .brand");
     if (!s || !l) return;
     if (!brand) return void s.remove();
-    brand.appendChild(l);
-    l.classList.remove("splash-logo");
-    l.classList.add("header-logo", "logo-anim");
-    const reduce = !!matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+
+    const { headerLogo, target } = prepareHeaderLogo(l, brand);
+    const reduce = !!window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
     if (reduce) {
-      s.classList.add("is-fading");
-      s.addEventListener("transitionend", () => s.remove(), { once: true });
+      finishSplash(s, l, headerLogo);
       return;
     }
-    s.classList.add("is-fading");
-    l.addEventListener("animationend", () => s.remove(), { once: true });
+
+    const start = l.getBoundingClientRect();
+    if (!start.width || !target.width || typeof l.animate !== "function") {
+      finishSplash(s, l, headerLogo);
+      return;
+    }
+
+    l.classList.add("logo-traveling");
+    Object.assign(l.style, {
+      left: `${start.left}px`,
+      top: `${start.top}px`,
+      width: `${start.width}px`,
+      height: `${start.height}px`,
+    });
+
+    const moveAnimation = l.animate(
+      [
+        {
+          left: `${start.left}px`,
+          top: `${start.top}px`,
+          width: `${start.width}px`,
+          height: `${start.height}px`,
+        },
+        {
+          left: `${target.left}px`,
+          top: `${target.top}px`,
+          width: `${target.width}px`,
+          height: `${target.height}px`,
+        },
+      ],
+      {
+        duration: 2520,
+        easing: "cubic-bezier(.16, 1, .3, 1)",
+        fill: "forwards",
+      }
+    );
+
+    s.animate(
+      [{ backgroundColor: "#ffffff" }, { backgroundColor: "rgba(255, 255, 255, 0)" }],
+      {
+        duration: 2520,
+        easing: "cubic-bezier(.16, 1, .3, 1)",
+        fill: "forwards",
+      }
+    );
+
+    moveAnimation.finished.then(
+      () => finishSplash(s, l, headerLogo, moveAnimation),
+      () => finishSplash(s, l, headerLogo, moveAnimation)
+    );
   };
 
   /** Render auth view for current mode. */
@@ -313,7 +383,7 @@
       } catch {
         byId("splash")?.remove();
       }
-    }, 860);
+    }, 1680);
   };
 
   document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", init) : init();

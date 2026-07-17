@@ -63,7 +63,7 @@ function generateContactItemHTML(contact) {
   const initials = getInitials(contact.name);
   const avatarClass = getAvatarClass(contact.name);
   return `
-    <div class="contact-item" onclick="selectContact('${contact.id}')">
+    <div class="contact-item" onclick="selectContact('${contact.id}', event)">
       <div class="avatar-contact-circle ${avatarClass}">${initials}</div>
       <div class="contact-info">
         <div class="contact-name">${contact.name}</div>
@@ -75,8 +75,9 @@ function generateContactItemHTML(contact) {
 /**
  * Handle selecting a contact in the list and open details.
  * @param {string} id
+ * @param {Event} event
  */
-function selectContact(id) {
+function selectContact(id, event) {
   const allItems = document.querySelectorAll('.contact-item');
   allItems.forEach(item => item.classList.remove('selected'));
   const clickedItem = event.target.closest('.contact-item');

@@ -1,25 +1,25 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>Log in</title>
-    <link rel="icon" href="../img/capa.png" type="image/png" />
+    <link rel="icon" href="./img/capa.png" type="image/png" />
 
     <!-- Styles -->
-    <link rel="stylesheet" href="../styles/animations-logo.css" />
-    <link rel="stylesheet" href="../styles/log.css" />
-    <link rel="stylesheet" href="../styles/log-responsive.css" />
+    <link rel="stylesheet" href="./styles/animations-logo.css" />
+    <link rel="stylesheet" href="./styles/log.css" />
+    <link rel="stylesheet" href="./styles/log-responsive.css" />
 
     <!-- Scripts -->
-    <script src="../scripts/firebase.js" defer></script>
-    <script src="../scripts/auth-core.js" defer></script>
-    <script src="../scripts/auth-ui.js" defer></script>
+    <script src="./scripts/firebase.js" defer></script>
+    <script src="./scripts/auth-core.js" defer></script>
+    <script src="./scripts/auth-ui.js" defer></script>
   </head>
 
   <body>
     <div class="splash" id="splash">
-      <img class="splash-logo" id="joinLogo" src="../img/capa.png" alt="Join Logo" />
+      <img class="splash-logo" id="joinLogo" src="./img/capa.png" alt="Join Logo" />
     </div>
 
     <header class="site-header">
@@ -45,26 +45,24 @@
         >
           <div class="login-header">
             <h1 class="panel-title" id="loginTitle">Log in</h1>
-            <img src="../img/Vector 5.png" alt="" />
+            <img src="./img/Vector 5.png" alt="" />
           </div>
 
           <div id="authMessageLogin" class="auth-message" aria-live="polite"></div>
 
           <div class="form-grid" role="form">
             <input
-              class="email-icon"
+              class="email-icon padding-bottom"
               id="loginEmail"
               type="email"
-              class="padding-bottom"
               placeholder="Email"
               autocomplete="username"
             />
 
             <input
-              class="passwort-icon visibile-icon"
+              class="passwort-icon visibile-icon padding-bottom"
               id="loginPassword"
               type="password"
-              class="padding-bottom"
               placeholder="Password"
               autocomplete="current-password"
             />
@@ -96,12 +94,12 @@
                   type="button"
                   aria-label="Zurück zum Login"
                 >
-                  <img class="arrow-image" src="../img/arrow-left-line.png" alt="" />
+                  <img class="arrow-image" src="./img/arrow-left-line.png" alt="" />
                 </button>
               </div>
               <div class="signup-title">
                 <h1 class="panel-title" id="signupTitle">Sign up</h1>
-                <img src="../img/Vector 5.png" alt="" />
+                <img src="./img/Vector 5.png" alt="" />
               </div>
             </div>
 
@@ -110,34 +108,30 @@
 
             <div class="form-grid" role="form">
               <input
-                class="name-icon"
+                class="name-icon padding-bottom"
                 id="signupName"
                 type="text"
-                class="padding-bottom"
                 placeholder="Name"
                 autocomplete="name"
               />
               <input
-                class="email-icon"
+                class="email-icon padding-bottom"
                 id="signupEmail"
                 type="email"
-                class="padding-bottom"
                 placeholder="Email"
                 autocomplete="email"
               />
               <input
-                class="passwort-icon visibile-icon"
+                class="passwort-icon visibile-icon padding-bottom"
                 id="signupPassword"
                 type="password"
-                class="padding-bottom"
                 placeholder="Password"
                 autocomplete="new-password"
               />
               <input
-                class="passwort-icon visibile-icon"
+                class="passwort-icon visibile-icon padding-bottom"
                 id="signupPasswordConfirm"
                 type="password"
-                class="padding-bottom"
                 placeholder="Confirm password"
                 autocomplete="new-password"
               />
@@ -147,7 +141,7 @@
               <input class="checkbox-input" type="checkbox" id="acceptPolicy" />
               <label for="acceptPolicy"
                 >I accept the
-                <a href="../resources/private-policy/privacy-policy-guest.html">Privacy Policy</a></label
+                <a href="./resources/private-policy/privacy-policy-guest.html">Privacy Policy</a></label
               >
             </div>
 
@@ -160,8 +154,8 @@
     </main>
 
     <footer>
-      <a href="../resources/private-policy/privacy-policy-guest.html">Privacy Policy</a>
-      <a href="../resources/legal-notice/legal-notice-guest.html">Legal notice</a>
+      <a href="./resources/private-policy/privacy-policy-guest.html">Privacy Policy</a>
+      <a href="./resources/legal-notice/legal-notice-guest.html">Legal notice</a>
     </footer>
   </body>
 </html>
