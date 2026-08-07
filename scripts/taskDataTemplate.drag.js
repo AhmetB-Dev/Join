@@ -39,7 +39,7 @@ function attachDropListenersToColumns() {
  * @param {string} newColumn
  * @returns {Promise<void>}
  */
-async function updateTaskColumnInFirebase(taskId, newColumn) {
+async function updateTaskColumnInAPI(taskId, newColumn) {
   try {
     await patchTaskColumn(taskId, newColumn);
     updateTaskDOMPosition(taskId, newColumn);
@@ -49,19 +49,13 @@ async function updateTaskColumnInFirebase(taskId, newColumn) {
 }
 
 /**
- * Send PATCH request to update task column in Firebase.
+ * Send PATCH request to update a task column through the Django API.
  * @param {string} taskId
  * @param {string} newColumn
  * @returns {Promise<void>}
  */
 async function patchTaskColumn(taskId, newColumn) {
-  const url = `https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks/${taskId}.json`;
-  const r = await fetch(url, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ column: newColumn })
-  });
-  if (!r.ok) throw new Error(`Error updating task column: ${r.statusText}`);
+  await JoinAPI.patch(`/tasks/${taskId}/`, { column: newColumn });
 }
 
 /**

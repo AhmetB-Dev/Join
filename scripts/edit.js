@@ -225,13 +225,11 @@ function setupOpenButtons() {
   }
 
   /**
-   * Fetch contacts JSON from Firebase.
+   * Fetch contacts from the Django REST API.
    * @returns {Promise<object>}
    */
   async function fetchContactsForAssignee() {
-    const url = 'https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/contacts.json';
-    const response = await fetch(url);
-    return await response.json();
+    return JoinAPI.toObjectById(await JoinAPI.get('/contacts/'));
   }
 
   /**

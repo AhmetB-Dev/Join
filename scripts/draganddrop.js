@@ -254,7 +254,7 @@ function attachColumnDropEvent(column) {
 function handleTaskDrop(column, task) {
   insertTaskAtPlaceholderOrEnd(column, task);
   task.style.transform = "rotate(0deg) scale(1)";
-  updateTaskColumnInFirebase(task.id, column.id);
+  updateTaskColumnInAPI(task.id, column.id);
 }
 
 /**

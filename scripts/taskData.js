@@ -19,41 +19,34 @@ function getInitials(fullName) {
 }
 
 /**
- * Return a random color string from a predefined set.
- * @returns {"red"|"green"|"blue"|"pink"|"orange"|"purple"}
+ * Add visual-only assignee metadata after loading tasks.
+ * Colors are derived from the contact name, so they stay stable across reloads.
  */
-function getRandomColor() {
-  const colors = ["red", "green", "blue", "pink", "orange", "purple"];
-  return colors[Math.floor(Math.random() * colors.length)];
-}
-
 function enrichTasksWithUserData(tasks) {
   tasks.forEach(task => {
-    if (!task.users) return;
+    if (!Array.isArray(task.users)) return;
     task.users.forEach(user => {
+      if (!user || !user.name) return;
       if (!user.initials) user.initials = getInitials(user.name);
-      if (!user.color) user.color = getRandomColor();
+      user.color = getAvatarColor(user.name);
     });
   });
 }
 
 /**
- * Load tasks from Firebase and enrich with user metadata.
+ * Load tasks from the Django REST API and enrich with user metadata.
  * @returns {Promise<Array<object>>}
  */
-async function loadTasksFromFirebase() {
-  const url = "https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks.json";
+async function loadTasksFromAPI() {
   try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error("Error loading tasks");
-    let data = await response.json();
-    if (!data || typeof data !== "object") return [];
-    let tasksArray = Object.entries(data)
-      .filter(([key]) => key !== "null" && key !== "task-3")
-      .map(([key, value]) => ({ firebaseKey: key, ...value }));
+    const data = await JoinAPI.get('/tasks/');
+    const tasksArray = (Array.isArray(data) ? data : [])
+      .filter(task => task && task.id !== null && task.id !== undefined)
+      .map(task => ({ ...task, id: String(task.id) }));
     enrichTasksWithUserData(tasksArray);
     return tasksArray;
   } catch (error) {
+    console.error('Error loading tasks:', error);
     return [];
   }
 }
@@ -124,7 +117,7 @@ function attachDragOverListenersToColumns() {
  * @returns {Promise<void>}
  */
 async function initTaskData() {
-  tasks = await loadTasksFromFirebase();
+  tasks = await loadTasksFromAPI();
   generateTasks(tasks);
   if (typeof window.reinitializeDragAndDrop === 'function') {
     window.reinitializeDragAndDrop();
@@ -148,7 +141,7 @@ async function closeModalAndReload() {
   try {
     document.querySelectorAll('.draggable-cards').forEach(card => card.remove());
     
-    const tasks = await loadTasksFromFirebase();
+    const tasks = await loadTasksFromAPI();
     generateTasks(tasks);
     if (typeof window.reinitializeDragAndDrop === 'function') {
       window.reinitializeDragAndDrop();

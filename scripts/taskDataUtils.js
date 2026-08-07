@@ -88,7 +88,7 @@ function attachMoveDropdownOptions(taskEl, dd) {
     option.addEventListener("click", async function (ev) {
       ev.stopPropagation();
       const ns = option.dataset.status;
-      await updateTaskColumnInFirebase(taskEl.id, ns);
+      await updateTaskColumnInAPI(taskEl.id, ns);
       const newCol = document.getElementById(ns);
       if (newCol) newCol.appendChild(taskEl);
       dd.classList.remove("visible");

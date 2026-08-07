@@ -1,11 +1,10 @@
 /**
- * Load contacts from Firebase and populate the assignment dropdown.
+ * Load contacts from the Django API and populate the assignment dropdown.
  * @returns {Promise<void>}
  */
 async function loadContactsForAssignment() {
   try {
-    const response = await fetch('https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/contacts.json');
-    const contacts = await response.json();
+    const contacts = JoinAPI.toObjectById(await JoinAPI.get('/contacts/'));
     populateContactDropdown(contacts);
   } catch (error) {
     console.error('Error loading contacts:', error);

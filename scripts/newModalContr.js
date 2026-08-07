@@ -6,8 +6,7 @@
  */
 async function loadContacts(assignedUsers = []) {
   try {
-    const response = await fetch('https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/contacts.json');
-    const contacts = await response.json();
+    const contacts = JoinAPI.toObjectById(await JoinAPI.get('/contacts/'));
     populateAssigneeDropdown(contacts, assignedUsers);
   } catch (error) {
     console.error(error);

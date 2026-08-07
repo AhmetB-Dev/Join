@@ -1,15 +1,28 @@
 /**
- * Get a CSS class for user avatar color based on the name length.
+ * Return a stable avatar color for a name.
+ * The same contact always gets the same color after reloads and API requests.
+ * @param {string} name Full name
+ * @returns {"red"|"blue"|"green"|"purple"|"orange"|"pink"}
+ */
+function getAvatarColor(name) {
+    const colors = ['red', 'blue', 'green', 'purple', 'orange', 'pink'];
+    const normalized = String(name || '').trim().toLowerCase();
+    let hash = 0;
+
+    for (const char of normalized) {
+        hash = ((hash * 31) + char.codePointAt(0)) >>> 0;
+    }
+
+    return colors[hash % colors.length];
+}
+
+/**
+ * Get the CSS class for the stable avatar color.
  * @param {string} name Full name
  * @returns {string} CSS class name
  */
 function getAvatarClass(name) {
-    const colors = [
-        'profile-badge-red', 'profile-badge-blue', 'profile-badge-green',
-        'profile-badge-purple', 'profile-badge-orange', 'profile-badge-pink', 'profile-badge-teal'
-    ];
-    const index = name.length % colors.length;
-    return colors[index];
+    return `profile-badge-${getAvatarColor(name)}`;
 };
 
 /**

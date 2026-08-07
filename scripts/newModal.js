@@ -261,12 +261,12 @@ function setEditPriority(priority) {
 }
 
 /**
- * Saves the currently edited task to Firebase and closes the modal.
+ * Saves the currently edited task through the API and closes the modal.
  */
-async function saveEditedTaskToFirebase() {
+async function saveEditedTaskToAPI() {
   if (!currentTask) return;
   updateTaskFromInputs();
-  await updateTaskInFirebase(currentTask);
+  await updateTaskInAPI(currentTask);
   closeEditModal();
   
   if (typeof closeModalAndReload === 'function') {
@@ -292,21 +292,13 @@ function updateTaskFromInputs() {
 }
 
 /**
- * Updates a task in Firebase via PUT.
- * @param {{firebaseKey?:string}} task
+ * Updates a task through the Django REST API.
+ * @param {{id?:string|number}} task
  */
-async function updateTaskInFirebase(task) {
-  if (!task || !task.firebaseKey) return;
-  const url = `https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks/${task.firebaseKey}.json`;
-  try {
-    const response = await fetch(url, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(task)
-    });
-    if (!response.ok) throw new Error(`Update failed: ${response.statusText}`);
-  } catch (error) {
-  }
+async function updateTaskInAPI(task) {
+  const taskId = task?.id ?? window.currentTaskId;
+  if (taskId === null || taskId === undefined || taskId === '') return null;
+  return JoinAPI.put(`/tasks/${taskId}/`, JoinAPI.taskPayload(task));
 }
 
 /**
@@ -357,40 +349,35 @@ function getBadgeClassFromAnyColor(colorValue) {
 }
 
 /**
- * Opens the Edit-Modal from the overlay and loads fresh data if necessary.
+ * Opens the Edit-Modal from the overlay and refreshes the task from the API.
  */
 async function editTaskFromOverlay(event) {
   event.stopPropagation();
   if (!currentTask) return;
-  
-  if (currentTask.firebaseKey) {
-    try {
-      const url = `https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks/${currentTask.firebaseKey}.json`;
-      const response = await fetch(url);
-      if (response.ok) {
-        const freshTask = await response.json();
-        window.currentTask = { ...freshTask, firebaseKey: currentTask.firebaseKey };
-        fillEditModal(window.currentTask);
-      } else {
-        fillEditModal(currentTask);
-      }
-    } catch (error) {
+
+  const taskId = currentTask.id ?? window.currentTaskId;
+  try {
+    const freshTask = taskId !== null && taskId !== undefined
+      ? await JoinAPI.get(`/tasks/${taskId}/`)
+      : null;
+    if (freshTask) {
+      window.currentTask = { ...freshTask, id: String(freshTask.id) };
+      fillEditModal(window.currentTask);
+    } else {
       fillEditModal(currentTask);
     }
-  } else {
+  } catch (error) {
     fillEditModal(currentTask);
   }
-  
+
   document.getElementById('toggleModalFloating').style.display = 'none';
   const modal = document.getElementById('editTaskModal');
   if (modal) modal.style.display = 'flex';
-  if (typeof initTaskDataModal === 'function') {
-    initTaskDataModal();
-  }
+  if (typeof initTaskDataModal === 'function') initTaskDataModal();
 }
 
 /** Subtask initialization and New-Subtask helpers are outsourced to newModal.subtasks.js */
 function initEditModal() {
-  document.getElementById('confirmEditBtn')?.addEventListener('click', saveEditedTaskToFirebase);
+  document.getElementById('confirmEditBtn')?.addEventListener('click', saveEditedTaskToAPI);
   initSubtaskCreation();
 }

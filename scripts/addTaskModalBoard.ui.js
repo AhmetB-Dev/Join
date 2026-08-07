@@ -30,7 +30,7 @@ async function createTaskHandler(e) {
   if (!validateForm()) return;
   btn.disabled = true;
   try {
-    await addTaskToFirebase();
+    await addTaskToAPI();
   } catch (error) {
     console.error("Task creation failed", error);
   } finally {

@@ -20,19 +20,15 @@ function setPriorityFloatingEdit(priority) {
 }
 
 /**
- * Delete the currently opened task from Firebase and refresh the board.
+ * Delete the currently opened task through the Django API and refresh the board.
  * @returns {Promise<void>}
  */
-async function deleteTaskFromFirebase() {
+async function deleteTaskFromAPI() {
   if (!currentTaskId) {
     return;
   }
   try {
-    const url = `https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks/${currentTaskId}.json`;
-    const response = await fetch(url, { method: 'DELETE' });
-    if (!response.ok) {
-      throw new Error(`Error deleting task: ${response.statusText}`);
-    }
+    await JoinAPI.delete(`/tasks/${currentTaskId}/`);
     document.getElementById("toggleModalFloating").style.display = "none";
     if (typeof closeModalAndReload === 'function') {
       await closeModalAndReload();

@@ -1,12 +1,6 @@
 (() => {
   "use strict";
   /** @type {const} */
-  const BASE_URL =
-    (window.FIREBASE_URL && String(window.FIREBASE_URL)) ||
-    "https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/";
-  /** @type {const} */
-  const TASKS_NODE = "tasks";
-  /** @type {const} */
   const POLL_MS = 1500;
   /** @type {const} */
   const DATE_LOCALE = "en-US";
@@ -19,15 +13,6 @@
     "tasks in progress": "inProgress",
     "awaiting feedback": "awaitFeedback",
   };
-
-  /** Read data from Firebase (if available) or via fetch. */
-  /** @param {string} path @returns {Promise<any>} */
-  const firebaseGetPath = (path) =>
-    typeof window.firebaseGet === "function"
-      ? window.firebaseGet(path)
-      : fetch(`${BASE_URL}${path}.json`)
-          .then((r) => r.json())
-          .catch(() => null);
 
   /** Normalize column names. */
   /** @param {string} rawColumn @returns {"toDoColumn"|"inProgress"|"awaitFeedback"|"done"|""} */
@@ -74,7 +59,7 @@
     const isObj = (x) => x && typeof x === "object" && !Array.isArray(x);
     const rows = isObj(rawData) ? Object.values(rawData) : Array.isArray(rawData) ? rawData : [];
     return rows.filter(isObj).map((row, i) => ({
-      id: row.firebaseKey || row.id || String(i),
+      id: row.id ?? String(i),
       column: normalizeColumn(row.column ?? row.status ?? row.state ?? row.list ?? ""),
       priority: normalizePriority(row.priority ?? row.prio ?? ""),
       dueDate: parseDate(row.dueDate ?? row.deadline ?? row.date ?? ""),
@@ -156,10 +141,12 @@
       }
     }
     if (badge) {
-      const pieces = name.split(/\s+/);
-      const a = (pieces[0] || "")[0] || "",
-        b = (pieces[pieces.length - 1] || "")[0] || "";
-      badge.textContent = !isGuest && name ? (a + b).toUpperCase() : "G";
+      const pieces = name.split(/\s+/).filter(Boolean);
+
+      const first = (pieces[0] || "")[0] || "";
+      const last = pieces.length > 1 ? (pieces[pieces.length - 1] || "")[0] || "" : "";
+
+      badge.textContent = !isGuest && name ? (first + last).toUpperCase() : "G";
     }
   };
 
@@ -225,7 +212,7 @@
   /** @returns {Promise<void>} */
   const fetchAndRender = async () => {
     try {
-      const raw = await firebaseGetPath(TASKS_NODE);
+      const raw = await JoinAPI.get("/tasks/");
       const tasks = parseAndNormalizeTasks(raw);
       renderCounters(computeCounters(tasks), tasks);
       renderGreeting();

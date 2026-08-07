@@ -2,7 +2,7 @@ window.currentTask = null;
 window.currentTaskId = null;
 
 /**
- * Patch subtask status for currentTask and update progress in Firebase.
+ * Patch subtask status for currentTask and update progress through the API.
  * @param {string} taskId
  * @param {number} subtaskIndex
  * @param {boolean} newStatus
@@ -45,21 +45,18 @@ function calculateSubtaskProgress() {
 }
 
 /**
- * Persist subtask changes to Firebase.
+ * Persist subtask changes through the API.
  * @param {string} taskId
  * @param {number} newProgress
  * @returns {void}
  */
 function persistSubtaskChanges(taskId, newProgress) {
-  const url = `https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks/${taskId}.json`;
-  fetch(url, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ subtasks: window.currentTask.subtasks, progress: newProgress })
-  }).then(r => {
-    if (!r.ok) throw new Error("Error updating subtask status.");
-    updateTaskCardInBackground(taskId);
-  }).catch(() => {});
+  JoinAPI.patch(`/tasks/${taskId}/`, {
+    subtasks: window.currentTask.subtasks,
+    progress: Math.round(newProgress)
+  })
+    .then(() => updateTaskCardInBackground(taskId))
+    .catch(error => console.error('Error updating subtask status:', error));
 }
 
 /**
@@ -69,7 +66,7 @@ function persistSubtaskChanges(taskId, newProgress) {
  */
 async function updateTaskCardInBackground(taskId) {
   try {
-    const updatedTask = await fetchTaskFromFirebase(taskId);
+    const updatedTask = await fetchTaskFromAPI(taskId);
     if (updatedTask) {
       refreshTaskCard(taskId, updatedTask);
     }
@@ -79,13 +76,13 @@ async function updateTaskCardInBackground(taskId) {
 }
 
 /**
- * Fetch task data from Firebase.
+ * Fetch task data from the Django API.
  * @param {string} taskId
  * @returns {Promise<object|null>}
  */
-async function fetchTaskFromFirebase(taskId) {
-  const response = await fetch(`https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks/${taskId}.json`);
-  return await response.json();
+async function fetchTaskFromAPI(taskId) {
+  const task = await JoinAPI.get(`/tasks/${taskId}/`);
+  return task ? { ...task, id: String(task.id) } : null;
 }
 
 /**
@@ -111,7 +108,7 @@ function refreshTaskCard(taskId, updatedTask) {
  * @returns {void}
  */
 function replaceTaskCard(existingCard, updatedTask, taskId) {
-  const newCard = createTaskElement({ ...updatedTask, firebaseKey: taskId });
+  const newCard = createTaskElement({ ...updatedTask, id: String(updatedTask.id ?? taskId) });
   attachTaskListeners(updatedTask, newCard);
   existingCard.parentNode.replaceChild(newCard, existingCard);
 }
@@ -273,12 +270,12 @@ function renderSubtasks(task) {
 
 /**
  * Open the floating task overlay for the given task object.
- * @param {{firebaseKey?:string,id?:string}} task
+ * @param {{id:string|number}} task
  * @returns {void}
  */
 function openTaskModal(task) {
   window.currentTask = task;
-  window.currentTaskId = task.firebaseKey || task.id;
+  window.currentTaskId = String(task.id);
   const modal = document.getElementById('toggleModalFloating');
   modal.dataset.taskId = window.currentTaskId;
   renderModalHeader(task, modal);
@@ -300,14 +297,14 @@ function calculateProgress(task) {
 
 /**
  * Create a draggable card element for a task.
- * @param {{firebaseKey?:string,id?:string,title:string,description:string,priority?:string,users?:Array}} task
+ * @param {{id:string|number,title:string,description:string,priority?:string,users?:Array}} task
  * @returns {HTMLElement}
  */
 function createTaskElement(task) {
   const { total, completed, progress } = calculateProgress(task);
   const el = document.createElement("div");
   el.classList.add("draggable-cards");
-  el.id = task.firebaseKey || task.id;
+  el.id = String(task.id);
   el.setAttribute("draggable", isTouchDevice() ? "false" : "true");
   el.dataset.title = task.title.toLowerCase();
   el.dataset.description = task.description.toLowerCase();
@@ -353,7 +350,7 @@ function attachTaskListeners(task, taskEl) {
 function attachDragEndListener(taskEl) {
   taskEl.addEventListener("dragend", async function () {
     const newCol = taskEl.closest(".task-board-container")?.id;
-    if (newCol) await updateTaskColumnInFirebase(taskEl.id, newCol);
+    if (newCol) await updateTaskColumnInAPI(taskEl.id, newCol);
   });
 }
 

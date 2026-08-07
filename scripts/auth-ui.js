@@ -1,7 +1,7 @@
 (() => {
   "use strict";
   const REDIRECT_AFTER_AUTH = "./summary.html";
-  const { isValidEmail, createUser, verifyLogin } = window.AuthCore || {};
+  const { isValidEmail, createUser, verifyLogin, guestLogin } = window.AuthCore || {};
 
   /** Get element by id. @param {string} id @returns {HTMLElement|null} */
   const byId = (id) => document.getElementById(id);
@@ -357,15 +357,19 @@
     byId("backToLoginBtn")?.addEventListener("click", backToLogin);
   };
 
-  /** Guest login: mark and redirect. */
-  const handleGuestLogin = () => {
+  /** Authenticate as the backend guest account and redirect. */
+  const handleGuestLogin = async () => {
+    showMsg("");
     try {
-      localStorage.setItem("isGuest", "true");
+      await guestLogin();
       ["name", "firstName", "lastName"].forEach((k) => localStorage.removeItem(k));
+      localStorage.setItem("isGuest", "true");
       sessionStorage.setItem("summary.triggerSplash", "1");
       localStorage.setItem("summary.triggerSplash", "1");
-    } catch {}
-    window.location.href = REDIRECT_AFTER_AUTH;
+      window.location.href = REDIRECT_AFTER_AUTH;
+    } catch (error) {
+      showMsg(error?.message || "Guest login failed.");
+    }
   };
 
   /** Initialize module, bind UI, run splash. */

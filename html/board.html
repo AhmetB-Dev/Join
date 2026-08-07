@@ -22,13 +22,14 @@
   <link rel="stylesheet" href="../styles/newmodal.css" />
   <link rel="stylesheet" href="../styles/contacts.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  <script src="../scripts/api.js"></script>
   <script src="../scripts/account-name.js"></script>
   <script src="../scripts/utils.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/de.js"></script>
   <script src="../scripts/datepicker.js"></script>
   <script src="../scripts/addTaskModalBoard.contacts.js"></script>
-  <script src="../scripts/addTaskModalBoard.firebase.js"></script>
+  <script src="../scripts/addTaskModalBoard.api.js"></script>
   <script src="../scripts/addTaskModalBoard.validation.js"></script>
   <script src="../scripts/addTaskModalBoard.data.js"></script>
   <script src="../scripts/addTaskModalBoard.category.js"></script>
@@ -45,7 +46,7 @@
   <script src="../scripts/newModal.subtasks.js"></script>
   <script src="../scripts/newModal.js"></script>
   <script src="../scripts/taskDataModal.subtasks.js"></script>
-  <script src="../scripts/taskDataModal.firebase.js"></script>
+  <script src="../scripts/taskDataModal.api.js"></script>
   <script src="../scripts/taskDataModal.js"></script>
   <script src="../scripts/taskDataUtils.contacts.js"></script>
   <script src="../scripts/edit.js"></script>
@@ -387,7 +388,7 @@
           <div class="subtask-container-div" id="modalSubtasks"></div>
         </div>
         <div class="delete-edit-container w445">
-          <img src="../img/delete-contacts.png" alt="delete contacts" onclick="deleteTaskFromFirebase()" />
+          <img src="../img/delete-contacts.png" alt="delete contacts" onclick="deleteTaskFromAPI()" />
           <img src="../img/edit-contacts.png" alt="edit contacts" onclick="editTaskFromOverlay(event)" />
         </div>
       </div>

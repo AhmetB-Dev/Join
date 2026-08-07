@@ -76,7 +76,7 @@ function attachCheckboxChangeHandler(checkbox, subtask, index) {
   checkbox.addEventListener('change', function() {
     subtask.completed = this.checked;
     if (window.currentTask && window.currentTaskId) {
-      updateSubtaskStatusInFirebaseWithLocalData(window.currentTaskId, index, this.checked);
+      updateSubtaskStatusInAPIWithLocalData(window.currentTaskId, index, this.checked);
     }
   });
 }
@@ -301,7 +301,7 @@ function registerBlurHandler(input, container, originalText) {
     const finalText = newText !== '' ? newText : originalText;
     const newSpan = createSubtaskTextSpan(finalText);
     container.replaceChild(newSpan, input);
-    await updateSubtaskInFirebase(container, finalText);
+    await updateSubtaskInAPI(container, finalText);
   });
 }
 

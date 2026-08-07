@@ -118,7 +118,7 @@ function resetTaskDragState(state) {
  */
 function dropTaskInColumn(column, task) {
   insertTaskAtPlaceholderOrEnd(column, task);
-  updateTaskColumnInFirebase(task.id, column.id);
+  updateTaskColumnInAPI(task.id, column.id);
 }
 
 /**

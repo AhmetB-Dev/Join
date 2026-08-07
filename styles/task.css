@@ -73,7 +73,7 @@ label.star-red::after {
 .task-form-right {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8.5px;
 }
 
 button:hover {
@@ -138,7 +138,10 @@ button:hover {
   border: 1px solid #d1d5db;
   background: #fff;
   color: #2a3647;
-  transition: background-color 0.15s, color 0.15s, transform 0.1s;
+  transition:
+    background-color 0.15s,
+    color 0.15s,
+    transform 0.1s;
 }
 #addtask-container .priority-btn button img {
   width: 18px;
@@ -215,7 +218,9 @@ button:hover {
   cursor: pointer;
   background: #fff;
   color: #111827;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 .at-assign-item:hover {
   background: #f3f4f6;

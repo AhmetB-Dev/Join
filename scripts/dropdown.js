@@ -30,10 +30,14 @@ document.addEventListener('DOMContentLoaded', function () {
  * Removes user data from localStorage and sessionStorage.
  */
 window.logout = function logout() {
+  if (window.JoinAPI?.logout) {
+    window.JoinAPI.logout();
+    return;
+  }
   try {
+    localStorage.removeItem('join.authToken');
     localStorage.setItem('isGuest', 'false');
     localStorage.removeItem('name');
     sessionStorage.clear();
-  } catch (e) {
-  }
+  } catch (e) {}
 };

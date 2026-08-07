@@ -1,11 +1,11 @@
 /**
- * Persist the currently edited task to Firebase and refresh UI.
+ * Persist the currently edited task to Django API and refresh UI.
  * @returns {Promise<void>}
  */
-async function saveEditedTaskToFirebase() {
+async function saveEditedTaskToAPI() {
   if (!currentTask) return;
   updateTaskFromInputs();
-  await updateTaskInFirebase(currentTask);
+  await updateTaskInAPI(currentTask);
   closeEditModal();
   await triggerModalReload();
 }
@@ -114,11 +114,11 @@ function triggerBackgroundCardUpdate() {
 }
 
 /**
- * Bind the confirm button to save edited task to Firebase.
+ * Bind the confirm button to save edited task to Django API.
  * @returns {void}
  */
 function bindConfirmEditButton() {
-  document.getElementById('confirmEditBtn')?.addEventListener('click', saveEditedTaskToFirebase);
+  document.getElementById('confirmEditBtn')?.addEventListener('click', saveEditedTaskToAPI);
 }
 
 /**
@@ -275,7 +275,7 @@ function attachEditBlurHandler(input, item, span, actionsDiv, current) {
     const newText = input.value.trim() || current;
     const newSpan = createSubtaskTextSpan(newText);
     replaceInputWithSpan(input, item, newSpan, actionsDiv);
-    await updateSubtaskInFirebase(item, newText);
+    await updateSubtaskInAPI(item, newText);
   });
 }
 

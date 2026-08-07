@@ -79,7 +79,7 @@ function createEditModalSubtaskContainer() {
 }
 
 /**
- * Create checkbox for a subtask with change handler saving to Firebase.
+ * Create checkbox for a subtask with change handler saving to Django API.
  */
 function createSubtaskCheckbox(subtask, index) {
   const checkbox = document.createElement('input');
@@ -89,7 +89,7 @@ function createSubtaskCheckbox(subtask, index) {
   checkbox.addEventListener('change', function () {
     subtask.completed = this.checked;
     if (window.currentTask && window.currentTaskId) {
-      updateSubtaskStatusInFirebase(window.currentTaskId, index, this.checked);
+      updateSubtaskStatusInAPI(window.currentTaskId, index, this.checked);
     }
   });
   return checkbox;
@@ -182,22 +182,21 @@ function removeSubtaskFromCurrentTask(item) {
 }
 
 /**
- * Persist subtask completion and progress to Firebase.
+ * Persist subtask completion and progress through the Django API.
  */
-async function updateSubtaskStatusInFirebase(taskId, subtaskIndex, newStatus) {
+async function updateSubtaskStatusInAPI(taskId, subtaskIndex, newStatus) {
   try {
-    const url = `https://join-360-fb6db-default-rtdb.europe-west1.firebasedatabase.app/tasks/${taskId}.json`;
-    const taskData = await (await fetch(url)).json();
+    const taskData = await JoinAPI.get(`/tasks/${taskId}/`);
     if (!taskData || !Array.isArray(taskData.subtasks)) return;
     if (subtaskIndex < 0 || subtaskIndex >= taskData.subtasks.length) return;
     taskData.subtasks[subtaskIndex].completed = newStatus;
     const total = taskData.subtasks.length;
     const completed = taskData.subtasks.filter(st => st.completed).length;
-    const progress = total ? (completed / total) * 100 : 0;
-    await fetch(url, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ subtasks: taskData.subtasks, progress }) });
+    const progress = total ? Math.round((completed / total) * 100) : 0;
+    await JoinAPI.patch(`/tasks/${taskId}/`, { subtasks: taskData.subtasks, progress });
     if (typeof updateTaskCardInBackground === 'function') updateTaskCardInBackground(taskId);
   } catch (err) {
-    console.error('Error updating subtask status in Firebase:', err);
+    console.error('Error updating subtask status through API:', err);
   }
 }
 
