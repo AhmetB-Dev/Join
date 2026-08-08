@@ -12,11 +12,12 @@
   padding: 88px 265px 32px 64px;
 }
 #addtask-container h2 {
-  font-size: 72px;
+  font-size: clamp(2.875rem, 2.4046rem + 1.711vw, 4.5rem);
   padding-bottom: 3rem;
+  z-index: 3;
 }
 #addtask-container label {
-  font-size: 20px;
+  font-size: clamp(1.25rem, -1.1731rem + 2.692vw, 2.125rem);
 }
 label.star-red::after {
   content: "*";
@@ -29,7 +30,7 @@ label.star-red::after {
   border: 1px solid #d1d1d1;
   border-radius: 8px;
   outline: none;
-  font-size: 16px;
+  font-size: clamp(0.9375rem, 0.9167rem + 0.093vw, 1rem);
 }
 #addtask-container select {
   padding: 6px 8px;
@@ -53,7 +54,7 @@ label.star-red::after {
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
   background: #fff;
-  font-size: 20px;
+  font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
   margin-left: -5px;
   cursor: pointer;
   color: #1f2a36;
@@ -90,7 +91,7 @@ button:hover {
   color: red;
 }
 .form-error {
-  font-size: 20px;
+  font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
 }
 .clear-creat-div {
   display: flex;
@@ -98,7 +99,7 @@ button:hover {
 }
 #clear-task-btn {
   display: flex;
-  font-size: 21px;
+  font-size: clamp(1.1875rem, 1.1458rem + 0.185vw, 1.3125rem);
   padding: 12px;
   border-radius: 8px;
   background: #f5f7f9;
@@ -106,7 +107,7 @@ button:hover {
 #create-task-btn {
   background: #2a3647;
   color: #fff;
-  font-size: 21px;
+  font-size: clamp(1.1875rem, 1.1458rem + 0.185vw, 1.3125rem);
   padding: 12px;
   border-radius: 8px;
 }
@@ -171,7 +172,7 @@ button:hover {
   background: #fff5f5;
 }
 .at-error-message {
-  font-size: 12px;
+  font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
   color: #ef4444;
   margin-top: -5px;
 }
@@ -186,7 +187,7 @@ button:hover {
   border: 1px solid #cbd5e1;
   border-radius: 10px;
   outline: none;
-  font-size: 16px;
+  font-size: clamp(1rem, -0.3846rem + 1.538vw, 1.5rem);
   background: #fff;
   padding: 10px 132px 10px 10px;
 }
@@ -238,7 +239,7 @@ button:hover {
   justify-content: center;
   font-weight: 700;
   color: #fff;
-  font-size: 12px;
+  font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
   flex: 0 0 28px;
 }
 .at-av-c1 {
@@ -264,7 +265,7 @@ button:hover {
 }
 .at-assign-name {
   flex: 1;
-  font-size: 14px;
+  font-size: clamp(0.875rem, -0.8558rem + 1.923vw, 1.5rem);
 }
 .at-assign-check {
   width: 18px;
@@ -285,7 +286,7 @@ button:hover {
   position: absolute;
   left: 2px;
   top: -2px;
-  font-size: 20px;
+  font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
   line-height: 1;
   color: #fff;
 }
@@ -309,7 +310,7 @@ button:hover {
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 12px;
+  font-size: clamp(0.75rem, -1.3269rem + 2.308vw, 1.5rem);
   color: #fff;
   cursor: pointer;
   user-select: none;
@@ -337,7 +338,7 @@ button:hover {
   background: #ec4899;
 }
 .at-assign-hint {
-  font-size: 12px;
+  font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
   color: #6b7280;
 }
 
@@ -410,7 +411,7 @@ ul {
   outline: none;
   background: transparent;
   color: #1f2937;
-  font-size: 15px;
+  font-size: clamp(0.875rem, 0.8542rem + 0.093vw, 0.9375rem);
   transition: border-color 0.2s ease;
 }
 .at-subtask-edit:focus {
@@ -433,7 +434,7 @@ ul {
   content: "No subtasks yet";
   display: block;
   color: #9ca3af;
-  font-size: 14px;
+  font-size: clamp(0.8125rem, 0.7917rem + 0.093vw, 0.875rem);
   padding: 16px 2px;
   text-align: center;
 }

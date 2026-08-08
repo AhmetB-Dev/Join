@@ -24,7 +24,7 @@
     justify-content: space-between;
     align-items: center;
     flex-direction: row;
-    font-size: 20px;
+    font-size: clamp(1rem, 0.89rem + 0.4vw, 1.25rem);
     font-weight: 400;
     color: #2a3647;
 }
@@ -58,7 +58,7 @@
     justify-content: center;
     align-items: center;
     color: #28abe2;
-    font-size: 32px;
+    font-size: clamp(1.5rem, 1.28rem + 0.8vw, 2rem);
     font-weight: 700;
     transition: background-color 0.1s ease-in-out;
 }
@@ -89,7 +89,7 @@
     .main-header {
         justify-content: center;
         align-items: center;
-        font-size: 18px;
+        font-size: clamp(1rem, 0.89rem + 0.4vw, 1.25rem);
     }
 
     .header-text {
@@ -109,7 +109,7 @@
     .account {
         width: 48px;
         height: 48px;
-        font-size: 28px;
+        font-size: clamp(1.5rem, 1.28rem + 0.8vw, 2rem);
     }
 
     .help-icon {
@@ -126,7 +126,7 @@
 @media (max-width: 440px) {
     .main-header {
         height: 64px;
-        font-size: 16px;
+        font-size: clamp(1rem, 0.89rem + 0.4vw, 1.25rem);
     }
 
     .header-right-side {
@@ -137,7 +137,7 @@
     .account {
         width: 40px;
         height: 40px;
-        font-size: 24px;
+        font-size: clamp(1.5rem, 1.28rem + 0.8vw, 2rem);
     }
 
     .header-Logo {

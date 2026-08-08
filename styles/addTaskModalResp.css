@@ -103,7 +103,7 @@
     align-items: center;
     gap: 8px;
     transition: box-shadow 0.1s ease;
-    font-size: 20px;
+    font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
     font-weight: 400;
 }
 
@@ -115,7 +115,7 @@
     background-color: #ff3d01;
     border-color: #999;
     color: white;
-    font-size: 21px;
+    font-size: clamp(1.1875rem, 1.1458rem + 0.185vw, 1.3125rem);
     font-weight: 700;
 }
 
@@ -134,7 +134,7 @@
     align-items: center;
     gap: 8px;
     transition: box-shadow 0.1s ease;
-    font-size: 20px;
+    font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
     font-weight: 400;
 }
 
@@ -146,7 +146,7 @@
     background-color: #fea800;
     border-color: #999;
     color: white;
-    font-size: 21px;
+    font-size: clamp(1.1875rem, 1.1458rem + 0.185vw, 1.3125rem);
     font-weight: 700;
 }
 
@@ -165,7 +165,7 @@
     align-items: center;
     gap: 8px;
     transition: box-shadow 0.1s ease;
-    font-size: 20px;
+    font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
     font-weight: 400;
 }
 
@@ -177,7 +177,7 @@
     background-color: #79e229;
     border-color: #999;
     color: white;
-    font-size: 21px;
+    font-size: clamp(1.1875rem, 1.1458rem + 0.185vw, 1.3125rem);
     font-weight: 700;
 }
 
@@ -199,7 +199,7 @@
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
-    font-size: 20px;
+    font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
 }
 
 .input:focus {
@@ -209,7 +209,7 @@
 
 .input::placeholder {
     color: #D1d1d1;
-    font-size: 20px;
+    font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
     font-weight: 400;
 }
 
@@ -225,7 +225,7 @@
     color: white !important;
 }
 .contact-name-edit {
-    font-size: 20px;
+    font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
     font-weight: 400;
     margin-bottom: 5px;
 }
@@ -239,7 +239,7 @@
     background-color: #ffffff;
     padding-left: 12px;
     padding-top: 12px;
-    font-size: 20px;
+    font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
     font-family: inter;
 }
 
@@ -250,7 +250,7 @@
 
 .description::placeholder {
     color: #D1d1d1;
-    font-size: 20px;
+    font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
 }
 
 .dropdown-item {
@@ -277,7 +277,7 @@
 .custom-dropdown {
     position: relative;
     width: 100%;
-    font-size: 16px;
+    font-size: clamp(0.9375rem, 0.9167rem + 0.093vw, 1rem);
 }
 
 .dropdown-selected {
@@ -307,7 +307,7 @@
     padding: 10px;
     border: 1px solid #d0d0d0;
     border-radius: 10px;
-    font-size: 20px;
+    font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
     outline: none;
     cursor: pointer;
     height: 24px;
@@ -409,7 +409,7 @@
 }
 
 .date-input::placeholder {
-    font-size: 20px;
+    font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
     font-weight: 400;
     color: #D1d1d1;
 }
@@ -423,7 +423,7 @@
     border-radius: 10px;
     border: 1px solid #D1D1D1;
     background-color: #ffffff;
-    font-size: 20px;
+    font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
     font-weight: 400;
     padding-left: 12px;
     box-sizing: border-box;
@@ -454,7 +454,7 @@
     background-color: white;
     padding: 12px;
     cursor: pointer;
-    font-size: 20px;
+    font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
     font-weight: 400;
 }
 
@@ -578,7 +578,7 @@
     background-color: #ffffff;
     padding-left: 12px;
     padding-right: 70px;
-    font-size: 16px;
+    font-size: clamp(0.9375rem, 0.9167rem + 0.093vw, 1rem);
 }
 
 .subtask-icons-div {
@@ -616,7 +616,7 @@
 
 .subtask::placeholder {
     color: #D1d1d1;
-    font-size: 20px;
+    font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
     font-weight: 400;
 }
 
@@ -740,7 +740,7 @@ h1{
     cursor: pointer;
     transition: all 0.0s ease-in-out;
     box-shadow: none;
-    font-size: 21px;
+    font-size: clamp(1.1875rem, 1.1458rem + 0.185vw, 1.3125rem);
     font-weight: 700px;
     text-align: center;
     gap: 8px;
@@ -763,7 +763,7 @@ h1{
     color: #2a3647;
     border: 1px solid #2a3647;
     border-radius: 8px;
-    font-size: 20px;
+    font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
     cursor: pointer;
     transition: all 0.0s ease-in-out;
     box-shadow: none;
@@ -790,7 +790,7 @@ h1{
     flex: 1;
     padding-right: 30px;
     color: #999;
-    font-size: 20px;
+    font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
     font-weight: 400;
     color: black;
     padding-left: 12px;
@@ -816,7 +816,7 @@ h1{
     height: 40px;
     color: white !important;
     font-weight: bold;
-    font-size: 16px;
+    font-size: clamp(0.9375rem, 0.9167rem + 0.093vw, 1rem);
     border-radius: 50% !important;
     text-transform: uppercase;
     border: 2px solid white;

@@ -36,7 +36,7 @@
     outline: none;
     width: 100%;
     padding: 8px;
-    font-size: 18px;
+    font-size: clamp(1rem, 0.9583rem + 0.185vw, 1.125rem);
 }
 
 .input-box-right {
@@ -78,7 +78,7 @@
 }
 
 .board-bar-item h2 {
-    font-size: 18px;
+    font-size: clamp(1rem, 0.9583rem + 0.185vw, 1.125rem);
     font-weight: 700;
     margin: 0;
 }
@@ -172,7 +172,7 @@
 
     h2 {
         display: block;
-        font-size: 21px;
+        font-size: clamp(1.1875rem, 1.1197rem + 0.301vw, 1.3125rem);
         font-weight: 700;
         margin-bottom: 16px;
         color: #2a3647;
@@ -388,7 +388,7 @@
     }
 
     h1 {
-        font-size: 64px;
+        font-size: clamp(2.875rem, 2.0625rem + 2.708vw, 4.5rem);
     }
 
     .board-header {
@@ -493,7 +493,7 @@
     }
 
     .board-bar>div div {
-        font-size: 18px;
+        font-size: clamp(1rem, 0.8897rem + 0.49vw, 1.125rem);
         font-weight: 700;
     }
 
@@ -531,7 +531,7 @@
 
     .task-board-container h2 {
         display: block;
-        font-size: 21px;
+        font-size: clamp(1.1875rem, 1.0772rem + 0.49vw, 1.3125rem);
         font-weight: 700;
         margin-bottom: 16px;
         color: #2a3647;
@@ -555,7 +555,7 @@
     }
 
     .task-modal-headline h1 {
-        font-size: 32px;
+        font-size: clamp(1.0625rem, 0.7019rem + 1.442vw, 2rem);
     }
 
 
@@ -588,7 +588,7 @@
 
 @media (max-width: 480px) {
     h1 {
-        font-size: 46px;
+        font-size: clamp(2.875rem, 2.0625rem + 2.708vw, 4.5rem);
     }
 
     .board-header {
@@ -618,11 +618,11 @@
     }
 
     .task-search {
-        font-size: 14px;
+        font-size: clamp(0.875rem, 0.6562rem + 0.729vw, 1.3125rem);
     }
 
     .add-task-button {
-        font-size: 14px;
+        font-size: clamp(0.875rem, 0.6562rem + 0.729vw, 1.3125rem);
     }
 
     .board-bar {
@@ -725,17 +725,17 @@
     }
 
     .task-modal-headline h1 {
-        font-size: 17px;
+        font-size: clamp(1.0625rem, 0.7019rem + 1.442vw, 2rem);
     }
 
     .card-label-user-story-modal h4 {
         width: 120px !important;
         height: 26px !important;
-        font-size: 18px !important;
+        font-size: clamp(1rem, 0.8125rem + 0.833vw, 1.125rem) !important;
     }
 
     .resp-title {
-        font-size: 24px;
+        font-size: clamp(1.375rem, 1.1875rem + 0.833vw, 1.5rem);
     }
 
     .w445 {
@@ -751,13 +751,13 @@
     }
 
     .card-label-technical-task-modal h4 {
-        font-size: 19px !important;
+        font-size: clamp(1.0625rem, 0.875rem + 0.833vw, 1.1875rem) !important;
         width: 135px !important;
         height: 28px !important;
     }
 
     .main-section-task-overlay span {
-        font-size: 16px !important;
+        font-size: clamp(0.9375rem, 0.8438rem + 0.417vw, 1rem) !important;
         padding-bottom: 4px !important;
     }
 
@@ -815,7 +815,7 @@
 }
 
 .move-to-dropdown .dropdown-option {
-    font-size: 16px;
+    font-size: clamp(0.9375rem, 0.9167rem + 0.093vw, 1rem);
     font-weight: 300;
     padding: 5px;
     cursor: pointer;

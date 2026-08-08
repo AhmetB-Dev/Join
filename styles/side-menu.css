@@ -25,7 +25,7 @@
 }
 
 .side-menu a {
-    font-size: 20px;
+    font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
     font-weight: 400;
     display: flex;
     justify-content: flex-start;
@@ -277,7 +277,7 @@
     }
 
     .hr3 {
-        font-size: 3rem !important;
+        font-size: clamp(2.1875rem, 1.6698rem + 2.301vw, 3rem) !important;
         width: 0 !important;
     }
 
@@ -317,7 +317,7 @@
     }
 
     .menu-content-div a {
-        font-size: 12px;
+        font-size: clamp(0.75rem, 0.6562rem + 0.417vw, 0.8125rem);
     }
 
     .selected-menu img {
@@ -326,7 +326,7 @@
     }
 
     .selected-menu a {
-        font-size: 12px;
+        font-size: clamp(0.75rem, 0.6562rem + 0.417vw, 0.8125rem);
     }
 }
 

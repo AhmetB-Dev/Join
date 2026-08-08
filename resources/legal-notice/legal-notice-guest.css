@@ -54,7 +54,7 @@ h3 {
 }
 
 h1 {
-  font-size: 61px;
+  font-size: clamp(2.75rem, 2.3958rem + 1.574vw, 3.8125rem);
   font-weight: 700;
   color: black;
   margin-bottom: 20px;
@@ -68,13 +68,13 @@ p1 {
 }
 
 h2 {
-  font-size: 27px;
+  font-size: clamp(1.375rem, 1.2708rem + 0.463vw, 1.6875rem);
   font-weight: 700;
   margin-top: 20px;
 }
 
 h3 {
-  font-size: 20px;
+  font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
   font-weight: 700;
   margin-top: 15px;
 }
@@ -82,7 +82,7 @@ h3 {
 p {
   margin: 10px 0;
   font-weight: 400;
-  font-size: 16px;
+  font-size: clamp(0.9375rem, 0.9167rem + 0.093vw, 1rem);
 }
 
 ul {
@@ -92,7 +92,7 @@ ul {
 
 h4 {
   font-weight: 400;
-  font-size: 16px;
+  font-size: clamp(0.9375rem, 0.9167rem + 0.093vw, 1rem);
 }
 
 .header {
@@ -123,7 +123,7 @@ small {
 }
 
 .help-container h1 {
-  font-size: 61px;
+  font-size: clamp(2.9375rem, 2.6875rem + 1.25vw, 3.8125rem);
   font-weight: 700;
   margin: 0;
   color: #000;
@@ -199,7 +199,7 @@ small {
   align-items: center;
   text-decoration: none;
   color: white;
-  font-size: 14px;
+  font-size: clamp(0.8125rem, 0.7917rem + 0.093vw, 0.875rem);
   width: 25%;
 }
 
@@ -357,7 +357,7 @@ small {
   }
 
   .main-header > div:first-child {
-    font-size: 16px;
+    font-size: clamp(0.75rem, 0.6786rem + 0.357vw, 1rem);
   }
 
   .help-container {
@@ -394,7 +394,7 @@ small {
   }
 
   .main-header > div:first-child {
-    font-size: 14px;
+    font-size: clamp(0.75rem, 0.6786rem + 0.357vw, 1rem);
   }
 
   .help-container {
@@ -402,7 +402,7 @@ small {
   }
 
   .help-container h1 {
-    font-size: 47px;
+    font-size: clamp(2.9375rem, 2.6875rem + 1.25vw, 3.8125rem);
     font-weight: 700;
   }
 }
@@ -438,11 +438,11 @@ small {
 
 @media (max-width: 320px) {
   .main-header > div:first-child {
-    font-size: 12px;
+    font-size: clamp(0.75rem, 0.6786rem + 0.357vw, 1rem);
   }
 
   .help-container h1 {
-    font-size: 47px;
+    font-size: clamp(2.9375rem, 2.6875rem + 1.25vw, 3.8125rem);
   }
 }
 

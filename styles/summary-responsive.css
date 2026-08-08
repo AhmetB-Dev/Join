@@ -1,1221 +1,1190 @@
 @media (min-width: 0px) and (max-width: 440px) {
+  .page-summary {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    /* overflow-x: hidden; */
+    color: #2a3647;
+  }
 
-    .page-summary {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
-        color: #2a3647;
-    }
+  .page-summary body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    min-height: 100dvh;
+    /* overflow: hidden; */
+    background-color: #f5f7f9;
+  }
 
-    .page-summary body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        max-width: 100%;
-        min-height: 100dvh;
-        overflow: hidden;
-        background-color: #f5f7f9;
-    }
+  .page-summary .main-div {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    box-sizing: border-box;
+  }
 
-    /* ==== Layout-Grundidee ====
-     .main-div -> flex column
-     .header bleibt oben
-     .summary wird der SCROLLER
-     .side-menu-bottom fix unten
-  */
-    .page-summary .main-div {
-        display: flex;
-        flex-direction: column;
-        min-height: 100dvh;
-        box-sizing: border-box;
-    }
+  /* Fixe Bottom-Bar */
+  .page-summary .side-menu {
+    display: none;
+  }
 
-    /* Fixe Bottom-Bar */
-    .page-summary .side-menu {
-        display: none;
-    }
+  .page-summary .menu-content-bottom {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 0;
+  }
 
-    .page-summary .menu-content-bottom {
-        width: 100%;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        gap: 0;
-    }
+  .page-summary .summary {
+    flex: 1 1 auto;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+    padding: 20px;
+    padding: 55px 25px 100px 25px;
+  }
 
-    /* === Der tatsächliche Scroller: .summary === */
-    .page-summary .summary {
-        flex: 1 1 auto;
-        overflow: auto;
-        -webkit-overflow-scrolling: touch;
-        overflow: hidden;
-        box-sizing: border-box;
-        padding: 20px;
-        padding: 55px 25px 80px 25px;
-    }
+  .v-stack {
+    padding-left: unset;
+    padding-right: unset;
+  }
 
-    .v-stack {
-        padding-left: unset;
-        padding-right: unset;
-    }
+  .page-summary a {
+    text-decoration: none;
+  }
 
-    .page-summary a {
-        text-decoration: none;
-    }
+  .page-summary .summary-content {
+    display: unset;
+  }
 
-    .page-summary .summary-content {
-        display: unset;
-    }
+  .page-summary .summary-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
 
-    .page-summary .summary-metrics {
-        display: flex;
-        flex-direction: column;
-        gap: 25px;
-    }
+  .page-summary .summary-card-design {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  }
 
-    .page-summary .summary-card-design {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        background: #fff;
-        border-radius: 14px;
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-    }
+  /* Header kompakter */
+  .page-summary .summary-header {
+    display: flex;
+    gap: 15px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-    /* Header kompakter */
-    .page-summary .summary-header {
-        display: flex;
-        gap: 15px;
-        flex-direction: column;
-        align-items: flex-start;
-    }
+  .page-summary .summary-divider {
+    display: none;
+  }
 
-    .page-summary .summary-divider {
-        display: none;
-    }
+  .page-summary .summary-title {
+    font-size: clamp(2.9375rem, 2.25rem + 2.5vw, 4.5rem);
+    margin: 0;
+  }
 
-    .page-summary .summary-title {
-        font-size: 47px;
-        margin: 0;
-    }
+  .page-summary .summary-subtitle {
+    display: flex;
+    flex-direction: column;
+    font-size: clamp(1.25rem, 1.1675rem + 0.3vw, 1.4375rem);
+    margin-top: 0;
+  }
 
-    .page-summary .summary-subtitle {
-        display: flex;
-        flex-direction: column;
-        font-size: 20px;
-        margin-top: 0;
-    }
+  .page-summary .summary-subtitle::after {
+    content: url(../assets/img/summary-line-mobile.svg);
+  }
 
-    .page-summary .summary-subtitle::after {
-        content: url(../assets/img/summary-line-mobile.svg);
-    }
+  /* Cards etc. */
+  .page-summary .summary-card {
+    padding-bottom: 25px;
+    padding-top: 25px;
+    border: 15px;
+    border-radius: 20px;
+  }
 
-    /* Cards etc. */
-    .page-summary .summary-card {
-        padding-bottom: 25px;
-        padding-top: 25px;
-        border: 15px;
-        border-radius: 20px;
-    }
+  .page-summary .js-count-container {
+    display: flex;
+    flex-direction: column;
+  }
 
-    .page-summary .js-count-container {
-        display: flex;
-        flex-direction: column;
-    }
+  .page-summary .summary-row {
+    display: flex;
+    gap: 25px;
+  }
 
-    .page-summary .summary-row {
-        display: flex;
-        gap: 25px;
-    }
+  .page-summary .counter-design {
+    font-size: clamp(2.8125rem, 2.07rem + 2.7vw, 4.5rem);
+    font-weight: bold;
+  }
 
-    .page-summary .counter-design {
-        font-size: 45px;
-        font-weight: bold;
-    }
+  .page-summary .counter-text-design {
+    font-size: clamp(0.875rem, 0.71rem + 0.6vw, 1.25rem);
+  }
 
-    .page-summary .counter-text-design {
-        font-size: 14px;
-    }
+  .page-summary .deadline-container {
+    display: flex;
+    align-items: center;
+    gap: 23px;
+  }
 
-    .page-summary .deadline-container {
-        display: flex;
-        align-items: center;
-        gap: 23px;
-    }
+  .page-summary .deadline-under-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 18px;
+  }
 
-    .page-summary .deadline-under-container {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        gap: 18px;
-    }
+  .page-summary .js-urgent-container {
+    display: flex;
+    flex-direction: column;
+  }
 
-    .page-summary .js-urgent-container {
-        display: flex;
-        flex-direction: column;
-    }
+  .page-summary .urgent-line-padding {
+    padding-left: unset;
+    padding-right: unset;
+  }
 
-    .page-summary .urgent-line-padding {
-        padding-left: unset;
-        padding-right: unset;
-    }
+  .page-summary .label {
+    font-size: clamp(0.875rem, 0.765rem + 0.4vw, 1.125rem);
+  }
 
-    .page-summary .label {
-        font-size: 14px;
-    }
+  .page-summary .js-deadline-date {
+    font-size: clamp(1.125rem, 1.015rem + 0.4vw, 1.375rem);
+    font-weight: bold;
+  }
 
-    .page-summary .js-deadline-date {
-        font-size: 18px;
-        font-weight: bold;
-    }
+  .page-summary .img-urgent-summary {
+    width: 40px;
+    height: 40px;
+  }
 
-    .page-summary .img-urgent-summary {
-        width: 40px;
-        height: 40px;
-    }
+  /* Greeting korrekt verstecken (statt display:hidden) */
+  .page-summary .welcome-summary,
+  .page-summary .summary-name,
+  .page-summary .summary-greeting {
+    display: none;
+  }
 
-    /* Greeting korrekt verstecken (statt display:hidden) */
-    .page-summary .welcome-summary,
-    .page-summary .summary-name,
-    .page-summary .summary-greeting {
-        display: none;
-    }
+  /* Icons mobil (deine aktuellen Assets) */
+  .page-summary .summary-card:hover {
+    background-color: #2a3647;
+    color: white;
+  }
 
-    /* Icons mobil (deine aktuellen Assets) */
-    .page-summary .summary-card:hover {
-        background-color: #2a3647;
-        color: white;
-    }
+  .page-summary .icon-todo {
+    background-image: url(../assets/img/summary-pen-mobile.png);
+    background-size: 40px 40px;
+  }
 
-    .page-summary .icon-todo {
-        background-image: url(../assets/img/summary-pen-mobile.png);
-        background-size: 40px 40px;
-    }
+  .page-summary .summary-card:hover .icon-todo {
+    background-image: url(../assets/img/icon/todo-mobile.png);
+    background-size: 50px 50px;
+  }
 
-    .page-summary .summary-card:hover .icon-todo {
-        background-image: url(../assets/img/icon/todo-mobile.png);
-        background-size: 50px 50px;
-    }
+  .page-summary .icon-done {
+    background-image: url(../assets/img/summary-done-mobile.png);
+    background-size: 40px 40px;
+  }
 
-    .page-summary .icon-done {
-        background-image: url(../assets/img/summary-done-mobile.png);
-        background-size: 40px 40px;
-    }
-
-    .page-summary .summary-card:hover .icon-done {
-        background-image: url(../assets/img/icon/done-mobile.png);
-        background-size: 50px 50px;
-    }
+  .page-summary .summary-card:hover .icon-done {
+    background-image: url(../assets/img/icon/done-mobile.png);
+    background-size: 50px 50px;
+  }
 }
 
 @media (min-width: 440px) and (max-width: 550px) {
+  /* Root: volle Breite + sauberes Scrolling */
+  .page-summary {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    color: #2a3647;
+  }
 
-    /* Root: volle Breite + sauberes Scrolling */
-    .page-summary {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
-        color: #2a3647;
-    }
+  /* Body vollflächig, scrollen übernimmt gleich .summary selbst */
+  .page-summary body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    min-height: 100dvh;
+    overflow: hidden;
+    /* wichtig: kein Doppelscroll am Body */
+    background-color: #f5f7f9;
+  }
 
-    /* Body vollflächig, scrollen übernimmt gleich .summary selbst */
-    .page-summary body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        max-width: 100%;
-        min-height: 100dvh;
-        overflow: hidden;
-        /* wichtig: kein Doppelscroll am Body */
-        background-color: #f5f7f9;
-    }
+  .page-summary .main-div {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    box-sizing: border-box;
+  }
 
-    .page-summary .main-div {
-        display: flex;
-        flex-direction: column;
-        min-height: 100dvh;
-        box-sizing: border-box;
-    }
+  /* Fixe Bottom-Bar */
+  .page-summary .side-menu {
+    display: none;
+  }
 
-    /* Fixe Bottom-Bar */
-    .page-summary .side-menu {
-        display: none;
-    }
+  .page-summary .logo-content-container-bottom,
+  .page-summary .menu-content-bottom,
+  .page-summary .bottom-menu {
+    margin: 0 !important;
+  }
 
-    .page-summary .logo-content-container-bottom,
-    .page-summary .menu-content-bottom,
-    .page-summary .bottom-menu {
-        margin: 0 !important;
-    }
+  .page-summary .menu-content-bottom {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 0;
+  }
 
-    .page-summary .menu-content-bottom {
-        width: 100%;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        gap: 0;
-    }
+  /* === Der tatsächliche Scroller: .summary === */
+  .page-summary .summary {
+    flex: 1 1 auto;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+    padding: 25px;
+    padding: 55px 25px 100px 25px;
+  }
 
-    /* === Der tatsächliche Scroller: .summary === */
-    .page-summary .summary {
-        flex: 1 1 auto;
-        overflow: auto;
-        -webkit-overflow-scrolling: touch;
-        box-sizing: border-box;
-        padding: 25px;
-        overflow: hidden;
-        padding: 55px 25px 0px 25px;
-    }
+  .v-stack {
+    padding-left: 3pc;
+    padding-right: 3pc;
+  }
 
+  /* Mobiler Feinschliff (aus deiner Datei übernommen) */
+  .page-summary .summary-content {
+    display: unset;
+  }
 
-    .v-stack {
-        padding-left: 3pc;
-        padding-right: 3pc;
-    }
+  .page-summary .summary-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
 
-    /* Mobiler Feinschliff (aus deiner Datei übernommen) */
-    .page-summary .summary-content {
-        display: unset;
-    }
+  /* Header kompakter */
+  .page-summary .summary-header {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-    .page-summary .summary-metrics {
-        display: flex;
-        flex-direction: column;
-        gap: 25px;
-    }
+  .page-summary .summary-divider {
+    display: none;
+  }
 
+  .page-summary .summary-title {
+    font-size: clamp(2.9375rem, 2.25rem + 2.5vw, 4.5rem);
+    margin: 0;
+  }
 
-    /* Header kompakter */
-    .page-summary .summary-header {
-        display: flex;
-        gap: 15px;
-        margin-bottom: 25px;
-        flex-direction: column;
-        align-items: flex-start;
-    }
+  .page-summary .summary-subtitle {
+    display: flex;
+    flex-direction: column;
+    font-size: clamp(1.25rem, 1.1675rem + 0.3vw, 1.4375rem);
+    margin-top: 0;
+  }
 
-    .page-summary .summary-divider {
-        display: none;
-    }
+  .page-summary .summary-subtitle::after {
+    content: url(../assets/img/summary-line-mobile.svg);
+  }
 
-    .page-summary .summary-title {
-        font-size: 53px;
-        margin: 0;
-    }
+  /* Cards etc. */
+  .page-summary .summary-card {
+    padding-bottom: 25px;
+    padding-top: 25px;
+    border: 15px;
+    border-radius: 20px;
+  }
 
-    .page-summary .summary-subtitle {
-        display: flex;
-        flex-direction: column;
-        font-size: 20px;
-        margin-top: 0;
-    }
+  .page-summary .summary-card-design {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  }
 
-    .page-summary .summary-subtitle::after {
-        content: url(../assets/img/summary-line-mobile.svg);
-    }
+  .page-summary .js-count-container {
+    display: flex;
+    flex-direction: column;
+  }
 
-    /* Cards etc. */
-    .page-summary .summary-card {
-        padding-bottom: 25px;
-        padding-top: 25px;
-        border: 15px;
-        border-radius: 20px;
-    }
+  .page-summary .summary-row {
+    display: flex;
+    gap: 25px;
+  }
 
-    .page-summary .summary-card-design {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        background: #fff;
-        border-radius: 14px;
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-    }
+  .page-summary .counter-design {
+    font-size: clamp(2.8125rem, 2.07rem + 2.7vw, 4.5rem);
+  }
 
-    .page-summary .js-count-container {
-        display: flex;
-        flex-direction: column;
-    }
+  .page-summary .counter-text-design {
+    font-size: clamp(0.875rem, 0.71rem + 0.6vw, 1.25rem);
+  }
 
-    .page-summary .summary-row {
-        display: flex;
-        gap: 25px;
-    }
+  .page-summary .deadline-container {
+    display: flex;
+    align-items: center;
+    gap: 23px;
+  }
 
-    .page-summary .counter-design {
-        font-size: 52px;
+  .page-summary .deadline-under-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 18px;
+  }
 
-    }
+  .page-summary .js-urgent-container {
+    display: flex;
+    flex-direction: column;
+  }
 
-    .page-summary .counter-text-design {
-        font-size: 19px;
-    }
+  .page-summary .label {
+    font-size: clamp(0.875rem, 0.765rem + 0.4vw, 1.125rem);
+  }
 
-    .page-summary .deadline-container {
-        display: flex;
-        align-items: center;
-        gap: 23px;
-    }
+  .page-summary .js-deadline-date {
+    font-size: clamp(1.125rem, 1.015rem + 0.4vw, 1.375rem);
+  }
 
-    .page-summary .deadline-under-container {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        gap: 18px;
-    }
+  .urgent-line-padding {
+    padding-left: 1pc;
+    padding-right: 1pc;
+  }
 
-    .page-summary .js-urgent-container {
-        display: flex;
-        flex-direction: column;
-    }
+  .page-summary .img-urgent-summary {
+    width: 40px;
+    height: 40px;
+  }
 
-    .page-summary .label {
-        font-size: 17px;
+  /* Greeting korrekt verstecken (statt display:hidden) */
+  .page-summary .welcome-summary,
+  .page-summary .summary-name,
+  .page-summary .summary-greeting {
+    display: none;
+  }
 
-    }
+  /* Icons mobil (deine aktuellen Assets) */
+  .page-summary .summary-card:hover {
+    background-color: #2a3647;
+    color: white;
+  }
 
-    .page-summary .js-deadline-date {
-        font-size: 19px;
-    }
+  .page-summary .icon-todo {
+    background-image: url(../assets/img/summary-pen-mobile.png);
+    background-size: 40px 40px;
+  }
 
-    .urgent-line-padding {
-        padding-left: 1pc;
-        padding-right: 1pc;
-    }
+  .page-summary .summary-card:hover .icon-todo {
+    background-image: url(../assets/img/icon/todo-mobile.png);
+    background-size: 50px 50px;
+  }
 
-    .page-summary .img-urgent-summary {
-        width: 40px;
-        height: 40px;
-    }
+  .page-summary .icon-done {
+    background-image: url(../assets/img/summary-done-mobile.png);
+    background-size: 40px 40px;
+  }
 
-    /* Greeting korrekt verstecken (statt display:hidden) */
-    .page-summary .welcome-summary,
-    .page-summary .summary-name,
-    .page-summary .summary-greeting {
-        display: none;
-    }
-
-    /* Icons mobil (deine aktuellen Assets) */
-    .page-summary .summary-card:hover {
-        background-color: #2a3647;
-        color: white;
-    }
-
-    .page-summary .icon-todo {
-        background-image: url(../assets/img/summary-pen-mobile.png);
-        background-size: 40px 40px;
-    }
-
-    .page-summary .summary-card:hover .icon-todo {
-        background-image: url(../assets/img/icon/todo-mobile.png);
-        background-size: 50px 50px;
-    }
-
-    .page-summary .icon-done {
-        background-image: url(../assets/img/summary-done-mobile.png);
-        background-size: 40px 40px;
-    }
-
-    .page-summary .summary-card:hover .icon-done {
-        background-image: url(../assets/img/icon/done-mobile.png);
-        background-size: 50px 50px;
-    }
+  .page-summary .summary-card:hover .icon-done {
+    background-image: url(../assets/img/icon/done-mobile.png);
+    background-size: 50px 50px;
+  }
 }
 
 @media (min-width: 550px) and (max-width: 700px) {
+  /* Root: volle Breite + sauberes Scrolling */
+  .page-summary {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    color: #2a3647;
+  }
 
-    /* Root: volle Breite + sauberes Scrolling */
-    .page-summary {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
-        color: #2a3647;
-    }
+  /* Body vollflächig, scrollen übernimmt gleich .summary selbst */
+  .page-summary body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    min-height: 100dvh;
+    overflow: hidden;
+    /* wichtig: kein Doppelscroll am Body */
+    background-color: #f5f7f9;
+  }
 
-    /* Body vollflächig, scrollen übernimmt gleich .summary selbst */
-    .page-summary body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        max-width: 100%;
-        min-height: 100dvh;
-        overflow: hidden;
-        /* wichtig: kein Doppelscroll am Body */
-        background-color: #f5f7f9;
-    }
-
-    /* ==== Layout-Grundidee ====
+  /* ==== Layout-Grundidee ====
      .main-div -> flex column
      .header bleibt oben
      .summary wird der SCROLLER
      .side-menu-bottom fix unten
   */
-    .page-summary .main-div {
-        display: flex;
-        flex-direction: column;
-        min-height: 100dvh;
-        box-sizing: border-box;
-    }
+  .page-summary .main-div {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    box-sizing: border-box;
+  }
 
-    /* Fixe Bottom-Bar */
-    .page-summary .side-menu {
-        display: none;
-    }
+  /* Fixe Bottom-Bar */
+  .page-summary .side-menu {
+    display: none;
+  }
 
+  .page-summary .logo-content-container-bottom,
+  .page-summary .menu-content-bottom,
+  .page-summary .bottom-menu {
+    margin: 0 !important;
+  }
 
+  .page-summary .menu-content-bottom {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 0;
+  }
 
-    .page-summary .logo-content-container-bottom,
-    .page-summary .menu-content-bottom,
-    .page-summary .bottom-menu {
-        margin: 0 !important;
-    }
+  /* === Der tatsächliche Scroller: .summary === */
+  .page-summary .summary {
+    flex: 1 1 auto;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+    padding: 55px 25px 100px 25px;
+  }
 
-    .page-summary .menu-content-bottom {
-        width: 100%;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        gap: 0;
-    }
+  /* Mobiler Feinschliff (aus deiner Datei übernommen) */
+  .page-summary .summary-content {
+    display: flex;
+    align-items: center;
+    gap: 5pc;
+  }
 
-    /* === Der tatsächliche Scroller: .summary === */
-    .page-summary .summary {
-        flex: 1 1 auto;
-        overflow: hidden;
-        overflow: auto;
-        -webkit-overflow-scrolling: touch;
-        box-sizing: border-box;
-        padding: 55px 25px 0px 25px;
-        overflow: hidden;
-    }
+  .page-summary .summary-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
 
-    /* Mobiler Feinschliff (aus deiner Datei übernommen) */
-    .page-summary .summary-content {
-        display: flex;
-        align-items: center;
-        gap: 5pc;
-    }
+  /* Header kompakter */
+  .page-summary .summary-header {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-    .page-summary .summary-metrics {
-        display: flex;
-        flex-direction: column;
-        gap: 25px;
-    }
+  .page-summary .summary-divider {
+    display: none;
+  }
 
-    /* Header kompakter */
-    .page-summary .summary-header {
-        display: flex;
-        gap: 15px;
-        margin-bottom: 25px;
-        flex-direction: column;
-        align-items: flex-start;
-    }
+  .page-summary .summary-title {
+    font-size: clamp(2.9375rem, 2.25rem + 2.5vw, 4.5rem);
+    margin: 0;
+  }
 
-    .page-summary .summary-divider {
-        display: none;
-    }
+  .page-summary .summary-subtitle {
+    display: flex;
+    flex-direction: column;
+    font-size: clamp(1.25rem, 1.1675rem + 0.3vw, 1.4375rem);
+    margin-top: 0;
+  }
 
-    .page-summary .summary-title {
-        font-size: 56px;
-        margin: 0;
-    }
+  .page-summary .summary-subtitle::after {
+    content: url(../assets/img/summary-line-mobile.svg);
+  }
 
-    .page-summary .summary-subtitle {
-        display: flex;
-        flex-direction: column;
-        font-size: 23px;
-        margin-top: 0;
-    }
+  /* Cards etc. */
+  .page-summary .summary-card {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 23px;
+    padding-top: 23px;
+    border: 15px;
+    border-radius: 20px;
+  }
 
-    .page-summary .summary-subtitle::after {
-        content: url(../assets/img/summary-line-mobile.svg);
-    }
+  .page-summary .summary-content {
+    display: unset;
+  }
 
-    /* Cards etc. */
-    .page-summary .summary-card {
-        display: flex;
-        justify-content: center;
-        padding-bottom: 23px;
-        padding-top: 23px;
-        border: 15px;
-        border-radius: 20px;
-    }
+  .page-summary .js-count-container {
+    display: flex;
+    flex-direction: column;
+  }
 
-    .page-summary .summary-content {
-        display: unset;
-    }
+  .page-summary .summary-row {
+    display: flex;
+    gap: 25px;
+  }
 
-    .page-summary .js-count-container {
-        display: flex;
-        flex-direction: column;
-    }
+  .page-summary .counter-design {
+    font-size: clamp(2.8125rem, 2.07rem + 2.7vw, 4.5rem);
+  }
 
-    .page-summary .summary-row {
-        display: flex;
-        gap: 25px;
-    }
+  .page-summary .counter-text-design {
+    font-size: clamp(0.875rem, 0.71rem + 0.6vw, 1.25rem);
+  }
 
-    .page-summary .counter-design {
-        font-size: 53px;
-    }
+  .page-summary .deadline-container {
+    display: flex;
+    align-items: center;
+    gap: 23px;
+  }
 
-    .page-summary .counter-text-design {
-        font-size: 18px;
-    }
+  .page-summary .deadline-under-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 18px;
+  }
 
-    .page-summary .deadline-container {
-        display: flex;
-        align-items: center;
-        gap: 23px;
-    }
+  .page-summary .js-urgent-container {
+    display: flex;
+    flex-direction: column;
+  }
 
-    .page-summary .deadline-under-container {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        gap: 18px;
-    }
+  .page-summary .label {
+    font-size: clamp(0.875rem, 0.765rem + 0.4vw, 1.125rem);
+  }
 
-    .page-summary .js-urgent-container {
-        display: flex;
-        flex-direction: column;
-    }
+  .page-summary .js-deadline-date {
+    font-size: clamp(1.125rem, 1.015rem + 0.4vw, 1.375rem);
+  }
 
-    .page-summary .label {
-        font-size: 18px;
-    }
+  .page-summary .img-urgent-summary {
+    width: 45px;
+    height: 45px;
+  }
 
-    .page-summary .js-deadline-date {
-        font-size: 22px;
-    }
+  /* Greeting korrekt verstecken (statt display:hidden) */
+  .page-summary .welcome-summary,
+  .page-summary .summary-name,
+  .page-summary .summary-greeting {
+    display: none;
+  }
 
-    .page-summary .img-urgent-summary {
-        width: 45px;
-        height: 45px;
-    }
+  /* Icons mobil (deine aktuellen Assets) */
+  .page-summary .summary-card:hover {
+    background-color: #2a3647;
+    color: white;
+  }
 
-    /* Greeting korrekt verstecken (statt display:hidden) */
-    .page-summary .welcome-summary,
-    .page-summary .summary-name,
-    .page-summary .summary-greeting {
-        display: none;
-    }
+  .page-summary .icon-todo {
+    background-image: url(../assets/img/summary-pen-mobile.png);
+    background-size: 45px 45px;
+  }
 
-    /* Icons mobil (deine aktuellen Assets) */
-    .page-summary .summary-card:hover {
-        background-color: #2a3647;
-        color: white;
-    }
+  .page-summary .summary-card:hover .icon-todo {
+    background-image: url(../assets/img/icon/todo-mobile.png);
+    background-size: 55px 55px;
+  }
 
-    .page-summary .icon-todo {
-        background-image: url(../assets/img/summary-pen-mobile.png);
-        background-size: 45px 45px;
-    }
+  .page-summary .icon-done {
+    background-image: url(../assets/img/summary-done-mobile.png);
+    background-size: 45px 45px;
+  }
 
-    .page-summary .summary-card:hover .icon-todo {
-        background-image: url(../assets/img/icon/todo-mobile.png);
-        background-size: 55px 55px;
-    }
-
-    .page-summary .icon-done {
-        background-image: url(../assets/img/summary-done-mobile.png);
-        background-size: 45px 45px;
-    }
-
-    .page-summary .summary-card:hover .icon-done {
-        background-image: url(../assets/img/icon/done-mobile.png);
-        background-size: 55px 55px;
-    }
+  .page-summary .summary-card:hover .icon-done {
+    background-image: url(../assets/img/icon/done-mobile.png);
+    background-size: 55px 55px;
+  }
 }
 
 @media (min-width: 700px) and (max-width: 925px) {
+  /* Root: volle Breite + sauberes Scrolling */
+  .page-summary {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    color: #2a3647;
+  }
 
-    /* Root: volle Breite + sauberes Scrolling */
-    .page-summary {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
-        color: #2a3647;
-    }
+  /* Body vollflächig, scrollen übernimmt gleich .summary selbst */
+  .page-summary body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    min-height: 100dvh;
+    overflow: hidden;
+    /* wichtig: kein Doppelscroll am Body */
+    background-color: #f5f7f9;
+  }
 
-    /* Body vollflächig, scrollen übernimmt gleich .summary selbst */
-    .page-summary body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        max-width: 100%;
-        min-height: 100dvh;
-        overflow: hidden;
-        /* wichtig: kein Doppelscroll am Body */
-        background-color: #f5f7f9;
-    }
-
-    /* ==== Layout-Grundidee ====
+  /* ==== Layout-Grundidee ====
      .main-div -> flex column
      .header bleibt oben
      .summary wird der SCROLLER
      .side-menu-bottom fix unten
   */
-    .page-summary .main-div {
-        display: flex;
-        flex-direction: column;
-        min-height: 100dvh;
-        box-sizing: border-box;
-    }
+  .page-summary .main-div {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    box-sizing: border-box;
+  }
 
-    /* Fixe Bottom-Bar */
-    .page-summary .side-menu {
-        display: none;
-    }
+  /* Fixe Bottom-Bar */
+  .page-summary .side-menu {
+    display: none;
+  }
 
+  .page-summary .logo-content-container-bottom,
+  .page-summary .menu-content-bottom,
+  .page-summary .bottom-menu {
+    margin: 0 !important;
+  }
 
+  .page-summary .menu-content-bottom {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 0;
+  }
 
-    .page-summary .logo-content-container-bottom,
-    .page-summary .menu-content-bottom,
-    .page-summary .bottom-menu {
-        margin: 0 !important;
-    }
+  /* === Der tatsächliche Scroller: .summary === */
+  .page-summary .summary {
+    flex: 1 1 auto;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+    padding: 55px 25px 100px 25px;
+  }
 
-    .page-summary .menu-content-bottom {
-        width: 100%;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        gap: 0;
-    }
+  /* Mobiler Feinschliff (aus deiner Datei übernommen) */
+  .page-summary .summary-content {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
 
-    /* === Der tatsächliche Scroller: .summary === */
-    .page-summary .summary {
-        flex: 1 1 auto;
-        overflow: auto;
-        -webkit-overflow-scrolling: touch;
-        box-sizing: border-box;
-        padding: 55px 25px 0px 25px;
-        overflow: hidden;
-    }
+  .page-summary .summary-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
 
-    /* Mobiler Feinschliff (aus deiner Datei übernommen) */
-    .page-summary .summary-content {
-        display: flex;
-        align-items: center;
-        gap: 40px;
-    }
+  /* Header kompakter */
+  .page-summary .summary-header {
+    display: flex;
+    gap: 15px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-    .page-summary .summary-metrics {
-        display: flex;
-        flex-direction: column;
-        gap: 25px;
-    }
+  .page-summary .summary-divider {
+    display: none;
+  }
 
-    /* Header kompakter */
-    .page-summary .summary-header {
-        display: flex;
-        gap: 15px;
-        flex-direction: column;
-        align-items: flex-start;
-    }
+  .page-summary .summary-title {
+    font-size: clamp(2.9375rem, 2.25rem + 2.5vw, 4.5rem);
+    margin: 0;
+  }
 
-    .page-summary .summary-divider {
-        display: none;
-    }
+  .page-summary .summary-subtitle {
+    display: flex;
+    flex-direction: column;
+    font-size: clamp(1.25rem, 1.1675rem + 0.3vw, 1.4375rem);
+    margin-top: 0;
+  }
 
-    .page-summary .summary-title {
-        font-size: 57px;
-        margin: 0;
-    }
+  .page-summary .summary-subtitle::after {
+    content: url(../assets/img/summary-line-mobile.svg);
+  }
 
+  /* Cards etc. */
+  .page-summary .summary-card {
+    padding-bottom: 20px;
+    padding-top: 20px;
+    border: 15px;
+    border-radius: 20px;
+  }
 
-    .page-summary .summary-subtitle {
-        display: flex;
-        flex-direction: column;
-        font-size: 22px;
-        margin-top: 0;
-    }
+  .page-summary .js-count-container {
+    display: flex;
+    flex-direction: column;
+  }
 
+  .page-summary .summary-row {
+    display: flex;
+    gap: 25px;
+  }
 
+  .page-summary .counter-design {
+    font-size: clamp(2.8125rem, 2.07rem + 2.7vw, 4.5rem);
+  }
 
-    .page-summary .summary-subtitle::after {
-        content: url(../assets/img/summary-line-mobile.svg);
-    }
+  .page-summary .counter-text-design {
+    font-size: clamp(0.875rem, 0.71rem + 0.6vw, 1.25rem);
+  }
 
-    /* Cards etc. */
-    .page-summary .summary-card {
-        padding-bottom: 20px;
-        padding-top: 20px;
-        border: 15px;
-        border-radius: 20px;
-    }
+  .page-summary .deadline-container {
+    display: flex;
+    align-items: center;
+    gap: 23px;
+  }
 
-    .page-summary .js-count-container {
-        display: flex;
-        flex-direction: column;
-    }
+  .page-summary .deadline-under-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 18px;
+  }
 
-    .page-summary .summary-row {
-        display: flex;
-        gap: 25px;
-    }
+  .page-summary .js-urgent-container {
+    display: flex;
+    flex-direction: column;
+  }
 
-    .page-summary .counter-design {
-        font-size: 48px;
-    }
+  .page-summary .label {
+    font-size: clamp(0.875rem, 0.765rem + 0.4vw, 1.125rem);
+  }
 
-    .page-summary .counter-text-design {
-        font-size: 18px;
-    }
+  .page-summary .js-deadline-date {
+    font-size: clamp(1.125rem, 1.015rem + 0.4vw, 1.375rem);
+  }
 
-    .page-summary .deadline-container {
-        display: flex;
-        align-items: center;
-        gap: 23px;
-    }
+  .page-summary .img-urgent-summary {
+    width: 45px;
+    height: 45px;
+  }
 
-    .page-summary .deadline-under-container {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        gap: 18px;
-    }
+  /* Greeting korrekt verstecken (statt display:hidden) */
 
-    .page-summary .js-urgent-container {
-        display: flex;
-        flex-direction: column;
-    }
+  .welcome-summary {
+    margin: 0px;
+    font-size: clamp(1.875rem, 1.1161rem + 2.024vw, 2.9375rem);
+  }
 
-    .page-summary .label {
-        font-size: 16px;
-    }
+  .summary-name {
+    font-size: clamp(3.125rem, 2.5rem + 1.667vw, 4rem);
+  }
 
-    .page-summary .js-deadline-date {
-        font-size: 18px;
-    }
+  /* Icons mobil (deine aktuellen Assets) */
+  .page-summary .summary-card:hover {
+    background-color: #2a3647;
+    color: white;
+  }
 
-    .page-summary .img-urgent-summary {
-        width: 45px;
-        height: 45px;
-    }
+  .page-summary .icon-todo {
+    background-image: url(../assets/img/summary-pen-mobile.png);
+    background-size: 45px 45px;
+  }
 
-    /* Greeting korrekt verstecken (statt display:hidden) */
+  .page-summary .summary-card:hover .icon-todo {
+    background-image: url(../assets/img/icon/todo-mobile.png);
+    background-size: 55px 55px;
+  }
 
-    .welcome-summary {
-        margin: 0px;
-        font-size: 30px;
-    }
+  .page-summary .icon-done {
+    background-image: url(../assets/img/summary-done-mobile.png);
+    background-size: 45px 45px;
+  }
 
-    .summary-name {
-        font-size: 50px;
-    }
-
-    /* Icons mobil (deine aktuellen Assets) */
-    .page-summary .summary-card:hover {
-        background-color: #2a3647;
-        color: white;
-    }
-
-    .page-summary .icon-todo {
-        background-image: url(../assets/img/summary-pen-mobile.png);
-        background-size: 45px 45px;
-    }
-
-    .page-summary .summary-card:hover .icon-todo {
-        background-image: url(../assets/img/icon/todo-mobile.png);
-        background-size: 55px 55px;
-    }
-
-    .page-summary .icon-done {
-        background-image: url(../assets/img/summary-done-mobile.png);
-        background-size: 45px 45px;
-    }
-
-    .page-summary .summary-card:hover .icon-done {
-        background-image: url(../assets/img/icon/done-mobile.png);
-        background-size: 55px 55px;
-    }
+  .page-summary .summary-card:hover .icon-done {
+    background-image: url(../assets/img/icon/done-mobile.png);
+    background-size: 55px 55px;
+  }
 }
 
 @media (min-width: 925px) and (max-width: 1150px) {
+  /* Root: volle Breite + sauberes Scrolling */
+  .page-summary {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    color: #2a3647;
+  }
 
-    /* Root: volle Breite + sauberes Scrolling */
-    .page-summary {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
-        color: #2a3647;
-    }
+  /* Body vollflächig, scrollen übernimmt gleich .summary selbst */
+  .page-summary body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    min-height: 100dvh;
+    overflow: hidden;
+    /* wichtig: kein Doppelscroll am Body */
+    background-color: #f5f7f9;
+  }
 
-    /* Body vollflächig, scrollen übernimmt gleich .summary selbst */
-    .page-summary body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        max-width: 100%;
-        min-height: 100dvh;
-        overflow: hidden;
-        /* wichtig: kein Doppelscroll am Body */
-        background-color: #f5f7f9;
-    }
-
-    /* ==== Layout-Grundidee ====
+  /* ==== Layout-Grundidee ====
      .main-div -> flex column
      .header bleibt oben
      .summary wird der SCROLLER
      .side-menu-bottom fix unten
   */
-    .page-summary .main-div {
-        display: flex;
-        flex-direction: column;
-        min-height: 100dvh;
-        box-sizing: border-box;
-    }
+  .page-summary .main-div {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    box-sizing: border-box;
+  }
 
-    .page-summary .logo-content-container-bottom,
-    .page-summary .menu-content-bottom,
-    .page-summary .bottom-menu {
-        margin: 0 !important;
-    }
+  .page-summary .logo-content-container-bottom,
+  .page-summary .menu-content-bottom,
+  .page-summary .bottom-menu {
+    margin: 0 !important;
+  }
 
-    .page-summary .menu-content-bottom {
-        width: 100%;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        gap: 0;
-    }
+  .page-summary .menu-content-bottom {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 0;
+  }
 
-    /* === Der tatsächliche Scroller: .summary === */
-    .page-summary .summary {
-        flex: 1 1 auto;
-        overflow: auto;
-        box-sizing: border-box;
-        overflow: hidden;
-        -webkit-overflow-scrolling: touch;
-        padding: 1pc 1pc 2pc 2pc;
-    }
+  /* === Der tatsächliche Scroller: .summary === */
+  .page-summary .summary {
+    flex: 1 1 auto;
+    overflow: auto;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+    padding: 1pc 1pc 2pc 2pc;
+  }
 
-    /* Mobiler Feinschliff (aus deiner Datei übernommen) */
-    .page-summary .summary-content {
-        display: flex;
-        align-items: center;
-        gap: 40px;
-    }
+  /* Mobiler Feinschliff (aus deiner Datei übernommen) */
+  .page-summary .summary-content {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
 
-    .page-summary .summary-metrics {
-        display: flex;
-        flex-direction: column;
-        gap: 25px;
-    }
+  .page-summary .summary-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
 
-    /* Header kompakter */
-    .page-summary .summary-header {
-        display: flex;
-        align-items: center;
-        padding-top: 2pc;
-        gap: 15px;
-    }
+  /* Header kompakter */
+  .page-summary .summary-header {
+    display: flex;
+    align-items: center;
+    padding-top: 2pc;
+    gap: 15px;
+  }
 
-    .page-summary .summary-title {
-        font-size: 57px;
-        margin: 0;
-    }
+  .page-summary .summary-title {
+    font-size: clamp(2.9375rem, 2.25rem + 2.5vw, 4.5rem);
+    margin: 0;
+  }
 
-    .page-summary .summary-subtitle {
-        display: flex;
-        flex-direction: column;
-        font-size: 22px;
-        margin-top: 0;
-    }
+  .page-summary .summary-subtitle {
+    display: flex;
+    flex-direction: column;
+    font-size: clamp(1.25rem, 1.1675rem + 0.3vw, 1.4375rem);
+    margin-top: 0;
+  }
 
-    /* Cards etc. */
-    .page-summary .summary-card {
-        padding-bottom: 25px;
-        padding-top: 25px;
-        border: 15px;
-        border-radius: 20px;
-    }
+  /* Cards etc. */
+  .page-summary .summary-card {
+    padding-bottom: 25px;
+    padding-top: 25px;
+    border: 15px;
+    border-radius: 20px;
+  }
 
-    .page-summary .js-count-container {
-        display: flex;
-        flex-direction: column;
-    }
+  .page-summary .js-count-container {
+    display: flex;
+    flex-direction: column;
+  }
 
-    .page-summary .summary-row {
-        display: flex;
-        gap: 25px;
-    }
+  .page-summary .summary-row {
+    display: flex;
+    gap: 25px;
+  }
 
-    .page-summary .counter-design {
-        font-size: 48px;
-    }
+  .page-summary .counter-design {
+    font-size: clamp(2.8125rem, 2.07rem + 2.7vw, 4.5rem);
+  }
 
-    .page-summary .counter-text-design {
-        font-size: 19px;
-    }
+  .page-summary .counter-text-design {
+    font-size: clamp(0.875rem, 0.71rem + 0.6vw, 1.25rem);
+  }
 
-    .page-summary .deadline-container {
-        display: flex;
-        align-items: center;
-        gap: 23px;
-    }
+  .page-summary .deadline-container {
+    display: flex;
+    align-items: center;
+    gap: 23px;
+  }
 
-    .page-summary .deadline-under-container {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        gap: 18px;
-    }
+  .page-summary .deadline-under-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 18px;
+  }
 
-    .page-summary .js-urgent-container {
-        display: flex;
-        flex-direction: column;
-    }
+  .page-summary .js-urgent-container {
+    display: flex;
+    flex-direction: column;
+  }
 
-    .page-summary .label {
-        font-size: 16px;
-    }
+  .page-summary .label {
+    font-size: clamp(0.875rem, 0.765rem + 0.4vw, 1.125rem);
+  }
 
-    .page-summary .js-deadline-date {
-        font-size: 18px;
-    }
+  .page-summary .js-deadline-date {
+    font-size: clamp(1.125rem, 1.015rem + 0.4vw, 1.375rem);
+  }
 
-    .page-summary .img-urgent-summary {
-        width: 45px;
-        height: 45px;
-    }
+  .page-summary .img-urgent-summary {
+    width: 45px;
+    height: 45px;
+  }
 
-    /* Greeting korrekt verstecken (statt display:hidden) */
+  /* Greeting korrekt verstecken (statt display:hidden) */
 
-    .welcome-summary {
-        margin: 0px;
-        font-size: 30px;
-    }
+  .welcome-summary {
+    margin: 0px;
+    font-size: clamp(1.875rem, 1.1161rem + 2.024vw, 2.9375rem);
+  }
 
-    .summary-name {
-        font-size: 50px;
-    }
+  .summary-name {
+    font-size: clamp(3.125rem, 2.5rem + 1.667vw, 4rem);
+  }
 
-    /* Icons mobil (deine aktuellen Assets) */
-    .page-summary .summary-card:hover {
-        background-color: #2a3647;
-        color: white;
-    }
+  /* Icons mobil (deine aktuellen Assets) */
+  .page-summary .summary-card:hover {
+    background-color: #2a3647;
+    color: white;
+  }
 
-    .page-summary .icon-todo {
-        background-image: url(../assets/img/summary-pen-mobile.png);
-        background-size: 45px 45px;
-    }
+  .page-summary .icon-todo {
+    background-image: url(../assets/img/summary-pen-mobile.png);
+    background-size: 45px 45px;
+  }
 
-    .page-summary .summary-card:hover .icon-todo {
-        background-image: url(../assets/img/icon/todo-mobile.png);
-        background-size: 55px 55px;
-    }
+  .page-summary .summary-card:hover .icon-todo {
+    background-image: url(../assets/img/icon/todo-mobile.png);
+    background-size: 55px 55px;
+  }
 
-    .page-summary .icon-done {
-        background-image: url(../assets/img/summary-done-mobile.png);
-        background-size: 45px 45px;
-    }
+  .page-summary .icon-done {
+    background-image: url(../assets/img/summary-done-mobile.png);
+    background-size: 45px 45px;
+  }
 
-    .page-summary .summary-card:hover .icon-done {
-        background-image: url(../assets/img/icon/done-mobile.png);
-        background-size: 55px 55px;
-    }
+  .page-summary .summary-card:hover .icon-done {
+    background-image: url(../assets/img/icon/done-mobile.png);
+    background-size: 55px 55px;
+  }
 }
 
 @media (min-width: 1150px) and (max-width: 1320px) {
+  /* Root: volle Breite + sauberes Scrolling */
+  .page-summary {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    color: #2a3647;
+  }
 
-    /* Root: volle Breite + sauberes Scrolling */
-    .page-summary {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
-        color: #2a3647;
-    }
+  /* Body vollflächig, scrollen übernimmt gleich .summary selbst */
+  .page-summary body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-width: 100%;
+    min-height: 100dvh;
+    overflow: hidden;
+    /* wichtig: kein Doppelscroll am Body */
+    background-color: #f5f7f9;
+  }
 
-    /* Body vollflächig, scrollen übernimmt gleich .summary selbst */
-    .page-summary body {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        max-width: 100%;
-        min-height: 100dvh;
-        overflow: hidden;
-        /* wichtig: kein Doppelscroll am Body */
-        background-color: #f5f7f9;
-    }
-
-    /* ==== Layout-Grundidee ====
+  /* ==== Layout-Grundidee ====
      .main-div -> flex column
      .header bleibt oben
      .summary wird der SCROLLER
      .side-menu-bottom fix unten
   */
-    .page-summary .main-div {
-        display: flex;
-        flex-direction: column;
-        min-height: 100dvh;
-        box-sizing: border-box;
-    }
+  .page-summary .main-div {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    box-sizing: border-box;
+  }
 
-    .page-summary .logo-content-container-bottom,
-    .page-summary .menu-content-bottom,
-    .page-summary .bottom-menu {
-        margin: 0 !important;
-    }
+  .page-summary .logo-content-container-bottom,
+  .page-summary .menu-content-bottom,
+  .page-summary .bottom-menu {
+    margin: 0 !important;
+  }
 
-    .page-summary .menu-content-bottom {
-        width: 100%;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        gap: 0;
-    }
+  .page-summary .menu-content-bottom {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 0;
+  }
 
-    /* === Der tatsächliche Scroller: .summary === */
-    .page-summary .summary {
-        flex: 1 1 auto;
-        overflow: auto;
-        box-sizing: border-box;
-        -webkit-overflow-scrolling: touch;
-        padding: 1pc 1pc 2pc 2pc;
-        overflow: hidden;
-    }
+  /* === Der tatsächliche Scroller: .summary === */
+  .page-summary .summary {
+    flex: 1 1 auto;
+    overflow: auto;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
+    padding: 1pc 1pc 2pc 2pc;
+  }
 
-    /* Mobiler Feinschliff (aus deiner Datei übernommen) */
-    .page-summary .summary-content {
-        display: flex;
-        align-items: center;
-        gap: 40px;
-    }
+  /* Mobiler Feinschliff (aus deiner Datei übernommen) */
+  .page-summary .summary-content {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
 
-    .page-summary .summary-metrics {
-        display: flex;
-        flex-direction: column;
-        gap: 25px;
-    }
+  .page-summary .summary-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
 
-    /* Header kompakter */
-    .page-summary .summary-header {
-        display: flex;
-        align-items: center;
-        padding-top: 2pc;
-        gap: 15px;
-    }
+  /* Header kompakter */
+  .page-summary .summary-header {
+    display: flex;
+    align-items: center;
+    padding-top: 2pc;
+    gap: 15px;
+  }
 
-    .page-summary .summary-title {
-        font-size: 57px;
-        margin: 0;
-    }
+  .page-summary .summary-title {
+    font-size: clamp(2.9375rem, 2.25rem + 2.5vw, 4.5rem);
+    margin: 0;
+  }
 
-    .page-summary .summary-subtitle {
-        display: flex;
-        flex-direction: column;
-        font-size: 22px;
-        margin-top: 0;
-    }
+  .page-summary .summary-subtitle {
+    display: flex;
+    flex-direction: column;
+    font-size: clamp(1.25rem, 1.1675rem + 0.3vw, 1.4375rem);
+    margin-top: 0;
+  }
 
-    /* Cards etc. */
-    .page-summary .summary-card {
-        padding-bottom: 25px;
-        padding-top: 25px;
-        border: 15px;
-        border-radius: 20px;
-    }
+  /* Cards etc. */
+  .page-summary .summary-card {
+    padding-bottom: 25px;
+    padding-top: 25px;
+    border: 15px;
+    border-radius: 20px;
+  }
 
-    .page-summary .js-count-container {
-        display: flex;
-        flex-direction: column;
-    }
+  .page-summary .js-count-container {
+    display: flex;
+    flex-direction: column;
+  }
 
-    .page-summary .summary-row {
-        display: flex;
-        gap: 25px;
-    }
+  .page-summary .summary-row {
+    display: flex;
+    gap: 25px;
+  }
 
-    .page-summary .counter-design {
-        font-size: 72px;
-    }
+  .page-summary .counter-design {
+    font-size: clamp(2.8125rem, 2.07rem + 2.7vw, 4.5rem);
+  }
 
-    .page-summary .counter-text-design {
-        /* font-size: 19px; */
-    }
+  .page-summary .counter-text-design {
+    /* font-size: 19px; */
+  }
 
-    .page-summary .deadline-container {
-        display: flex;
-        align-items: center;
-        gap: 23px;
-    }
+  .page-summary .deadline-container {
+    display: flex;
+    align-items: center;
+    gap: 23px;
+  }
 
-    .page-summary .deadline-under-container {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        gap: 18px;
-    }
+  .page-summary .deadline-under-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 18px;
+  }
 
-    .page-summary .js-urgent-container {
-        display: flex;
-        flex-direction: column;
-    }
+  .page-summary .js-urgent-container {
+    display: flex;
+    flex-direction: column;
+  }
 
-    .page-summary .label {
-        /* font-size: 16px; */
-    }
+  .page-summary .label {
+    /* font-size: 16px; */
+  }
 
-    .page-summary .js-deadline-date {
-        /* font-size: 18px; */
-    }
+  .page-summary .js-deadline-date {
+    /* font-size: 18px; */
+  }
 
-    .page-summary .img-urgent-summary {
-        /* width: 45px;
+  .page-summary .img-urgent-summary {
+    /* width: 45px;
         height: 45px; */
-    }
+  }
 
-    /* Greeting korrekt verstecken (statt display:hidden) */
+  /* Greeting korrekt verstecken (statt display:hidden) */
 
-    .welcome-summary {
-        margin: 0px;
-        /* font-size: 30px; */
-    }
+  .welcome-summary {
+    margin: 0px;
+    /* font-size: 30px; */
+  }
 
-    .summary-name {
-        /* font-size: 50px; */
-    }
+  .summary-name {
+    /* font-size: 50px; */
+  }
 
-    /* Icons mobil (deine aktuellen Assets) */
-    .page-summary .summary-card:hover {
-        background-color: #2a3647;
-        color: white;
-    }
+  /* Icons mobil (deine aktuellen Assets) */
+  .page-summary .summary-card:hover {
+    background-color: #2a3647;
+    color: white;
+  }
 
-    .page-summary .icon-todo {
-        background-image: url(../assets/img/summary-pen-mobile.png);
-        background-size: 50px 50px;
-    }
+  .page-summary .icon-todo {
+    background-image: url(../assets/img/summary-pen-mobile.png);
+    background-size: 50px 50px;
+  }
 
-    .page-summary .summary-card:hover .icon-todo {
-        background-image: url(../assets/img/icon/todo-mobile.png);
-        background-size: 60px 60px;
-    }
+  .page-summary .summary-card:hover .icon-todo {
+    background-image: url(../assets/img/icon/todo-mobile.png);
+    background-size: 60px 60px;
+  }
 
-    .page-summary .icon-done {
-        background-image: url(../assets/img/summary-done-mobile.png);
-        background-size: 50px 50px;
-    }
+  .page-summary .icon-done {
+    background-image: url(../assets/img/summary-done-mobile.png);
+    background-size: 50px 50px;
+  }
 
-    .page-summary .summary-card:hover .icon-done {
-        background-image: url(../assets/img/icon/done-mobile.png);
-        background-size: 60px 60px;
-    }
+  .page-summary .summary-card:hover .icon-done {
+    background-image: url(../assets/img/icon/done-mobile.png);
+    background-size: 60px 60px;
+  }
 }

@@ -1,50 +1,46 @@
-body{
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
-    scroll-behavior: smooth;
-    font-family: inter;
-    background-color: #f5f7f9;
-    scroll-behavior: smooth;
-    zoom: 0.8;
+body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  scroll-behavior: smooth;
+  font-family: inter;
+  background-color: #f5f7f9;
+  zoom: 0.8;
 }
 
 @supports not (zoom: 1) {
-    body {
-        transform: scale(0.8);
-        transform-origin: top left;
-        width: 125%;
-        height: 125vh;
-    }
+  body {
+    transform: scale(0.8);
+    transform-origin: top left;
+    width: 125%;
+    height: 125vh;
+  }
 }
 
-html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: hidden; 
-    color: #2a3647;
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  color: #2a3647;
 }
 
-a{
-    text-decoration: none;
+a {
+  text-decoration: none;
 }
 
-.flexrow{
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    flex-direction: row;
-    
+.flexrow {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row;
 }
 
-.flexcolumn{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+.flexcolumn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
-
-
-

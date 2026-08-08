@@ -81,7 +81,7 @@ h1, h2, h3 {
 }
 
 h1 {
-  font-size: 61px;
+  font-size: clamp(2.9375rem, 2.5rem + 1.458vw, 3.8125rem);
   font-weight: 700;
   color: black;
   margin-bottom: 20px;
@@ -91,12 +91,12 @@ h1 {
 }
 
 h2 {
-  font-size: 27px;
+  font-size: clamp(1.375rem, 1.2708rem + 0.463vw, 1.6875rem);
   font-weight: 700;
 }
 
 h3 {
-  font-size: 20px;
+  font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
   font-weight: 700;
   margin-top: 15px;
 }
@@ -104,7 +104,7 @@ h3 {
 p {
   margin: 10px 0;
   font-weight: 400;
-  font-size: 16px;
+  font-size: clamp(0.9375rem, 0.9167rem + 0.093vw, 1rem);
 }
 
 ul {
@@ -114,7 +114,7 @@ ul {
 
 h4 {
   font-weight: 400;
-  font-size: 16px;
+  font-size: clamp(0.9375rem, 0.9167rem + 0.093vw, 1rem);
 }
 
 .header-and-main-container {
@@ -190,7 +190,7 @@ p1 {
   align-items: center;
   text-decoration: none;
   color: white;
-  font-size: 14px;
+  font-size: clamp(0.8125rem, 0.7917rem + 0.093vw, 0.875rem);
   width: 25%;
 }
 
@@ -282,12 +282,12 @@ p1 {
   .account {
     width: 32px;
     height: 32px;
-    font-size: 14px;
+    font-size: clamp(0.8125rem, 0.7574rem + 0.245vw, 0.875rem);
   }
 }
 
 @media (max-width: 480px) {
   h1 {
-    font-size: 47px;
+    font-size: clamp(2.9375rem, 2.5rem + 1.458vw, 3.8125rem);
   }
 }

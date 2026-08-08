@@ -54,7 +54,7 @@ required-field {
 span {
     font-family: inter;
     font-weight: 400;
-    font-size: 20px;
+    font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
     color: #2a3548;
     white-space: nowrap;
 
@@ -136,7 +136,7 @@ span {
 
 
     .headline-div-modal h1 {
-        font-size: 28px;
+        font-size: clamp(1.4375rem, 0.9688rem + 2.083vw, 1.75rem);
         padding-left: 8px;
     }
 

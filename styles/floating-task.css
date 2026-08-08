@@ -74,7 +74,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 23px;
+    font-size: clamp(1.3125rem, 1.2708rem + 0.185vw, 1.4375rem);
     font-weight: 400;
 }
 
@@ -90,7 +90,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 23px;
+    font-size: clamp(1.3125rem, 1.2708rem + 0.185vw, 1.4375rem);
     font-weight: 400;
     margin-top: 4px;
     width: 164px;
@@ -105,7 +105,7 @@
 
 .main-section-task-overlay span{
     font-weight: 400;
-    font-size: 20px;
+    font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
 }
 
 .flexrow{
@@ -133,7 +133,7 @@
 
 .account-name{
     font-weight: 400 !important;
-    font-size:19px !important;
+    font-size:clamp(1.0625rem, 1.0208rem + 0.185vw, 1.1875rem) !important;
 }
 
 .subtask-checkbox{
@@ -226,7 +226,7 @@
 
 .date{
     color:black;
-    font-size:20px;
+    font-size:clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
 }
 
 
@@ -236,7 +236,7 @@
     height: 36px;
     border-radius: 45px;
     text-align: center;
-    font-size: 12px;
+    font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -252,7 +252,7 @@
     height: 36px;
     border-radius: 45px;
     text-align: center;
-    font-size: 12px;
+    font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -268,7 +268,7 @@
     height: 36px;
     border-radius: 45px;
     text-align: center;
-    font-size: 12px;
+    font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -284,7 +284,7 @@
         height: 36px;
         border-radius: 45px;
         text-align: center;
-        font-size: 12px;
+        font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -302,7 +302,7 @@
     height: 36px;
     border-radius: 45px;
     text-align: center;
-    font-size: 12px;
+    font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -320,7 +320,7 @@
     height: 36px;
     border-radius: 45px;
     text-align: center;
-    font-size: 12px;
+    font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -338,7 +338,7 @@
     height: 36px;
     border-radius: 45px;
     text-align: center;
-    font-size: 12px;
+    font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -355,7 +355,7 @@
     height: 32px;
     border-radius: 45px;
     text-align: center;
-    font-size: 12px;
+    font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -368,7 +368,7 @@
     height: 32px;
     border-radius: 45px;
     text-align: center;
-    font-size: 12px;
+    font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -381,7 +381,7 @@
     height: 32px;
     border-radius: 45px;
     text-align: center;
-    font-size: 12px;
+    font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -394,7 +394,7 @@
     height: 32px;
     border-radius: 45px;
     text-align: center;
-    font-size: 12px;
+    font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -407,7 +407,7 @@
     height: 32px;
     border-radius: 45px;
     text-align: center;
-    font-size: 12px;
+    font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -420,7 +420,7 @@
     height: 32px;
     border-radius: 45px;
     text-align: center;
-    font-size: 12px;
+    font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -433,7 +433,7 @@
     height: 32px;
     border-radius: 45px;
     text-align: center;
-    font-size: 12px;
+    font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -446,7 +446,7 @@
     height: 32px;
     border-radius: 45px;
     text-align: center;
-    font-size: 12px;
+    font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -459,7 +459,7 @@
     height: 32px;
     border-radius: 45px;
     text-align: center;
-    font-size: 12px;
+    font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -472,7 +472,7 @@
     height: 32px;
     border-radius: 45px;
     text-align: center;
-    font-size: 12px;
+    font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -485,7 +485,7 @@
     height: 32px;
     border-radius: 45px;
     text-align: center;
-    font-size: 12px;
+    font-size: clamp(0.75rem, 0.7292rem + 0.093vw, 0.8125rem);
     display: flex;
     justify-content: center;
     align-items: center;

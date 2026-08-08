@@ -5,7 +5,7 @@
     width: 100%;
     padding: 8px;
     box-sizing: border-box;
-    font-size: 1rem;
+    font-size: clamp(0.9375rem, 0.9167rem + 0.093vw, 1rem);
 }
 
 .edit-modal-overlay {
@@ -42,7 +42,7 @@
 
 .edit-modal-title {
     margin: 0;
-    font-size: 24px;
+    font-size: clamp(1.375rem, 1.3333rem + 0.185vw, 1.5rem);
     color: #2a3647;
 }
 
@@ -81,7 +81,7 @@
     padding: 12px 16px;
     border: 1px solid #d1d1d1;
     border-radius: 8px;
-    font-size: 16px;
+    font-size: clamp(0.9375rem, 0.9167rem + 0.093vw, 1rem);
 }
 
 
@@ -105,7 +105,7 @@
 }
 
 .priority-btn {
-    font-size: 16px;
+    font-size: clamp(0.9375rem, 0.9167rem + 0.093vw, 1rem);
     flex: 1;
     padding: 12px;
     border: 1px solid #d1d1d1;
@@ -139,7 +139,7 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    font-size: 14px;
+    font-size: clamp(0.8125rem, 0.7917rem + 0.093vw, 0.875rem);
     font-weight: bold;
     color: white;
     text-transform: uppercase;
@@ -156,7 +156,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 16px;
+    font-size: clamp(0.9375rem, 0.9167rem + 0.093vw, 1rem);
     font-weight: 500;
     color: white;
     margin-right: 12px;
@@ -170,7 +170,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 16px;
+    font-size: clamp(0.9375rem, 0.9167rem + 0.093vw, 1rem);
     font-weight: 500;
     color: white;
 }
@@ -289,7 +289,7 @@
     
     .form-input,
     .form-textarea {
-        font-size: 14px;
+        font-size: clamp(0.8125rem, 0.7188rem + 0.417vw, 0.875rem);
     }
 }
 
@@ -371,7 +371,7 @@
     color: #fff;
     font-weight: 300;
     margin-right: 8px;
-    font-size: 16px;
+    font-size: clamp(0.9375rem, 0.9167rem + 0.093vw, 1rem);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -453,7 +453,7 @@
 
 .edit-category-select {
     font-family: Arial, sans-serif;
-    font-size: 16px;
+    font-size: clamp(0.9375rem, 0.9167rem + 0.093vw, 1rem);
     color: #333;
     background-color: #ffffff;
     border: 1px solid #ccc;
@@ -513,12 +513,12 @@ input::-webkit-calendar-picker-indicator {
     width: 100%;
     padding: 8px;
     box-sizing: border-box;
-    font-size: 1rem;
+    font-size: clamp(0.9rem, 0.8286rem + 0.19vw, 1rem);
   }
   
   @media (max-width: 600px) {
     .responsive-subtask-input {
-      font-size: 0.9rem;
+      font-size: clamp(0.9rem, 0.8286rem + 0.19vw, 1rem);
       padding: 6px;
     }
   }

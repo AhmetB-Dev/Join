@@ -77,7 +77,7 @@ a {
     }
 
     .resources-link {
-        font-size: 14px;
+        font-size: clamp(0.8125rem, 0.7574rem + 0.245vw, 0.875rem);
     }
 }
 
@@ -90,7 +90,7 @@ a {
     justify-content: center;
     align-items: center;
     color: #29ABE2;
-    font-size: 20px;
+    font-size: clamp(1.125rem, 1.0833rem + 0.185vw, 1.25rem);
     font-weight: 700;
     cursor: pointer !important;
     transition: all 0.2s ease-in-out;
