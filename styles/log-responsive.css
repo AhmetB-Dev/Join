@@ -192,12 +192,12 @@
     font-size: 1.5rem;
   }
   input.passwort-icon {
-    background: url(../img/lock.png) no-repeat;
+    background: url(../assets/img/lock.png) no-repeat;
     background-size: 2rem;
     background-position: 13em center;
   }
   input.email-icon {
-    background: url(../img/icon/mail.png) no-repeat;
+    background: url(../assets/img/icon/mail.png) no-repeat;
     background-size: 2rem;
     background-position: 13em center;
   }

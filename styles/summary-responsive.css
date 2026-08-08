@@ -110,7 +110,7 @@
     }
 
     .page-summary .summary-subtitle::after {
-        content: url(../img/summary-line-mobile.svg);
+        content: url(../assets/img/summary-line-mobile.svg);
     }
 
     /* Cards etc. */
@@ -191,22 +191,22 @@
     }
 
     .page-summary .icon-todo {
-        background-image: url(../img/summary-pen-mobile.png);
+        background-image: url(../assets/img/summary-pen-mobile.png);
         background-size: 40px 40px;
     }
 
     .page-summary .summary-card:hover .icon-todo {
-        background-image: url(../img/icon/todo-mobile.png);
+        background-image: url(../assets/img/icon/todo-mobile.png);
         background-size: 50px 50px;
     }
 
     .page-summary .icon-done {
-        background-image: url(../img/summary-done-mobile.png);
+        background-image: url(../assets/img/summary-done-mobile.png);
         background-size: 40px 40px;
     }
 
     .page-summary .summary-card:hover .icon-done {
-        background-image: url(../img/icon/done-mobile.png);
+        background-image: url(../assets/img/icon/done-mobile.png);
         background-size: 50px 50px;
     }
 }
@@ -316,7 +316,7 @@
     }
 
     .page-summary .summary-subtitle::after {
-        content: url(../img/summary-line-mobile.svg);
+        content: url(../assets/img/summary-line-mobile.svg);
     }
 
     /* Cards etc. */
@@ -407,22 +407,22 @@
     }
 
     .page-summary .icon-todo {
-        background-image: url(../img/summary-pen-mobile.png);
+        background-image: url(../assets/img/summary-pen-mobile.png);
         background-size: 40px 40px;
     }
 
     .page-summary .summary-card:hover .icon-todo {
-        background-image: url(../img/icon/todo-mobile.png);
+        background-image: url(../assets/img/icon/todo-mobile.png);
         background-size: 50px 50px;
     }
 
     .page-summary .icon-done {
-        background-image: url(../img/summary-done-mobile.png);
+        background-image: url(../assets/img/summary-done-mobile.png);
         background-size: 40px 40px;
     }
 
     .page-summary .summary-card:hover .icon-done {
-        background-image: url(../img/icon/done-mobile.png);
+        background-image: url(../assets/img/icon/done-mobile.png);
         background-size: 50px 50px;
     }
 }
@@ -535,7 +535,7 @@
     }
 
     .page-summary .summary-subtitle::after {
-        content: url(../img/summary-line-mobile.svg);
+        content: url(../assets/img/summary-line-mobile.svg);
     }
 
     /* Cards etc. */
@@ -615,22 +615,22 @@
     }
 
     .page-summary .icon-todo {
-        background-image: url(../img/summary-pen-mobile.png);
+        background-image: url(../assets/img/summary-pen-mobile.png);
         background-size: 45px 45px;
     }
 
     .page-summary .summary-card:hover .icon-todo {
-        background-image: url(../img/icon/todo-mobile.png);
+        background-image: url(../assets/img/icon/todo-mobile.png);
         background-size: 55px 55px;
     }
 
     .page-summary .icon-done {
-        background-image: url(../img/summary-done-mobile.png);
+        background-image: url(../assets/img/summary-done-mobile.png);
         background-size: 45px 45px;
     }
 
     .page-summary .summary-card:hover .icon-done {
-        background-image: url(../img/icon/done-mobile.png);
+        background-image: url(../assets/img/icon/done-mobile.png);
         background-size: 55px 55px;
     }
 }
@@ -744,7 +744,7 @@
 
 
     .page-summary .summary-subtitle::after {
-        content: url(../img/summary-line-mobile.svg);
+        content: url(../assets/img/summary-line-mobile.svg);
     }
 
     /* Cards etc. */
@@ -822,22 +822,22 @@
     }
 
     .page-summary .icon-todo {
-        background-image: url(../img/summary-pen-mobile.png);
+        background-image: url(../assets/img/summary-pen-mobile.png);
         background-size: 45px 45px;
     }
 
     .page-summary .summary-card:hover .icon-todo {
-        background-image: url(../img/icon/todo-mobile.png);
+        background-image: url(../assets/img/icon/todo-mobile.png);
         background-size: 55px 55px;
     }
 
     .page-summary .icon-done {
-        background-image: url(../img/summary-done-mobile.png);
+        background-image: url(../assets/img/summary-done-mobile.png);
         background-size: 45px 45px;
     }
 
     .page-summary .summary-card:hover .icon-done {
-        background-image: url(../img/icon/done-mobile.png);
+        background-image: url(../assets/img/icon/done-mobile.png);
         background-size: 55px 55px;
     }
 }
@@ -1011,22 +1011,22 @@
     }
 
     .page-summary .icon-todo {
-        background-image: url(../img/summary-pen-mobile.png);
+        background-image: url(../assets/img/summary-pen-mobile.png);
         background-size: 45px 45px;
     }
 
     .page-summary .summary-card:hover .icon-todo {
-        background-image: url(../img/icon/todo-mobile.png);
+        background-image: url(../assets/img/icon/todo-mobile.png);
         background-size: 55px 55px;
     }
 
     .page-summary .icon-done {
-        background-image: url(../img/summary-done-mobile.png);
+        background-image: url(../assets/img/summary-done-mobile.png);
         background-size: 45px 45px;
     }
 
     .page-summary .summary-card:hover .icon-done {
-        background-image: url(../img/icon/done-mobile.png);
+        background-image: url(../assets/img/icon/done-mobile.png);
         background-size: 55px 55px;
     }
 }
@@ -1200,22 +1200,22 @@
     }
 
     .page-summary .icon-todo {
-        background-image: url(../img/summary-pen-mobile.png);
+        background-image: url(../assets/img/summary-pen-mobile.png);
         background-size: 50px 50px;
     }
 
     .page-summary .summary-card:hover .icon-todo {
-        background-image: url(../img/icon/todo-mobile.png);
+        background-image: url(../assets/img/icon/todo-mobile.png);
         background-size: 60px 60px;
     }
 
     .page-summary .icon-done {
-        background-image: url(../img/summary-done-mobile.png);
+        background-image: url(../assets/img/summary-done-mobile.png);
         background-size: 50px 50px;
     }
 
     .page-summary .summary-card:hover .icon-done {
-        background-image: url(../img/icon/done-mobile.png);
+        background-image: url(../assets/img/icon/done-mobile.png);
         background-size: 60px 60px;
     }
 }

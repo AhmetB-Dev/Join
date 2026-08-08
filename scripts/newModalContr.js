@@ -87,7 +87,7 @@ function selectContactEntry(id, item, contact, selectedContacts, badgesContainer
  * @returns {void}
  */
 function setCheckboxSelected(checkbox) {
-  checkbox.src = "../img/checkboxchecked.png";
+  checkbox.src = "../assets/img/checkboxchecked.png";
   checkbox.style.filter = "brightness(0) invert(1)";
 }
 
@@ -151,7 +151,7 @@ function generateDropdownItemHTML(contact) {
       </div>
       <span class="contact-name-edit">${contact.name}</span>
     </div>
-    <img src="../img/chekbox.png" alt="checkbox" class="custom-checkbox">`;
+    <img src="../assets/img/chekbox.png" alt="checkbox" class="custom-checkbox">`;
 }
 
 /**
@@ -199,7 +199,7 @@ function handleDropdownSelection(item, id, contact, selectedContacts, badgesCont
 function addDropdownSelection(item, id, contact, selectedContacts, badgesContainer, checkbox) {
   selectedContacts.add(id);
   item.classList.add('selected');
-  checkbox.src = "../img/checkboxchecked.png";
+  checkbox.src = "../assets/img/checkboxchecked.png";
   checkbox.style.filter = "brightness(0) invert(1)";
   createContactBadge(contact, id, badgesContainer, selectedContacts);
 }
@@ -216,7 +216,7 @@ function addDropdownSelection(item, id, contact, selectedContacts, badgesContain
 function removeDropdownSelection(item, id, selectedContacts, badgesContainer, checkbox) {
   selectedContacts.delete(id);
   item.classList.remove('selected');
-  checkbox.src = "../img/chekbox.png";
+  checkbox.src = "../assets/img/chekbox.png";
   checkbox.style.filter = "";
   const badge = badgesContainer.querySelector(`[data-contact-id="${id}"]`);
   if (badge) {
@@ -269,7 +269,7 @@ function attachBadgeClickListener(badge, selectedContacts, id) {
         item.classList.remove('selected');
         const checkboxImg = item.querySelector('.custom-checkbox');
         if (checkboxImg) {
-          checkboxImg.src = "../img/chekbox.png";
+          checkboxImg.src = "../assets/img/chekbox.png";
           checkboxImg.style.filter = "";
         }
       }
@@ -366,10 +366,10 @@ function getSelectedPriority() {
  */
 function getPriorityPath(priority) {
   switch (priority) {
-    case 'urgent': return '../img/priority-img/urgent.png';
-    case 'medium': return '../img/priority-img/medium.png';
-    case 'low':    return '../img/priority-img/low.png';
-    default:       return '../img/priority-img/medium.png';
+    case 'urgent': return '../assets/img/priority-img/urgent.png';
+    case 'medium': return '../assets/img/priority-img/medium.png';
+    case 'low':    return '../assets/img/priority-img/low.png';
+    default:       return '../assets/img/priority-img/medium.png';
   }
 }
 

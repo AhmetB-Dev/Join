@@ -153,7 +153,7 @@ function selectContactItem(item, id, contact, selectedContacts, badgesContainer)
   selectedContacts.add(id);
   item.classList.add('selected');
   const checkbox = item.querySelector('.custom-checkbox');
-  checkbox.src = "../img/checkboxchecked.png";
+  checkbox.src = "../assets/img/checkboxchecked.png";
   checkbox.style.filter = "brightness(0) invert(1)";
   createContactBadge(contact, id, badgesContainer, selectedContacts);
 }
@@ -198,7 +198,7 @@ function generateDropdownItemHTML(contact) {
       </div>
       <span class="contact-name-edit">${contact.name || ''}</span>
     </div>
-    <img src="../img/chekbox.png" alt="checkbox" class="custom-checkbox">`;
+    <img src="../assets/img/chekbox.png" alt="checkbox" class="custom-checkbox">`;
 }
 
 /**
@@ -236,7 +236,7 @@ function handleDropdownSelection(item, id, contact, selectedContacts, badgesCont
 function addDropdownSelection(item, id, contact, selectedContacts, badgesContainer, checkbox) {
   selectedContacts.add(id);
   item.classList.add('selected');
-  checkbox.src = "../img/checkboxchecked.png";
+  checkbox.src = "../assets/img/checkboxchecked.png";
   checkbox.style.filter = "brightness(0) invert(1)";
   createContactBadge(contact, id, badgesContainer, selectedContacts);
 }
@@ -252,7 +252,7 @@ function addDropdownSelection(item, id, contact, selectedContacts, badgesContain
 function removeDropdownSelection(item, id, selectedContacts, badgesContainer, checkbox) {
   selectedContacts.delete(id);
   item.classList.remove('selected');
-  checkbox.src = "../img/chekbox.png";
+  checkbox.src = "../assets/img/chekbox.png";
   checkbox.style.filter = "";
   const badge = badgesContainer.querySelector(`[data-contact-id="${id}"]`);
   if (badge) badge.remove();
@@ -343,7 +343,7 @@ function findDropdownItemByName(dropdownList, contactName) {
 function updateDropdownCheckbox(item, checked) {
   const checkbox = item.querySelector('.custom-checkbox');
   if (checkbox) {
-    checkbox.src = checked ? "../img/checkboxchecked.png" : "../img/chekbox.png";
+    checkbox.src = checked ? "../assets/img/checkboxchecked.png" : "../assets/img/chekbox.png";
     checkbox.style.filter = checked ? "brightness(0) invert(1)" : "";
   }
 }

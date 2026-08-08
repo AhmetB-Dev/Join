@@ -143,7 +143,7 @@ button {
 }
 
 .summary-card:hover .icon-todo {
-    background-image: url(../img/icon/to-do-icon-white.png);
+    background-image: url(../assets/img/icon/to-do-icon-white.png);
     background-size: auto;
     background-position: center;
     background-repeat: no-repeat;
@@ -154,7 +154,7 @@ button {
 }
 
 .icon-todo {
-    background-image: url(../img/icon/to-do-icon.png);
+    background-image: url(../assets/img/icon/to-do-icon.png);
     background-position: center;
     background-repeat: no-repeat;
     background-size: auto;
@@ -165,7 +165,7 @@ button {
 }
 
 .icon-done {
-    background-image: url(../img/icon/done-icon.png);
+    background-image: url(../assets/img/icon/done-icon.png);
     background-position: center;
     background-repeat: no-repeat;
     background-size: auto;
@@ -176,7 +176,7 @@ button {
 }
 
 .summary-card:hover .icon-done {
-    background-image: url(../img/icon/done-icon-white.png);
+    background-image: url(../assets/img/icon/done-icon-white.png);
     background-position: center;
     background-repeat: no-repeat;
     background-size: auto;

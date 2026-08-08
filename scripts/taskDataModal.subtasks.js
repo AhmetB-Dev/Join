@@ -31,8 +31,8 @@ function createSubtaskActionsContainer() {
   const actionsDiv = document.createElement("div");
   actionsDiv.className = "subtask-actions";
   actionsDiv.innerHTML = `
-    <img src="../img/pen.png" alt="Edit" class="subtask-edit-edit">
-    <img src="../img/trash.png" alt="Delete" class="subtask-delete-edit">`;
+    <img src="../assets/img/pen.png" alt="Edit" class="subtask-edit-edit">
+    <img src="../assets/img/trash.png" alt="Delete" class="subtask-delete-edit">`;
   return actionsDiv;
 }
 
@@ -233,8 +233,8 @@ function normalizeCurrentTaskSubtasks() {
  */
 function createSubtaskActions() {
   const actionsDiv = createActionsContainer();
-  const editIcon = createActionIcon("../img/pen.png", "Edit", "subtask-edit-edit");
-  const deleteIcon = createActionIcon("../img/trash.png", "Delete", "subtask-delete-edit");
+  const editIcon = createActionIcon("../assets/img/pen.png", "Edit", "subtask-edit-edit");
+  const deleteIcon = createActionIcon("../assets/img/trash.png", "Delete", "subtask-delete-edit");
   actionsDiv.appendChild(editIcon);
   actionsDiv.appendChild(deleteIcon);
   return actionsDiv;

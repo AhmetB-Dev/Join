@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const REDIRECT_AFTER_AUTH = "./summary.html";
+  const REDIRECT_AFTER_AUTH = "./pages/summary.html";
   const { isValidEmail, createUser, verifyLogin, guestLogin } = window.AuthCore || {};
 
   /** Get element by id. @param {string} id @returns {HTMLElement|null} */

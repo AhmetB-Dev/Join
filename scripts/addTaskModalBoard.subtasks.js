@@ -37,7 +37,7 @@ function createAddTaskSubtaskItem(text) {
   newItem.classList.add("subtask-item", "added-subtasks");
   newItem.innerHTML = `
     <span>${text}</span>
-    <img src="../img/subtask-delete.png" alt="Delete Subtask" class="subtask-icon trash-icon" />
+    <img src="../assets/img/subtask-delete.png" alt="Delete Subtask" class="subtask-icon trash-icon" />
   `;
   return newItem;
 }

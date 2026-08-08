@@ -115,8 +115,8 @@ function createSubtaskActions(subtask, item, span) {
   const div = document.createElement('div');
   div.className = 'subtask-actions';
   div.innerHTML = `
-    <img src="../img/pen.png" alt="Edit" class="subtask-edit-edit">
-    <img src="../img/trash.png" alt="Delete" class="subtask-delete-edit">`;
+    <img src="../assets/img/pen.png" alt="Edit" class="subtask-edit-edit">
+    <img src="../assets/img/trash.png" alt="Delete" class="subtask-delete-edit">`;
   setupSubtaskEditAction(div, subtask, item, span);
   setupSubtaskDeleteAction(div, item);
   return div;
@@ -264,8 +264,8 @@ function createNewSubtaskActions(subtaskObj, el, span, list) {
   const div = document.createElement('div');
   div.className = 'subtask-actions';
   div.innerHTML = `
-    <img src="../img/pen.png" alt="Edit" class="subtask-edit-edit">
-    <img src="../img/trash.png" alt="Delete" class="subtask-delete-edit">`;
+    <img src="../assets/img/pen.png" alt="Edit" class="subtask-edit-edit">
+    <img src="../assets/img/trash.png" alt="Delete" class="subtask-delete-edit">`;
   setupNewSubtaskEditAction(div, subtaskObj, el, span);
   setupNewSubtaskDeleteAction(div, el, list);
   return div;
