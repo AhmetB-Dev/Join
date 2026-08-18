@@ -253,8 +253,8 @@
 }
 
 .close-icon:hover {
-  filter: brightness(0) saturate(100%) invert(34%) sepia(100%) saturate(748%)
-    hue-rotate(162deg) brightness(97%) contrast(101%);
+  filter: brightness(0) saturate(100%) invert(34%) sepia(100%) saturate(748%) hue-rotate(162deg)
+    brightness(97%) contrast(101%);
 }
 
 .contact-avatar-section {
@@ -340,10 +340,9 @@
 }
 
 .create-btn {
-  width: 224px;
-  height: 62px;
   border-radius: 8px;
   color: white;
+  height: 62px;
   font-size: clamp(1.25rem, 1.2083rem + 0.185vw, 1.375rem);
   font-weight: bold;
   background-color: #2a3647;
@@ -439,8 +438,7 @@
 
 .edit-icon:hover {
   cursor: pointer;
-  filter: invert(49%) sepia(73%) saturate(400%) hue-rotate(145deg)
-    brightness(105%) contrast(100%);
+  filter: invert(49%) sepia(73%) saturate(400%) hue-rotate(145deg) brightness(105%) contrast(100%);
 }
 
 .edit-icon {
@@ -461,8 +459,7 @@
 
 .delete-icon:hover {
   cursor: pointer;
-  filter: invert(49%) sepia(73%) saturate(400%) hue-rotate(145deg)
-    brightness(105%) contrast(100%);
+  filter: invert(49%) sepia(73%) saturate(400%) hue-rotate(145deg) brightness(105%) contrast(100%);
 }
 
 .contact-name-large {

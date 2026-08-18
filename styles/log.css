@@ -17,7 +17,6 @@ body {
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 100;
   width: 100%;
   background: #f6f7f8;
 }
@@ -63,7 +62,9 @@ body {
 main {
   opacity: 0;
   filter: blur(6px);
-  transition: opacity 1s ease, filter 1s ease;
+  transition:
+    opacity 1s ease,
+    filter 1s ease;
   display: flex;
   justify-content: center;
   padding-top: 4em;
@@ -83,9 +84,9 @@ body.show-login main {
   padding: 30px 80px;
 }
 
-.margin-footer {
+/* .margin-footer {
   margin-bottom: 6em;
-}
+} */
 
 .login-title {
   display: flex;
@@ -105,7 +106,6 @@ body.show-login main {
 
 .login-header img {
   width: 75px;
-  /* margin-bottom: 1em; */
   height: 2px;
 }
 
@@ -124,7 +124,10 @@ body.show-login main {
   opacity: 0;
   filter: blur(6px);
   transform: translateY(6px);
-  transition: opacity 0.25s ease, filter 0.25s ease, transform 0.25s ease;
+  transition:
+    opacity 0.25s ease,
+    filter 0.25s ease,
+    transform 0.25s ease;
 }
 
 .auth-panel.show {
@@ -354,7 +357,9 @@ footer a {
   text-align: center;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
   opacity: 0;
-  transition: transform 250ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 250ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition:
+    transform 250ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 250ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .toast-signup {
