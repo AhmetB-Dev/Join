@@ -1,78 +1,68 @@
-# JOIN 360 — Django REST Backend
+# JOIN 360 — Frontend
 
-JOIN 360 is a responsive Kanban task management application with a vanilla HTML/CSS/JavaScript frontend and a Django REST Framework backend.
+JOIN 360 is a responsive Kanban task management application built with HTML, CSS and JavaScript.
+
+## Project context
+
+The JOIN 360 frontend was developed collaboratively as a team project.
+
+The backend is maintained in a separate repository and was independently developed by me using Python, Django and Django REST Framework.
+
+**Backend repository:** [AhmetB-Dev/join-backend](https://github.com/AhmetB-Dev/join-backend)
 
 ## Stack
 
-- Frontend: HTML, CSS, JavaScript
-- Backend: Python, Django, Django REST Framework
-- Development database: SQLite
-- Authentication: Django REST Framework token authentication
+- HTML
+- CSS
+- JavaScript
 
 ## Main features
 
 - Registration, login, guest login and logout
-- Contacts CRUD
-- Tasks CRUD
-- Task assignment to contacts
-- Subtasks and progress
-- Kanban column updates / drag and drop
-- Summary counters and upcoming deadline
+- Kanban task board
+- Create, edit and delete tasks
+- Assign tasks to contacts
+- Subtasks and progress tracking
+- Drag and drop between Kanban columns
+- Contact management
+- Summary counters and upcoming deadlines
+- Responsive user interface
 
 ## Project structure
 
 ```text
-JOIN/
-├── backend/                 # Django REST API
-│   ├── config/
-│   ├── users/
-│   ├── contacts/
-│   ├── tasks/
-│   ├── manage.py
-│   └── requirements.txt
-├── scripts/
-│   ├── api.js               # Central frontend API client
-│   └── ...
+Join/
 ├── html/
 ├── styles/
+├── scripts/
+│   ├── api.js
+│   └── ...
 ├── img/
 ├── index.html
 └── summary.html
 ```
 
-## Start the backend
+## Start locally
 
-From the `backend` directory:
+The frontend can be served locally with VS Code Live Server or another local web server.
 
-```powershell
-py -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
-```
-
-The API is then available at:
+Example:
 
 ```text
-http://127.0.0.1:8000/api/
+http://127.0.0.1:5500
 ```
 
-## Load the existing JOIN demo data
+## Backend integration
 
-The previous JOIN contacts and tasks were converted into a neutral seed file. To load them:
+The frontend communicates with the separate Django REST API.
 
-```powershell
-python manage.py seed_join --clear
+By default, the API client in `scripts/api.js` connects to:
+
+```text
+http://127.0.0.1:8000/api
 ```
 
-User accounts are intentionally not seeded. Register a fresh user through the JOIN login page so passwords are handled by Django's password hashing.
-
-## Start the frontend
-
-Serve the project with VS Code Live Server (for example `http://127.0.0.1:5500`). The frontend API client in `scripts/api.js` connects to `http://127.0.0.1:8000/api` by default.
-
-If the backend URL changes, set this before `api.js` loads:
+If the backend URL changes, configure the API base URL before `api.js` loads:
 
 ```html
 <script>
@@ -80,30 +70,6 @@ If the backend URL changes, set this before `api.js` loads:
 </script>
 ```
 
-## API endpoints
+For backend setup, API endpoints and backend documentation, see:
 
-```text
-POST   /api/auth/register/
-POST   /api/auth/login/
-POST   /api/auth/guest/
-POST   /api/auth/logout/
-GET    /api/auth/me/
-
-GET    /api/contacts/
-POST   /api/contacts/
-GET    /api/contacts/<id>/
-PUT    /api/contacts/<id>/
-PATCH  /api/contacts/<id>/
-DELETE /api/contacts/<id>/
-
-GET    /api/tasks/
-POST   /api/tasks/
-GET    /api/tasks/<id>/
-PUT    /api/tasks/<id>/
-PATCH  /api/tasks/<id>/
-DELETE /api/tasks/<id>/
-```
-
-## Production notes
-
-Before deployment, move `SECRET_KEY` to an environment variable, set `DEBUG = False`, configure `ALLOWED_HOSTS`, use a production database such as PostgreSQL, and restrict CORS to the deployed frontend origin.
+**[JOIN 360 Django REST Backend](https://github.com/AhmetB-Dev/join-backend)**
