@@ -60,3 +60,7 @@ a {
   align-items: center;
   flex-direction: column;
 }
+
+.email-color {
+  color: black;
+}

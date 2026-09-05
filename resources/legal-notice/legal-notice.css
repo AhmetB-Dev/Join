@@ -13,6 +13,10 @@ body {
   flex-direction: row;
 }
 
+.email-color {
+  color: black;
+}
+
 section {
   flex: 1;
   overflow-y: auto;
