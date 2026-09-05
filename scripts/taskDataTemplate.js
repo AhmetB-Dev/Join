@@ -146,7 +146,7 @@ function setModalFields(task) {
   document.getElementById('modalDescription').innerText = task.description || "No Description";
   document.getElementById('modalDueDate').innerText = task.dueDate || "No Date";
   document.getElementById('modalPriorityText').innerText = getPriorityLabel(task.priority);
-  document.getElementById('modalPriorityIcon').src = task.priority || "";
+  document.getElementById('modalPriorityIcon').src = getPriorityPath(extractPriority(task.priority));
 }
 
 /**

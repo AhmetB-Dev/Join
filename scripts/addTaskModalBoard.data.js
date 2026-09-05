@@ -8,7 +8,7 @@ function getTaskData() {
     description: getInputValue(".description", "No description provided"),
     dueDate: getInputValue(".date-input"),
     id: null,
-    priority: `../assets/img/priority-img/${getAddModalSelectedPriority()}.png`,
+    priority: getPriorityPath(getAddModalSelectedPriority()),
     progress: 0,
     title: getInputValue(".input"),
     users: getSelectedUsers(),

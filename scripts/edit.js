@@ -154,7 +154,7 @@ function setupOpenButtons() {
         <div class="avatar-contact-circle">${initials}</div>
         <span class="contact-name-edit">${contact?.name || ''}</span>
       </div>
-      <img src="../assets/img/chekbox.png" alt="checkbox" class="custom-checkbox">`;
+      <img src="../assets/img/shared/chekbox.png" alt="checkbox" class="custom-checkbox">`;
     item.addEventListener('click', (e)=>{ e.stopPropagation(); item.classList.toggle('selected'); });
     return item;
   }

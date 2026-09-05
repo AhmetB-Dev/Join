@@ -54,7 +54,7 @@ function ensureEmptyStateImages() {
  */
 function addEmptyStateImage(column) {
   const img = document.createElement("img");
-  img.src = "../assets/img/no-tasks-to-do.png";
+  img.src = "../assets/img/board/no-tasks-to-do.png";
   img.alt = "no tasks to do";
   img.classList.add("empty-state-img");
   column.appendChild(img);

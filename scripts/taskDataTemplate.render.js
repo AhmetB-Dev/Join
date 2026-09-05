@@ -100,7 +100,7 @@ function createHeader(task) {
   return `
     <div class="card-label-${labelType} padding-left">
       <h4>${headerTitle}</h4>
-      <img src="../assets/img/drag-drop-icon.png" alt="drag-and-drop-icon" class="drag-drop-icon">
+      <img src="../assets/img/board/drag-drop-icon.png" alt="drag-and-drop-icon" class="drag-drop-icon">
     </div>`;
 }
 
@@ -152,7 +152,7 @@ function createFooter(task) {
       </div>
       <div class="priority-container-img">
         <img src="${taskPriority}" alt="Priority" 
-             onerror="this.src='../assets/img/priority-img/medium.png'" 
+             onerror="this.src='../assets/img/board/priority-img/medium.png'" 
              class="priority-container-img">
       </div>
     </div>`;
@@ -165,9 +165,9 @@ function createFooter(task) {
  */
 function getPriorityImage(task) {
   const mapping = {
-    urgent: "../assets/img/icon-urgent.png",
-    medium: "../assets/img/priority-img/medium.png",
-    low: "../assets/img/icon-low.png"
+    urgent: "../assets/img/shared/icon-urgent.png",
+    medium: "../assets/img/board/priority-img/medium.png",
+    low: "../assets/img/shared/icon-low.png"
   };
   let prio = extractPriority(task.priority);
   if (!mapping[prio]) prio = "medium";

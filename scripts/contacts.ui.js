@@ -138,7 +138,7 @@ function setMobileHeaderWithBackButton() {
       <hr>
       <span class="contact-subtitle">Better with a team</span>
       <button class="mobile-back-button" onclick="showMobileListView()">
-        <img src="../assets/img/icon/return-icon.png" alt="return button" class="return-button-contacts">
+        <img src="../assets/img/shared/icon/return-icon.png" alt="return button" class="return-button-contacts">
       </button>
     `;
   }
@@ -199,10 +199,10 @@ function generateContactActionsHTML() {
   return `
     <div class="contact-actions">
       <button class="edit-contact-btn" onclick="editContact('${selectedContact.id}')">
-        <img src="../assets/img/edit-contacts.png" alt="edit" class="edit-icon">
+        <img src="../assets/img/shared/edit-contacts.png" alt="edit" class="edit-icon">
       </button>
       <button class="delete-contact-btn" onclick="deleteContact('${selectedContact.id}')">
-        <img src="../assets/img/delete-contacts.png" alt="edit" class="delete-icon">
+        <img src="../assets/img/shared/delete-contacts.png" alt="edit" class="delete-icon">
       </button>
     </div>`;
 }
@@ -236,10 +236,10 @@ function setMobileActionMenu() {
           </button>
           <div class="mobile-action-menu" id="mobileActionMenu" style="display: none;">
             <div class="action-menu-item" onclick="editContact('${selectedContact.id}')">
-              <img src="../assets/img/edit-contacts.png" alt="edit">
+              <img src="../assets/img/shared/edit-contacts.png" alt="edit">
             </div>
             <div class="action-menu-item" onclick="deleteContact('${selectedContact.id}')">
-              <img src="../assets/img/delete-contacts.png" alt="delete">
+              <img src="../assets/img/shared/delete-contacts.png" alt="delete">
             </div>
           </div>
         </div>`;

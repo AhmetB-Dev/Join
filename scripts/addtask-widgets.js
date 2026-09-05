@@ -321,7 +321,9 @@
     set("medium");
     return {
       getCurrentName: () => current,
-      getIconPath: () => `../assets/img/priority-img/${current}.png`,
+      getIconPath: () => current === "medium"
+        ? "../assets/img/board/priority-img/medium.png"
+        : `../assets/img/shared/priority-img/${current}.png`,
       resetToMedium: () => set("medium"),
     };
   };

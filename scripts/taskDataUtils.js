@@ -162,10 +162,10 @@ function getSelectedPriority() {
  */
 function getPriorityPath(priority) {
   switch (priority) {
-    case 'urgent': return '../assets/img/priority-img/urgent.png';
-    case 'medium': return '../assets/img/priority-img/medium.png';
-    case 'low': return '../assets/img/priority-img/low.png';
-    default: return '../assets/img/priority-img/medium.png';
+    case 'urgent': return '../assets/img/shared/priority-img/urgent.png';
+    case 'medium': return '../assets/img/board/priority-img/medium.png';
+    case 'low': return '../assets/img/shared/priority-img/low.png';
+    default: return '../assets/img/board/priority-img/medium.png';
   }
 }
 

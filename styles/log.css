@@ -207,25 +207,25 @@ input {
 }
 
 input.name-icon {
-  background: url(../assets/img/icon/person.png) no-repeat;
+  background: url(../assets/img/shared/icon/person.png) no-repeat;
   background-size: 20px;
   background-position: 17em center;
 }
 
 input.email-icon {
-  background: url(../assets/img/icon/mail.png) no-repeat;
+  background: url(../assets/img/shared/icon/mail.png) no-repeat;
   background-size: 20px;
   background-position: 17em center;
 }
 
 input.passwort-icon {
-  background: url(../assets/img/lock.png) no-repeat;
+  background: url(../assets/img/auth/lock.png) no-repeat;
   background-size: 20px;
   background-position: 17em center;
 }
 
 input.visibile-icon {
-  background: url(../assets/img/icon/visibility_off.png) no-repeat;
+  background: url(../assets/img/auth/icon/visibility_off.png) no-repeat;
   background-size: 20px;
   background-position: 17em center;
 }
