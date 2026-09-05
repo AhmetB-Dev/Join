@@ -38,7 +38,7 @@ main {
   display: flex;
   flex-direction: column;
   min-height: calc(100vh - 200px);
-  max-width: 1450px;  
+  max-width: 1450px;
 }
 
 main p {
@@ -218,7 +218,6 @@ small {
 }
 
 .main-container {
-  width: 80%;
   overflow-x: hidden;
   overflow-y: auto;
   scrollbar-width: thin;

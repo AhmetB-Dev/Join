@@ -7,7 +7,10 @@ body {
 }
 
 .main-container-privacy {
-  width: 80%;
+  /* width: 80%; */
+  scrollbar-width: thin;
+  scrollbar-color: #28abe2 #f1f1f1;
+  overflow: auto;
 }
 
 .help-header {
