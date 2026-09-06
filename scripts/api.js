@@ -1,11 +1,12 @@
 (() => {
   "use strict";
 
-  const DEFAULT_API_BASE_URL = "http://127.0.0.1:8000/api";
+  const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+
+  const API_BASE_URL = isLocalhost ? "http://127.0.0.1:8000/api" : "https://join-api.ahmet-balci.de/api";
   const TOKEN_KEY = "join.authToken";
 
-  const apiBaseUrl = () =>
-    String(window.JOIN_API_BASE_URL || DEFAULT_API_BASE_URL).replace(/\/+$/, "");
+  const apiBaseUrl = () => String(window.JOIN_API_BASE_URL || DEFAULT_API_BASE_URL).replace(/\/+$/, "");
 
   const normalizePath = (path) => {
     const value = String(path || "").trim();
@@ -18,7 +19,13 @@
   const extractErrorMessage = (payload, fallback) => {
     if (!payload) return fallback;
     if (typeof payload === "string") return payload;
-    if (Array.isArray(payload)) return payload.map((item) => extractErrorMessage(item, "")).filter(Boolean).join(" ") || fallback;
+    if (Array.isArray(payload))
+      return (
+        payload
+          .map((item) => extractErrorMessage(item, ""))
+          .filter(Boolean)
+          .join(" ") || fallback
+      );
     if (typeof payload === "object") {
       if (payload.detail) return extractErrorMessage(payload.detail, fallback);
       const messages = Object.values(payload)
@@ -30,13 +37,7 @@
   };
 
   async function request(path, options = {}) {
-    const {
-      method = "GET",
-      body,
-      auth = true,
-      headers = {},
-      keepalive = false,
-    } = options;
+    const { method = "GET", body, auth = true, headers = {}, keepalive = false } = options;
 
     const requestHeaders = { ...headers };
     const token = getToken();
@@ -114,25 +115,24 @@
     }).catch(() => null);
   };
 
-
   const taskPayload = (task) => {
     const users = (Array.isArray(task?.users) ? task.users : [])
-      .map(user => ({ name: String(user?.name || '').trim() }))
-      .filter(user => user.name);
+      .map((user) => ({ name: String(user?.name || "").trim() }))
+      .filter((user) => user.name);
     const subtasks = (Array.isArray(task?.subtasks) ? task.subtasks : [])
-      .map(subtask => ({ text: String(subtask?.text || '').trim(), completed: !!subtask?.completed }))
-      .filter(subtask => subtask.text);
+      .map((subtask) => ({ text: String(subtask?.text || "").trim(), completed: !!subtask?.completed }))
+      .filter((subtask) => subtask.text);
     const calculatedProgress = subtasks.length
-      ? Math.round((subtasks.filter(subtask => subtask.completed).length / subtasks.length) * 100)
+      ? Math.round((subtasks.filter((subtask) => subtask.completed).length / subtasks.length) * 100)
       : 0;
 
     return {
-      title: String(task?.title || '').trim(),
-      description: String(task?.description || 'No description provided').trim() || 'No description provided',
-      dueDate: String(task?.dueDate || '').trim(),
-      category: String(task?.category || 'Technical task').trim() || 'Technical task',
-      column: String(task?.column || 'toDoColumn').trim() || 'toDoColumn',
-      priority: String(task?.priority || 'low'),
+      title: String(task?.title || "").trim(),
+      description: String(task?.description || "No description provided").trim() || "No description provided",
+      dueDate: String(task?.dueDate || "").trim(),
+      category: String(task?.category || "Technical task").trim() || "Technical task",
+      column: String(task?.column || "toDoColumn").trim() || "toDoColumn",
+      priority: String(task?.priority || "low"),
       progress: calculatedProgress,
       users,
       subtasks,
@@ -140,7 +140,9 @@
   };
 
   const toObjectById = (rows) =>
-    Object.fromEntries((Array.isArray(rows) ? rows : []).map((row) => [String(row.id), { ...row, id: String(row.id) }]));
+    Object.fromEntries(
+      (Array.isArray(rows) ? rows : []).map((row) => [String(row.id), { ...row, id: String(row.id) }]),
+    );
 
   window.JoinAPI = {
     baseUrl: apiBaseUrl,
