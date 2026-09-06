@@ -3,7 +3,10 @@
 
   const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
 
-  const API_BASE_URL = isLocalhost ? "http://127.0.0.1:8000/api" : "https://join-api.ahmet-balci.de/api";
+  const DEFAULT_API_BASE_URL = isLocalhost
+    ? "http://127.0.0.1:8000/api"
+    : "https://join-api.ahmet-balci.de/api";
+
   const TOKEN_KEY = "join.authToken";
 
   const apiBaseUrl = () => String(window.JOIN_API_BASE_URL || DEFAULT_API_BASE_URL).replace(/\/+$/, "");
