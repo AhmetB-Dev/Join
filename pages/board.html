@@ -568,37 +568,7 @@
     }
 
     function createSubtaskItem(text) {
-      const newSubtask = createSubtaskContainer();
-      newSubtask.innerHTML = generateSubtaskInnerHTML(text);
-      attachTrashEvent(newSubtask);
-      return newSubtask;
-    }
-
-    function createSubtaskContainer() {
-      const element = document.createElement("div");
-      element.classList.add("subtask-item", "added-subtasks");
-      return element;
-    }
-
-    function generateSubtaskInnerHTML(text) {
-      return `
-    <div class="flexrow">
-      <span>${text}</span>
-    </div>
-    <div class="added-subtask-icons">
-      <div><img src="../assets/img/board/pen.png" alt="pen"></div>
-      <hr class="subtask-hr">
-      <div class="trash-icon"><img src="../assets/img/board/trash.png" alt="trash"></div>
-    </div>
-  `;
-    }
-
-    function attachTrashEvent(subtask) {
-      const trashIcon = subtask.querySelector(".trash-icon");
-      trashIcon.addEventListener("click", () => {
-        subtask.remove();
-        validateForm();
-      });
+      return createAddTaskSubtaskItem(text);
     }
 
     function setupSubtaskListeners() {

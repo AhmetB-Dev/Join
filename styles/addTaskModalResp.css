@@ -663,6 +663,23 @@
   opacity: 1;
 }
 
+.board-subtask-edit {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #d1d5db;
+  padding: 2px 0;
+  outline: none;
+  background: transparent;
+  color: #2a3647;
+  font: inherit;
+}
+
+.board-subtask-edit:focus {
+  border-bottom-color: #29abe2;
+}
+
 .added-subtask-icons img {
   cursor: pointer;
 }

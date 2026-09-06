@@ -79,10 +79,14 @@ function getSelectedUsers() {
  * @returns {Array<{completed:boolean,text:string}>}
  */
 function getSubtasks() {
-  return [...document.querySelectorAll(".subtasks-scroll-container .subtask-item span")].map(span => ({
-    completed: false,
-    text: span.innerText.trim()
-  }));
+  return [...document.querySelectorAll(".subtasks-scroll-container .subtask-item")]
+    .map(item => {
+      const editInput = item.querySelector(".board-subtask-edit");
+      const span = item.querySelector(".flexrow span");
+      const text = (editInput?.value ?? span?.innerText ?? "").trim();
+      return { completed: false, text };
+    })
+    .filter(subtask => subtask.text !== "");
 }
 
 /**
