@@ -1,60 +1,60 @@
 # JOIN 360 — Frontend
 
-JOIN 360 is a responsive Kanban task management application built with HTML, CSS and JavaScript.
+Responsive Kanban task management frontend built with HTML, CSS and JavaScript.
 
-## Project context
+[Live Demo](https://ahmet-balci.de/projects/join/) · [Frontend Repository](https://github.com/AhmetB-Dev/Join) · [Backend Repository](https://github.com/AhmetB-Dev/join-backend)
 
-The JOIN 360 frontend was developed collaboratively as a team project.
+## Project Context
 
-The backend is maintained in a separate repository and was independently developed by me using Python, Django and Django REST Framework.
+JOIN 360 was originally developed collaboratively as a frontend team project.
 
-**Backend repository:** [AhmetB-Dev/join-backend](https://github.com/AhmetB-Dev/join-backend)
+I later independently developed and integrated the separate Django REST Framework backend used by this application.
 
-## Stack
+The backend includes authentication, user-scoped contacts and tasks, PostgreSQL, Redis, automated tests, Docker and CI/CD.
 
-- HTML
-- CSS
-- JavaScript
+> This repository documents the frontend project. For my independently developed backend work, see [`AhmetB-Dev/join-backend`](https://github.com/AhmetB-Dev/join-backend).
 
-## Main features
+## Main Features
 
-- Registration, login, guest login and logout
+- Registration and login
+- Guest login
+- Logout
 - Kanban task board
 - Create, edit and delete tasks
 - Assign tasks to contacts
 - Subtasks and progress tracking
 - Drag and drop between Kanban columns
 - Contact management
-- Summary counters and upcoming deadlines
+- Summary counters
+- Upcoming deadline information
 - Responsive user interface
 
-## Project structure
+## Tech Stack
+
+| Area | Technology |
+| --- | --- |
+| Structure | HTML |
+| Styling | CSS |
+| Application logic | JavaScript |
+| Backend integration | REST API |
+| Backend | Django REST Framework (separate repository) |
+
+## Project Structure
 
 ```text
 Join/
-├── html/
-├── styles/
-├── scripts/
-│   ├── api.js
-│   └── ...
-├── img/
-├── index.html
-└── summary.html
+├── assets/             Static assets
+├── pages/              Application pages
+├── resources/          Additional project resources
+├── scripts/            JavaScript application logic and API integration
+├── styles/             CSS styles
+├── index.html          Application entry page
+└── README.md
 ```
 
-## Start locally
+## Backend Integration
 
-The frontend can be served locally with VS Code Live Server or another local web server.
-
-Example:
-
-```text
-http://127.0.0.1:5500
-```
-
-## Backend integration
-
-The frontend communicates with the separate Django REST API.
+The frontend communicates with the separate JOIN Django REST API.
 
 By default, the API client in `scripts/api.js` connects to:
 
@@ -62,7 +62,7 @@ By default, the API client in `scripts/api.js` connects to:
 http://127.0.0.1:8000/api
 ```
 
-If the backend URL changes, configure the API base URL before `api.js` loads:
+If the backend URL changes, define the API base URL before `api.js` loads:
 
 ```html
 <script>
@@ -70,6 +70,95 @@ If the backend URL changes, configure the API base URL before `api.js` loads:
 </script>
 ```
 
-For backend setup, API endpoints and backend documentation, see:
+Backend repository:
 
-**[JOIN 360 Django REST Backend](https://github.com/AhmetB-Dev/join-backend)**
+https://github.com/AhmetB-Dev/join-backend
+
+## Running Locally
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/AhmetB-Dev/Join.git
+cd Join
+```
+
+### 2. Start the backend
+
+Follow the setup instructions in:
+
+https://github.com/AhmetB-Dev/join-backend
+
+### 3. Serve the frontend
+
+Because this is a static frontend, it can be served with VS Code Live Server or another local HTTP server.
+
+Example local URL:
+
+```text
+http://127.0.0.1:5500
+```
+
+## Application Areas
+
+### Summary
+
+Provides an overview of task counts and upcoming work.
+
+### Board
+
+Kanban-style task management with drag-and-drop between task states.
+
+### Add Task
+
+Creates tasks with contact assignments, subtasks and task metadata.
+
+### Contacts
+
+Provides contact creation and management and allows contacts to be assigned to tasks.
+
+## Fullstack Integration
+
+Although the frontend and backend live in separate repositories, they form one integrated application:
+
+```text
+JOIN Frontend
+HTML / CSS / JavaScript
+        |
+        | REST API
+        v
+JOIN Backend
+Django REST Framework
+        |
+        |-- PostgreSQL
+        `-- Redis
+```
+
+This integration connects the collaborative frontend project to the backend I independently implemented.
+
+## Related Backend
+
+The separate backend repository contains the main backend-focused work for this project, including:
+
+- Django REST Framework
+- authentication
+- user-scoped data access
+- contacts and tasks APIs
+- PostgreSQL
+- Redis
+- Docker
+- automated testing
+- GitHub Actions CI/CD
+- production deployment
+
+[View the JOIN Backend Repository](https://github.com/AhmetB-Dev/join-backend)
+
+## Project Status
+
+JOIN 360 is available as a deployed portfolio project.
+
+This frontend repository demonstrates the collaborative frontend implementation and its integration with my independently developed backend.
+
+---
+
+Built as part of my Fullstack Developer portfolio.
