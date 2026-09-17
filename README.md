@@ -1,68 +1,91 @@
 # JOIN 360 — Frontend
 
-JOIN 360 is a responsive Kanban task management application built with HTML, CSS and JavaScript.
+**Responsive Kanban task manager built with HTML, CSS and modular JavaScript.**
 
-## Project context
+[![HTML](https://img.shields.io/badge/HTML5-Structure-E34F26?logo=html5&logoColor=white)](https://developer.mozilla.org/docs/Web/HTML)
+[![CSS](https://img.shields.io/badge/CSS3-Responsive_UI-1572B6?logo=css3&logoColor=white)](https://developer.mozilla.org/docs/Web/CSS)
+[![JavaScript](https://img.shields.io/badge/JavaScript-Application_Logic-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/docs/Web/JavaScript)
+[![REST API](https://img.shields.io/badge/REST_API-Django-092E20?logo=django&logoColor=white)](https://github.com/AhmetB-Dev/join-backend)
 
-The JOIN 360 frontend was developed collaboratively as a team project.
+[**Live Demo**](https://ahmet-balci.de/projects/join/) · [**Backend Repository**](https://github.com/AhmetB-Dev/join-backend)
 
-The backend is maintained in a separate repository and was independently developed by me using Python, Django and Django REST Framework.
+JOIN 360 helps users organize tasks on a Kanban board, manage contacts and track progress across different workflow stages.
 
-**Backend repository:** [AhmetB-Dev/join-backend](https://github.com/AhmetB-Dev/join-backend)
+## Project context and my contribution
 
-## Stack
+The original frontend was created collaboratively as a team project. After that project phase, I independently developed a Django REST backend and integrated it with the frontend.
 
-- HTML
-- CSS
-- JavaScript
+This repository therefore demonstrates both:
 
-## Main features
+- collaborative frontend development with HTML, CSS and JavaScript;
+- the later integration of a persistent, authenticated REST API.
 
-- Registration, login, guest login and logout
-- Kanban task board
+The backend architecture, authentication, database logic, tests and deployment are documented in the [separate backend repository](https://github.com/AhmetB-Dev/join-backend).
+
+## Core features
+
+- Registration and login
+- Isolated guest access
+- Kanban board with four workflow columns
 - Create, edit and delete tasks
 - Assign tasks to contacts
-- Subtasks and progress tracking
-- Drag and drop between Kanban columns
-- Contact management
-- Summary counters and upcoming deadlines
-- Responsive user interface
+- Add and track subtasks
+- Set categories, priorities and due dates
+- Drag tasks between columns
+- Touch-friendly drag and drop on mobile devices
+- Create, edit and delete contacts
+- Dashboard summary with task statistics
+- Responsive desktop and mobile layouts
 
-## Project structure
+## Technical highlights
 
-```text
-Join/
-├── html/
-├── styles/
-├── scripts/
-│   ├── api.js
-│   └── ...
-├── img/
-├── index.html
-└── summary.html
+- Modular JavaScript files organized by data, API, validation and UI responsibilities
+- Central API client with a configurable backend URL
+- Persistent user-scoped data through the Django REST API
+- Desktop and touch drag-and-drop handling
+- Reusable task and contact rendering logic
+- Client-side form validation and interaction feedback
+
+## Tech stack
+
+| Area | Technology |
+| --- | --- |
+| Structure | HTML5 |
+| Styling | CSS3 |
+| Application logic | JavaScript |
+| Data exchange | REST API |
+| Backend | Django REST Framework |
+| Persistence | PostgreSQL through the backend |
+
+## Frontend and backend
+
+```mermaid
+flowchart LR
+    A[JOIN frontend] -->|REST requests| B[Django REST API]
+    B --> C[PostgreSQL]
+    B --> D[Redis]
 ```
 
-## Start locally
+The frontend sends authenticated requests for users, contacts and tasks. The backend applies validation and user isolation before persisting data.
 
-The frontend can be served locally with VS Code Live Server or another local web server.
+## Run locally
 
-Example:
-
-```text
-http://127.0.0.1:5500
+```bash
+git clone https://github.com/AhmetB-Dev/Join.git
+cd Join
 ```
 
-## Backend integration
+1. Start the backend using the instructions in [`join-backend`](https://github.com/AhmetB-Dev/join-backend).
+2. Serve this frontend with a local HTTP server, such as VS Code Live Server.
+3. Open the application in your browser.
 
-The frontend communicates with the separate Django REST API.
-
-By default, the API client in `scripts/api.js` connects to:
+The default API URL is:
 
 ```text
 http://127.0.0.1:8000/api
 ```
 
-If the backend URL changes, configure the API base URL before `api.js` loads:
+To use a different backend, set the URL before the API client loads:
 
 ```html
 <script>
@@ -70,6 +93,19 @@ If the backend URL changes, configure the API base URL before `api.js` loads:
 </script>
 ```
 
-For backend setup, API endpoints and backend documentation, see:
+## Related backend capabilities
 
-**[JOIN 360 Django REST Backend](https://github.com/AhmetB-Dev/join-backend)**
+The independently developed backend adds:
+
+- token-based authentication
+- user-scoped contacts and tasks
+- isolated guest workspaces
+- PostgreSQL persistence
+- Redis caching and throttling
+- automated tests
+- Docker-based deployment
+- CI/CD with rollback support
+
+---
+
+Built as part of my Fullstack Developer portfolio.
