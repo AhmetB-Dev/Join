@@ -233,14 +233,10 @@ function setupOpenButtons() {
   }
 
   /**
-   * Local fallback contacts if remote fetch fails or is unavailable.
+   * Return an empty contact set if the API is unavailable.
    */
   function loadLocalContactsFallback() {
-    return (typeof getContactsFromLocalStorage === 'function' && getContactsFromLocalStorage()) || {
-      c1: { name: 'Max Mustermann', color: 'green' },
-      c2: { name: 'Erika Musterfrau', color: 'blue' },
-      c3: { name: 'John Doe', color: 'orange' }
-    };
+    return {};
   }
 
   window.populateAssigneeDropdown = populateAssigneeDropdownOverride;

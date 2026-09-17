@@ -1,5 +1,5 @@
 /**
- * Load contacts from the Django API or fallback to local/sample.
+ * Load contacts from the Django API.
  * @param {Array} assignedUsers
  */
 async function loadContacts(assignedUsers = []) {
@@ -7,33 +7,9 @@ async function loadContacts(assignedUsers = []) {
     const contacts = JoinAPI.toObjectById(await JoinAPI.get('/contacts/'));
     populateAssigneeDropdown(contacts, assignedUsers);
   } catch (error) {
-    const local = getContactsFromLocalStorage() || provideSampleContacts();
-    populateAssigneeDropdown(local, assignedUsers);
+    console.error('Error loading contacts:', error);
+    populateAssigneeDropdown({}, assignedUsers);
   }
-}
-
-/**
- * Get contacts from localStorage.
- * @returns {Object|null}
- */
-function getContactsFromLocalStorage() {
-  try {
-    const raw = localStorage.getItem('contacts');
-    if (!raw) return null;
-    return JSON.parse(raw);
-  } catch (_) { return null; }
-}
-
-/**
- * Provide sample contacts fallback.
- * @returns {Object}
- */
-function provideSampleContacts() {
-  return {
-    c1: { name: 'Max Mustermann', color: 'green' },
-    c2: { name: 'Erika Musterfrau', color: 'blue' },
-    c3: { name: 'John Doe', color: 'orange' }
-  };
 }
 
 /**

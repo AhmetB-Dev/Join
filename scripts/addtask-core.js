@@ -26,16 +26,14 @@
     return "Technical task";
   };
 
-  /** Fetch contact names from the Django API with demo fallbacks. */
+  /** Fetch contact names from the Django API. */
   const fetchContacts = async () => {
     try {
       const payload = await JoinAPI.get('/contacts/');
-      const list = (Array.isArray(payload) ? payload : []).map(c => c?.name).filter(Boolean);
-      return list.length
-        ? list
-        : ["Sofia Müller", "Anton Mayer", "Anja Schulz", "Benedikt Ziegler", "David Eisenberg"];
-    } catch {
-      return ["Sofia Müller", "Anton Mayer", "Anja Schulz", "Benedikt Ziegler", "David Eisenberg"];
+      return (Array.isArray(payload) ? payload : []).map(c => c?.name).filter(Boolean);
+    } catch (error) {
+      console.error('Error loading contacts:', error);
+      return [];
     }
   };
 
